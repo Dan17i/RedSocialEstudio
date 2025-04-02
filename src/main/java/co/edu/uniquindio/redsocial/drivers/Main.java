@@ -1,4 +1,4 @@
-package co.edu.uniquindio.Archivo;
+package co.edu.uniquindio.redsocial.drivers;
 
 public class Main {
     public static void main(String[] args) {

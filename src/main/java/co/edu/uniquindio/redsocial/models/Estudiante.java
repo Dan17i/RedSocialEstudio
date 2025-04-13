@@ -7,14 +7,11 @@ package co.edu.uniquindio.redsocial.models;
  * @since 2025-04-02
  */
 public class Estudiante extends Usuario {
-    private String carrera;
 
-    public Estudiante(String nombre, String email, String carrera) {
-        super(nombre, email);
-        this.carrera = carrera;
+    public Estudiante(String nombre, String id, ListaEnlazada<String> intereses, ListaEnlazada<Contenido> historialContenidos, ListaEnlazada<Valoracion> valoraciones) {
+        super(nombre, id, intereses, historialContenidos, valoraciones);
+
     }
 
-    public String getCarrera() {
-        return carrera;
-    }
+
 }

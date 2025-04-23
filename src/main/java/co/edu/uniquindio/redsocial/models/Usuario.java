@@ -4,6 +4,8 @@ package co.edu.uniquindio.redsocial.models;
  * Un usuario tiene un nombre y un email.
  *
  * @author Daniel Jurado
+ * @author Sebastian Torres
+ * @author Juan Soto
  * @since 2025-04-02
  */
 public class Usuario {

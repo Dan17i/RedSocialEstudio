@@ -37,10 +37,13 @@ public class GestorContenidos {
 
     public ListaEnlazada<Contenido> buscarPorTema(String tema){
 
+
+        return null;
     }
 
     public ListaEnlazada<Contenido> buscarPorAutor(String autor){
 
+        return null;
     }
 
     public void marcarComoDestacado(Contenido contenido){
@@ -49,5 +52,6 @@ public class GestorContenidos {
 
     public Map<String,Integer> generarEstadisticas(){
 
+        return Map.of();
     }
 }

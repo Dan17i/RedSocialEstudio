@@ -3,7 +3,9 @@ package co.edu.uniquindio.redsocial.models;
  * Clase que representa un usuario en la red social.
  * Un usuario tiene un nombre y un email.
  *
- * @author Daniel Jurado 
+ * @author Daniel Jurado
+ * @author Sebastian Torres
+ * @author Juan Soto
  * @since 2025-04-02
  */
 public class Usuario {

@@ -1,5 +1,12 @@
 package models;
-
+/**
+ * Clase que representa el test de un estudiante  en la red social.
+ *
+ * @author Daniel Jurado
+ * @author Sebastian Torres
+ * @author Juan Soto
+ * @since 2025-04-02
+ */
 import co.edu.uniquindio.redsocial.models.Estudiante;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

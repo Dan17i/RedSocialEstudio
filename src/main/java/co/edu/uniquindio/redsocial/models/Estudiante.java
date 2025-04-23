@@ -4,6 +4,8 @@ package co.edu.uniquindio.redsocial.models;
  * Un usuario tiene una carrera.
  *
  * @author Daniel Jurado
+ * @author Sebastian Torres
+ * @author Jaun Soto
  * @since 2025-04-02
  */
 public class Estudiante extends Usuario {

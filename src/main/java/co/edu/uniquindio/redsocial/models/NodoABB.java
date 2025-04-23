@@ -1,5 +1,12 @@
 package co.edu.uniquindio.redsocial.models;
-
+/**
+ * Clase que representa un el nodoABB se encarga del arból binario
+ *
+ * @author Daniel Jurado
+ * @author Sebastian Torres
+ * @author Juan Soto
+ * @since 2025-04-02
+ */
 public class NodoABB <T>{
 
     String clave;

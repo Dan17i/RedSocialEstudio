@@ -22,11 +22,10 @@ public class ArbolBinarioBusqueda <T>{
 
     public ListaEnlazada<T> buscar(String clave){
 
-        return;
+        return null;
     }
 
-    public ListaEnlazada<Contenido> listarContenidosPorTema(string tema){
-
-        
+    public ListaEnlazada<Contenido> listarContenidosPorTema(String tema){
+        return null;
     }
 }

@@ -33,6 +33,7 @@ public class GestorContenidos {
 
     public boolean eliminarContenido(String id){
 
+        return false;
     }
 
     public ListaEnlazada<Contenido> buscarPorTema(String tema){

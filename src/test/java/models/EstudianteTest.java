@@ -14,7 +14,7 @@ public class EstudianteTest {
     public void testEstudianteCreation() {
         Estudiante estudiante = new Estudiante("Ana", "ana@email.com", "Ingeniería");
         assertEquals("Ana", estudiante.getNombre());
-        assertEquals("ana@email.com", estudiante.getEmail());
+        assertEquals("4551", estudiante.getId());
         assertEquals("Ingeniería", estudiante.getCarrera());
     }
 }

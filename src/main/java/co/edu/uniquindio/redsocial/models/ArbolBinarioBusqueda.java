@@ -1,31 +1,17 @@
 package co.edu.uniquindio.redsocial.models;
 
-public class ArbolBinarioBusqueda <T>{
+class ArbolBinarioBusqueda<Contenido> {
+    private NodoABB<Contenido> raiz;
 
-    NodoABB<T> raiz;
-
-    public ArbolBinarioBusqueda(NodoABB<T> raiz) {
+    public ArbolBinarioBusqueda(NodoABB<Contenido> raiz) {
         this.raiz = raiz;
     }
 
-    public NodoABB<T> getRaiz() {
-        return raiz;
-    }
+    public void insertar(String clave, Contenido valor) { /* Lógica de inserción */ }
+    public ListaEnlazada<Contenido> buscar(String clave) { return new ListaEnlazada<>(); }
+    public ListaEnlazada<Contenido> listarContenidosPorTema(String tema) { return buscar(tema); }
 
-    public void setRaiz(NodoABB<T> raiz) {
-        this.raiz = raiz;
-    }
-
-    public  void insertar(String clave, T valor){
-
-    }
-
-    public ListaEnlazada<T> buscar(String clave){
-
-        return null;
-    }
-
-    public ListaEnlazada<Contenido> listarContenidosPorTema(String tema){
-        return null;
-    }
+    // Getters y Setters
+    public NodoABB<Contenido> getRaiz() { return raiz; }
+    public void setRaiz(NodoABB<Contenido> raiz) { this.raiz = raiz; }
 }

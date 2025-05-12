@@ -1,38 +1,21 @@
 package co.edu.uniquindio.redsocial.models;
 
-public class Valoracion {
+class Valoracion {
+    private Estudiante estudiante;
+    private int puntuacion;
+    private String comentario;
 
-    Estudiante estudiante;
-    int puntuacion;
-    String comentario;
-
-    public Valoracion(int puntuacion, Estudiante estudiante, String comentario) {
-        this.puntuacion = puntuacion;
+    public Valoracion(Estudiante estudiante, int puntuacion, String comentario) {
         this.estudiante = estudiante;
+        this.puntuacion = puntuacion;
         this.comentario = comentario;
     }
 
-    public Estudiante getEstudiante() {
-        return estudiante;
-    }
-
-    public void setEstudiante(Estudiante estudiante) {
-        this.estudiante = estudiante;
-    }
-
-    public int getPuntuacion() {
-        return puntuacion;
-    }
-
-    public void setPuntuacion(int puntuacion) {
-        this.puntuacion = puntuacion;
-    }
-
-    public String getComentario() {
-        return comentario;
-    }
-
-    public void setComentario(String comentario) {
-        this.comentario = comentario;
-    }
+    // Getters y Setters
+    public Estudiante getEstudiante() { return estudiante; }
+    public void setEstudiante(Estudiante estudiante) { this.estudiante = estudiante; }
+    public int getPuntuacion() { return puntuacion; }
+    public void setPuntuacion(int puntuacion) { this.puntuacion = puntuacion; }
+    public String getComentario() { return comentario; }
+    public void setComentario(String comentario) { this.comentario = comentario; }
 }

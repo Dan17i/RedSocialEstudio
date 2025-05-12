@@ -1,6 +1,5 @@
 package models;
 
-import co.edu.uniquindio.redsocial.models.Usuario;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 /**

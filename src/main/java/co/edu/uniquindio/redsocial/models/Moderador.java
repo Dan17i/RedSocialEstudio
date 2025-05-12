@@ -15,10 +15,11 @@ class Moderador extends Usuario {
     private int nivelAcceso;
     private ListaEnlazada<String> areasResponsabilidad;
 
-    public Moderador(String id, String nombre, ListaEnlazada<String> intereses,
+    public Moderador(String id, String nombre,  String email, String contraseña,
+                     ListaEnlazada<String> intereses,
                      ListaEnlazada<Contenido> historialContenidos, ListaEnlazada<Valoracion> valoraciones,
                      int nivelAcceso, ListaEnlazada<String> areasResponsabilidad) {
-        super(id, nombre, intereses, historialContenidos, valoraciones);
+        super(id, nombre, email, contraseña, intereses, historialContenidos, valoraciones);
         this.nivelAcceso = nivelAcceso;
         this.areasResponsabilidad = areasResponsabilidad;
     }
@@ -28,7 +29,7 @@ class Moderador extends Usuario {
     public void eliminarContenido(Contenido contenido) { /* Lógica de eliminación TODO TORRES */ }
     public ListaEnlazada<ListaEnlazada<Estudiante>> generarReporteComunidades() { return new ListaEnlazada<>(); }
     public Reporte generarReporte(String tipo) { return new Reporte("1", tipo, LocalDateTime.now(), new ListaEnlazada<>()); }
-    public void visualizarGrafo() { /* Lógica de visualización */ }
+    public void visualizarGrafo() { /* Lógica de visualización TODO TORRES */ }
 
     // Getters y Setters específicos
     public int getNivelAcceso() { return nivelAcceso; }

@@ -25,18 +25,18 @@ public class Estudiante<T> extends Usuario {
      * @param id                 Identificador único del estudiante.
      * @param nombre             Nombre del estudiante.
      * @param email              Correo electrónico del estudiante.
-     * @param contraseña         Contraseña del estudiante.
+     * @param contrasenia         Contraseña del estudiante.
      * @param intereses          Lista de intereses académicos.
      * @param historialContenidos Lista de contenidos publicados o consumidos.
      * @param valoraciones       Lista de valoraciones realizadas.
      * @param solicitudesAyuda   Cola de solicitudes de ayuda priorizadas.
      * @param gruposEstudio      Lista de grupos de estudio a los que pertenece.
      */
-    public Estudiante(String id, String nombre, String email, String contraseña,
+    public Estudiante(String id, String nombre, String email, String contrasenia,
                       ListaEnlazada<String> intereses, ListaEnlazada<Contenido> historialContenidos,
                       ListaEnlazada<Valoracion> valoraciones, ColaPrioridad<SolicitudAyuda> solicitudesAyuda,
                       ListaEnlazada<GrupoEstudio> gruposEstudio) {
-        super(id, nombre, email, contraseña, intereses, historialContenidos, valoraciones);
+        super(id, nombre, email, contrasenia, intereses, historialContenidos, valoraciones);
         this.solicitudesAyuda = solicitudesAyuda;
         this.gruposEstudio = gruposEstudio;
     }
@@ -59,7 +59,7 @@ public class Estudiante<T> extends Usuario {
      * @param grupo Grupo de estudio al que desea unirse.
      */
     public void unirseAGrupo(GrupoEstudio grupo) {
-        gruposEstudio.agregar(grupo);
+        this.gruposEstudio.agregar(grupo);
         grupo.agregarMiembro(this);
     }
     /**
@@ -101,9 +101,11 @@ public class Estudiante<T> extends Usuario {
      * @param contenido Contenido que se desea publicar.
      */
     public void publicarContenido(Contenido contenido) {
+        GestorContenidos.getInstancia().agregarContenido(contenido);
         this.getHistorialContenidos().agregar(contenido);
         // Se puede extender para agregarlo al repositorio global de contenidos
     }
+
     /**
      * @return Cola de solicitudes de ayuda del estudiante.
      */

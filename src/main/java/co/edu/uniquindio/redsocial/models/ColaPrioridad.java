@@ -19,6 +19,11 @@ public class ColaPrioridad<T> {
     public ColaPrioridad(ListaEnlazada<T> elementos) {
         this.elementos = elementos;
     }
+
+    public ColaPrioridad() {
+
+    }
+
     /**
      * Agrega un elemento a la cola con una prioridad dada.
      * La lógica de inserción debe asegurarse de mantener el orden según la prioridad.

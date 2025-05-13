@@ -16,25 +16,42 @@ import java.util.HashMap;
 public class GestorContenidos {
     private ArbolBinarioBusqueda<Contenido> arbolContenidos;
     private ListaEnlazada<Contenido> contenidoDestacado;
+    private static GestorContenidos instancia;
+
+
     /**
      * Constructor del gestor de contenidos.
      *
-     * @param arbolContenidos     Árbol binario donde se almacenan los contenidos por tema.
-     * @param contenidoDestacado  Lista de contenidos destacados.
+     * @param arbolContenidos    Árbol binario donde se almacenan los contenidos por tema.
+     * @param contenidoDestacado Lista de contenidos destacados.
      */
+
     public GestorContenidos(ArbolBinarioBusqueda<Contenido> arbolContenidos,
                             ListaEnlazada<Contenido> contenidoDestacado) {
         this.arbolContenidos = arbolContenidos;
         this.contenidoDestacado = contenidoDestacado;
     }
+
+
+    public static GestorContenidos getInstancia() {
+        if (instancia == null) {
+            instancia = new GestorContenidos(null, null);
+        }
+        return instancia;
+    }
+
     /**
      * Agrega un nuevo contenido al árbol de contenidos.
      *
      * @param contenido Contenido a agregar.
      */
+
     public void agregarContenido(Contenido contenido) {
+
         arbolContenidos.insertar(contenido.getTema(), contenido);
     }
+
+
     /**
      * Elimina un contenido del árbol de contenidos por ID.
      * (Esta implementación debe buscar por ID manualmente)
@@ -130,6 +147,7 @@ public class GestorContenidos {
         }
         return resultados;
     }
+
 
     // Getters y Setters
     public ArbolBinarioBusqueda<Contenido> getArbolContenidos() { return arbolContenidos; }

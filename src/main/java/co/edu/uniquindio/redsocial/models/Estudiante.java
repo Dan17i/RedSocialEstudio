@@ -1,6 +1,8 @@
 package co.edu.uniquindio.redsocial.models;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
+
 /**
  * Clase que representa a un estudiante dentro de la red social educativa.
  * Hereda de {@link Usuario} y tiene funcionalidades adicionales como unirse a grupos,
@@ -13,7 +15,7 @@ import java.time.LocalDateTime;
  * @author Juan Soto
  * @since 2025-04-02
  */
-class Estudiante<T> extends Usuario {
+public class Estudiante<T> extends Usuario {
 
     private ColaPrioridad<SolicitudAyuda> solicitudesAyuda;
     private ListaEnlazada<GrupoEstudio> gruposEstudio;
@@ -121,5 +123,38 @@ class Estudiante<T> extends Usuario {
      */
     public void setGruposEstudio(ListaEnlazada<GrupoEstudio> gruposEstudio) {
         this.gruposEstudio = gruposEstudio;
+    }
+    /**
+     * Compara este objeto con otro para determinar si son iguales.
+     *
+     * Dos objetos `Estudiante` se consideran iguales si su `id` es el mismo.
+     * Este método se utiliza para verificar la equivalencia de dos objetos y es
+     * útil cuando los estudiantes se almacenan en colecciones como `HashSet` o
+     * se buscan en mapas como `HashMap`.
+     *
+     * @param obj el objeto con el que se comparará este objeto `Estudiante`
+     * @return `true` si ambos objetos son iguales (mismo `id`), `false` en caso contrario
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Estudiante that = (Estudiante) obj;
+        return this.getId().equals(that.getId());
+    }
+    /**
+     * Devuelve el código hash para este objeto `Estudiante`.
+     *
+     * El código hash se genera utilizando el `id` del estudiante. Este método
+     * es consistente con el método `equals()`, lo que significa que si dos
+     * objetos son iguales según el método `equals()`, también tendrán el mismo
+     * código hash. Es útil cuando los objetos `Estudiante` se utilizan en
+     * colecciones basadas en hash como `HashSet` o `HashMap`.
+     *
+     * @return el código hash de este objeto `Estudiante`, basado en su `id`
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }

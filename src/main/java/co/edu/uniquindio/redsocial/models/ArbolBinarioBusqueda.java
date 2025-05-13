@@ -10,7 +10,7 @@ package co.edu.uniquindio.redsocial.models;
  * @since 2025-05-12
  * @param <Contenido> El tipo de los valores almacenados en el árbol.
  */
-class ArbolBinarioBusqueda<Contenido> {
+public class ArbolBinarioBusqueda<Contenido> {
     /**
      * Nodo raíz del árbol.
      */

@@ -8,7 +8,7 @@ package co.edu.uniquindio.redsocial.models;
  * @author Juan Soto
  * @since 2025-05-12
  */
-class Contenido {
+public class Contenido {
     private String id;
     private String tema;
     private String autor;

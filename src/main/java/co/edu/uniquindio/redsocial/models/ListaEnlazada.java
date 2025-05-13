@@ -85,4 +85,36 @@ class ListaEnlazada<T> {
         }
         return false;
     }
+
+    public NodoLista<T> obtenerNodo(int index) {
+        if (index < 0 || index >= tamanio) {
+            throw new IndexOutOfBoundsException("Índice fuera de rango");
+        }
+        NodoLista<T> actual = cabeza;
+        for (int i = 0; i < index; i++) {
+            actual = actual.getSiguiente();
+        }
+        return actual;
+    }
+
+    public void insertarEn(int index, T dato) {
+        if (index < 0 || index > tamanio) {
+            throw new IndexOutOfBoundsException("Índice fuera de rango");
+        }
+
+        NodoLista<T> nuevoNodo = new NodoLista<>(dato);
+
+        if (index == 0) {  // Insertar al inicio
+            nuevoNodo.setSiguiente(cabeza);
+            cabeza = nuevoNodo;
+        } else {  // Insertar en una posición intermedia
+            NodoLista<T> nodoAnterior = obtenerNodo(index - 1);
+            NodoLista<T> nodoSiguiente = nodoAnterior.getSiguiente();
+            nodoAnterior.setSiguiente(nuevoNodo);
+            nuevoNodo.setSiguiente(nodoSiguiente);
+        }
+
+        tamanio++;
+    }
+
 }

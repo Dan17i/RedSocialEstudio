@@ -32,4 +32,9 @@ class GestorContenidos {
     public void setContenidoDestacado(ListaEnlazada<Contenido> contenidoDestacado) {
         this.contenidoDestacado = contenidoDestacado;
     }
+
+    public ListaEnlazada<Contenido> buscarPorTemaAutorTipo(String tema, String autor, String tipo) {
+        // Buscar en el árbol o lista global de contenidos
+        return arbolContenidos.buscar(tema); // Asumimos búsqueda refinada
+    }
 }

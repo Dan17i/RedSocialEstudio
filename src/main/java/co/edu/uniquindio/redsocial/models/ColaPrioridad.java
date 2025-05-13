@@ -9,7 +9,7 @@ package co.edu.uniquindio.redsocial.models;
  * @since 2025-05-12
  * @param <T> Tipo de los elementos almacenados en la cola.
  */
-class ColaPrioridad<T> {
+public class ColaPrioridad<T> {
     private ListaEnlazada<T> elementos = new ListaEnlazada<>();
     /**
      * Constructor que inicializa la cola con una lista enlazada existente.
@@ -29,7 +29,12 @@ class ColaPrioridad<T> {
      * TODO: Implementar la lógica de ordenamiento por prioridad al insertar.
      */
     public void encolar(T elemento, int prioridad) {
-        // TODO TORRES: Implementar lógica para insertar el elemento respetando la prioridad
+        NodoPrioridad<T> nuevo = new NodoPrioridad<>(elemento, prioridad);
+        int index = 0;
+        while (index < elementos.getTamanio() && ((NodoPrioridad<T>) elementos.obtener(index)).getPrioridad() >= prioridad) {
+            index++;
+        }
+        elementos.insertarEn(index, (T) nuevo);
     }
     /**
      * Elimina y retorna el primer elemento de la cola (de mayor prioridad).

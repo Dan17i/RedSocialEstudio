@@ -8,8 +8,9 @@ package co.edu.uniquindio.redsocial.models;
  * @author Sebastian Torres
  * @author Juan Soto
  * @since 2025-05-12
- * @param <Contenido> El tipo de los valores almacenados en el árbol.
+ * @param <Contenido>> El tipo de los valores almacenados en el árbol.
  */
+
 public class ArbolBinarioBusqueda<Contenido> {
 
     private NodoABB<Contenido> raiz;
@@ -43,10 +44,7 @@ public class ArbolBinarioBusqueda<Contenido> {
 
     public ListaEnlazada<Contenido> buscar(String clave) {
         return new ListaEnlazada<>();
-    }
-
-    public ListaEnlazada<Contenido> listarContenidosPorTema(String tema) {
-        return buscar(tema);
+        
     }
 
     public NodoABB<Contenido> getRaiz() {
@@ -54,6 +52,7 @@ public class ArbolBinarioBusqueda<Contenido> {
     }
 
     public void setRaiz(NodoABB<Contenido> raiz) {
+
         this.raiz = raiz;
     }
 
@@ -109,5 +108,9 @@ public class ArbolBinarioBusqueda<Contenido> {
             nodo = nodo.getIzquierda();
         }
         return nodo;
+    }
+
+    public ListaEnlazada<Contenido> listarContenidosPorTema(String tema) {
+        return buscar(tema);
     }
 }

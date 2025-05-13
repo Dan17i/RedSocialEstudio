@@ -45,6 +45,7 @@ public class GrupoEstudio {
     public void agregarMiembro(Estudiante estudiante) {
         if (estudiante != null && !miembros.contiene(estudiante)) {
             miembros.agregar(estudiante);
+            estudiante.unirseAGrupo(this);
         }
     }
     /**
@@ -60,6 +61,10 @@ public class GrupoEstudio {
      */
     public ListaEnlazada<Estudiante> obtenerSubgrupo(int desde, int hasta) {
         return miembros.sublista(desde, hasta);
+    }
+
+    public void publicarContenidoGrupo(Contenido contenido) {
+        /**TODO: Implementar logica para publicar contenido visible solo para miembros del grupo*/
     }
 
     // Getters y Setters

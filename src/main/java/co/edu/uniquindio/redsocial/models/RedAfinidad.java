@@ -24,6 +24,7 @@ public class RedAfinidad {
         this.grafoEstudiantes = grafoEstudiantes;
     }
 
+
     /**
      * Sugiere compañeros afines a un estudiante en base al número de intereses en común.
      *
@@ -77,6 +78,15 @@ public class RedAfinidad {
             }
         }
         return contador;
+
+  
+    public void agregarEstudiante(Estudiante estudiante) {grafoEstudiantes.agregarNodo(estudiante);}
+
+    public ListaEnlazada<ListaEnlazada<Estudiante>> detectarComunidades(){
+        return grafoEstudiantes.detectarComunidades();
+    }
+      
+
     }
 
     // Getters y Setters

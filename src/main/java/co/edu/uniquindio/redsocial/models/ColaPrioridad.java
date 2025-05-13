@@ -26,7 +26,6 @@ public class ColaPrioridad<T> {
      * @param elemento  Elemento a agregar.
      * @param prioridad Prioridad del elemento (a menor valor, mayor prioridad, por ejemplo).
      *
-     * TODO: Implementar la lógica de ordenamiento por prioridad al insertar.
      */
     public void encolar(T elemento, int prioridad) {
         NodoPrioridad<T> nuevo = new NodoPrioridad<>(elemento, prioridad);

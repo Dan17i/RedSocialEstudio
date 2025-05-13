@@ -14,7 +14,12 @@ class GrupoEstudio {
     public void agregarMiembro(Estudiante estudiante) {
         if (!miembros.contiene(estudiante)) {
             miembros.agregar(estudiante);
+            estudiante.unirseAGrupo(this);
         }
+    }
+
+    public void publicarContenidoGrupo(Contenido contenido) {
+        /**TODO: Implementar logica para publicar contenido visible solo para miembros del grupo*/
     }
 
     // Getters y Setters

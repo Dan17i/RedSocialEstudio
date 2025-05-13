@@ -11,7 +11,7 @@ class Grafo<T> {
         nodos.agregar(new NodoGrafo<>(dato));
     }
 
-    public void agregarArista(T nodo1, T nodo2) { /* Lógica para agregar arista  TODO TORRES*/ }
+    public void agregarArista(T nodo1, T nodo2, double peso) { /* Lógica para agregar arista  TODO TORRES*/ }
     public ListaEnlazada<T> buscarRutaCorta(T origen, T destino) { return new ListaEnlazada<>(); }
     public ListaEnlazada<ListaEnlazada<T>> detectarComunidades() { return new ListaEnlazada<>(); }
     public void actualizarConexiones(T nodo1, T nodo2, double peso) { /* Actualizar pesos */ }

@@ -105,7 +105,7 @@ class Grafo<T> {
      * @param dato El dato del nodo a buscar.
      * @return El nodo encontrado, o null si no se encuentra.
      */
-    private NodoGrafo<T> buscarNodo(T dato) {
+    public NodoGrafo<T> buscarNodo(T dato) {
         NodoLista<NodoGrafo<T>> nodoActual = nodos.getCabeza();  // Obtén la cabeza de la lista
         while (nodoActual != null) {
             if (nodoActual.getDato().equals(dato)) {

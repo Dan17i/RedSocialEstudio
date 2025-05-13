@@ -318,4 +318,8 @@ public class ListaEnlazada<T> implements Iterable<T>{
     public void setTamanio(int tamanio) {
         this.tamanio = tamanio;
     }
+
+    public boolean isEmpty() {
+        return cabeza == null;
+    }
 }

@@ -15,13 +15,21 @@ package co.edu.uniquindio.redsocial.models;
  */
 public class RedAfinidad {
     private Grafo<Estudiante> grafoEstudiantes;
-
+    private static RedAfinidad instancia;
     /**
      * Constructor que inicializa la red con un grafo de estudiantes.
+     *
      * @param grafoEstudiantes grafo que contiene los estudiantes y sus relaciones.
      */
     public RedAfinidad(Grafo<Estudiante> grafoEstudiantes) {
         this.grafoEstudiantes = grafoEstudiantes;
+    }
+
+    public static RedAfinidad getInstancia() {
+        if (instancia==null){
+            instancia = new RedAfinidad(null);
+        }
+        return instancia;
     }
 
 
@@ -79,22 +87,9 @@ public class RedAfinidad {
         }
         return contador;
 
-  
-    public void agregarEstudiante(Estudiante estudiante) {grafoEstudiantes.agregarNodo(estudiante);}
 
-    public ListaEnlazada<ListaEnlazada<Estudiante>> detectarComunidades(){
-        return grafoEstudiantes.detectarComunidades();
-    }
-      
 
-    }
-
-    // Getters y Setters
-    public Grafo<Estudiante> getGrafoEstudiantes() {
-        return grafoEstudiantes;
-    }
-
-    public void setGrafoEstudiantes(Grafo<Estudiante> grafoEstudiantes) {
-        this.grafoEstudiantes = grafoEstudiantes;
     }
 }
+
+

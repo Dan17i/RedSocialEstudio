@@ -89,8 +89,8 @@ public class Usuario {
 
         StringBuilder sb = new StringBuilder("Historial de Contenidos:\n");
         for (int i = 0; i < historialContenidos.getTamanio(); i++) {
-            RegistroVisualizacion registro = historialContenidos.obtener(i);
-            sb.append("- ").append(registro.toString()).append("\n");
+            Contenido contenido = historialContenidos.obtener(i);
+            sb.append("- ").append(contenido.toString()).append("\n");
         }
 
         return sb.toString();

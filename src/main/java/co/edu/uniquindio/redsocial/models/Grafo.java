@@ -38,12 +38,6 @@ class Grafo<T> {
         nodos.agregar(new NodoGrafo<>(dato));
     }
 
-    ContenidoDeArchivos
-    public void agregarArista(T nodo1, T nodo2, double peso) { /* Lógica para agregar arista  TODO TORRES*/ }
-    public ListaEnlazada<T> buscarRutaCorta(T origen, T destino) { return new ListaEnlazada<>(); }
-    public ListaEnlazada<ListaEnlazada<T>> detectarComunidades() { return new ListaEnlazada<>(); }
-    public void actualizarConexiones(T nodo1, T nodo2, double peso) { /* Actualizar pesos */ }
-
     /**
      * Agrega una arista entre dos nodos del grafo. Si los nodos no existen, primero los agrega.
      * Este método debe ser mejorado para implementar correctamente la lógica de la arista.

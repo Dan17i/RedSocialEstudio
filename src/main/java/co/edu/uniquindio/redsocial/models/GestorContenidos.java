@@ -16,15 +16,14 @@ import java.util.HashMap;
 public class GestorContenidos {
     private ArbolBinarioBusqueda<Contenido> arbolContenidos;
     private ListaEnlazada<Contenido> contenidoDestacado;
-    ContenidoDeArchivos
     private static GestorContenidos instancia;
 
 
     /**
      * Constructor del gestor de contenidos.
      *
-     * @param arbolContenidos     Árbol binario donde se almacenan los contenidos por tema.
-     * @param contenidoDestacado  Lista de contenidos destacados.
+     * @param arbolContenidos    Árbol binario donde se almacenan los contenidos por tema.
+     * @param contenidoDestacado Lista de contenidos destacados.
      */
 
     public GestorContenidos(ArbolBinarioBusqueda<Contenido> arbolContenidos,
@@ -32,7 +31,7 @@ public class GestorContenidos {
         this.arbolContenidos = arbolContenidos;
         this.contenidoDestacado = contenidoDestacado;
     }
-    ContenidoDeArchivos
+
 
     public static GestorContenidos getInstancia() {
         if (instancia == null) {
@@ -51,14 +50,8 @@ public class GestorContenidos {
 
         arbolContenidos.insertar(contenido.getTema(), contenido);
     }
-    ContenidoDeArchivos
 
-    public boolean eliminarContenido(String id) { return false; }
-    public ListaEnlazada<Contenido> buscarPorTema(String tema) { return arbolContenidos.listarContenidosPorTema(tema); }
-    public ListaEnlazada<Contenido> buscarPorAutor(String autor) { return new ListaEnlazada<>(); }
-    public void marcarComoDestacado(Contenido contenido) { if(!contenidoDestacado.buscar(contenido)){contenidoDestacado.agregar(contenido); }}
-    public HashMap<String, Integer> generarEstadisticas() { return new HashMap<>(); }
-=======
+
     /**
      * Elimina un contenido del árbol de contenidos por ID.
      * (Esta implementación debe buscar por ID manualmente)

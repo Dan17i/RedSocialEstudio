@@ -20,7 +20,7 @@ class RedAfinidad {
     public void conectarEstudiantes(Estudiante e1, Estudiante e2) {
         //Calcular peso basado en intereses comunes
         double peso= calcularSimilitud(e1, e2);
-        grafoEstudiantes.agregarArista(e1, e2, peso);
+        grafoEstudiantes.agregarArista(e1, e2);
     }
 
     private double calcularSimilitud(Estudiante e1, Estudiante e2) {

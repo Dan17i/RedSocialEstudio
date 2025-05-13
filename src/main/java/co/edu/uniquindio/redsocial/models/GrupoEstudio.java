@@ -12,7 +12,9 @@ class GrupoEstudio {
     }
 
     public void agregarMiembro(Estudiante estudiante) {
-        miembros.agregar(estudiante);
+        if (!miembros.contiene(estudiante)) {
+            miembros.agregar(estudiante);
+        }
     }
 
     // Getters y Setters

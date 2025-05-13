@@ -24,9 +24,63 @@ class Usuario {
     }
 
     // Getters y Setters
-    public String getEmail() { return email; }
-    public String getContraseña() { return contraseña; }
-    public String getNombre() { return nombre; }
-    public String getId() { return id; }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getContraseña() {
+        return contraseña;
+    }
+
+    public void setContraseña(String contraseña) {
+        this.contraseña = contraseña;
+    }
+
+    public ListaEnlazada<String> getIntereses() {
+        return intereses;
+    }
+
+    public void setIntereses(ListaEnlazada<String> intereses) {
+        this.intereses = intereses;
+    }
+
+    public ListaEnlazada<Contenido> getHistorialContenidos() {
+        return historialContenidos;
+    }
+
+    public void setHistorialContenidos(ListaEnlazada<Contenido> historialContenidos) {
+        this.historialContenidos = historialContenidos;
+    }
+
+    public ListaEnlazada<Valoracion> getValoraciones() {
+        return valoraciones;
+    }
+
+    public void setValoraciones(ListaEnlazada<Valoracion> valoraciones) {
+        this.valoraciones = valoraciones;
+    }
+
+
     // ... otros getters/setters del diagrama
 }

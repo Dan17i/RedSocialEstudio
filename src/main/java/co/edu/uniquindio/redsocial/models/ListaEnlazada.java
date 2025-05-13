@@ -68,4 +68,8 @@ class ListaEnlazada<T> {
     public void setCabeza(NodoLista<T> cabeza) { this.cabeza = cabeza; }
     public int getTamanio() { return tamanio; }
     public void setTamanio(int tamanio) { this.tamanio = tamanio; }
+
+    public boolean contiene(T estudiante) {
+
+    }
 }

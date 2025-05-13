@@ -69,7 +69,20 @@ class ListaEnlazada<T> {
     public int getTamanio() { return tamanio; }
     public void setTamanio(int tamanio) { this.tamanio = tamanio; }
 
-    public boolean contiene(T estudiante) {
-
+    /**
+     * Verifica si la lista contiene un elemento específico.
+     *
+     * @param elemento el elemento a buscar en la lista
+     * @return true si el elemento está presente, false en caso contrario
+     */
+    public boolean contiene(T elemento) {
+        NodoLista<T> actual = cabeza;
+        while (actual != null) {
+            if (actual.getDato().equals(elemento)) {
+                return true;
+            }
+            actual = actual.getSiguiente();
+        }
+        return false;
     }
 }

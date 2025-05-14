@@ -85,7 +85,7 @@ public class Usuario {
      * @return Historial de contenidos como cadena de texto.
      */
     public String verHistorial() {
-        if (historialContenidos.estaVacia()) {
+        if (historialContenidos.isEmpty()) {
             return "El historial de contenidos está vacío.";
         }
 

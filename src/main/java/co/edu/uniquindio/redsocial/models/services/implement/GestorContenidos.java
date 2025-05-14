@@ -1,4 +1,9 @@
-package co.edu.uniquindio.redsocial.models;
+package co.edu.uniquindio.redsocial.models.services.implement;
+
+import co.edu.uniquindio.redsocial.models.Contenido;
+import co.edu.uniquindio.redsocial.models.structures.ArbolBinarioBusqueda;
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+import co.edu.uniquindio.redsocial.models.structures.NodoLista;
 
 import java.util.HashMap;
 

@@ -1,4 +1,4 @@
-package co.edu.uniquindio.redsocial.models;
+package co.edu.uniquindio.redsocial.models.structures;
 
 /**
  * Clase que representa un nodo en una lista enlazada.

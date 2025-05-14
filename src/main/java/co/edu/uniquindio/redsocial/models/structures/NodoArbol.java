@@ -1,4 +1,4 @@
-package co.edu.uniquindio.redsocial.models;
+package co.edu.uniquindio.redsocial.models.structures;
 
 /**
  * Nodo utilizado en el árbol binario de búsqueda.

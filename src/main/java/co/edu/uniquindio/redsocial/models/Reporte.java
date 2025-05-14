@@ -1,5 +1,7 @@
 package co.edu.uniquindio.redsocial.models;
 
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+
 import java.time.LocalDateTime;
 /**
  * Clase que representa un reporte generado por el sistema.

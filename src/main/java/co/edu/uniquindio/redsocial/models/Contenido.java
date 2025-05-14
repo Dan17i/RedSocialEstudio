@@ -1,4 +1,8 @@
 package co.edu.uniquindio.redsocial.models;
+
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+import co.edu.uniquindio.redsocial.models.structures.NodoLista;
+
 /**
  * Clase que representa un contenido dentro de la red social educativa.
  * Cada contenido tiene un tema, autor, tipo y una lista de valoraciones asociadas.

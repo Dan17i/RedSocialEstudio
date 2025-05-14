@@ -1,4 +1,10 @@
-package co.edu.uniquindio.redsocial.models;
+package co.edu.uniquindio.redsocial.models.services.implement;
+
+import co.edu.uniquindio.redsocial.models.Estudiante;
+import co.edu.uniquindio.redsocial.models.Usuario;
+import co.edu.uniquindio.redsocial.models.structures.ColaPrioridad;
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+import co.edu.uniquindio.redsocial.models.structures.NodoLista;
 
 import java.util.UUID;
 

@@ -1,4 +1,4 @@
-package co.edu.uniquindio.redsocial.models;
+package co.edu.uniquindio.redsocial.models.structures;
 /**
  * Clase que representa un nodo genérico en una lista enlazada.
  * Un nodo contiene un dato de tipo genérico y una referencia al siguiente nodo en la lista.

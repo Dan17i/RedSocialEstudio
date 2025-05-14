@@ -1,4 +1,6 @@
-package co.edu.uniquindio.redsocial.models;
+package co.edu.uniquindio.redsocial.models.structures;
+
+import co.edu.uniquindio.redsocial.models.NodoLista;
 
 import java.util.Iterator;
 

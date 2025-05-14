@@ -1,4 +1,7 @@
-package co.edu.uniquindio.redsocial.models;
+package co.edu.uniquindio.redsocial.models.structures;
+
+import co.edu.uniquindio.redsocial.models.NodoGrafo;
+import co.edu.uniquindio.redsocial.models.NodoLista;
 
 /**
  * Clase que representa un Grafo genérico. Un grafo es una estructura de datos compuesta por nodos

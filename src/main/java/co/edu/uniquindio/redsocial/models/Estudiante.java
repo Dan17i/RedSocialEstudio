@@ -1,5 +1,10 @@
 package co.edu.uniquindio.redsocial.models;
 
+import co.edu.uniquindio.redsocial.models.services.implement.GestorContenidos;
+import co.edu.uniquindio.redsocial.models.structures.ColaPrioridad;
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+import co.edu.uniquindio.redsocial.models.structures.NodoLista;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -17,7 +22,7 @@ import java.util.Objects;
  */
 public class Estudiante<T> extends Usuario {
 
-    private ColaPrioridad<SolicitudAyuda> solicitudesAyuda;
+    private ColaPrioridad<ColaPrioridad.SolicitudAyuda> solicitudesAyuda;
     private ListaEnlazada<GrupoEstudio> gruposEstudio;
     /**
      * Constructor del estudiante.
@@ -34,7 +39,7 @@ public class Estudiante<T> extends Usuario {
      */
     public Estudiante(String id, String nombre, String email, String contrasenia,
                       ListaEnlazada<String> intereses, ListaEnlazada<Contenido> historialContenidos,
-                      ListaEnlazada<Valoracion> valoraciones, ColaPrioridad<SolicitudAyuda> solicitudesAyuda,
+                      ListaEnlazada<Valoracion> valoraciones, ColaPrioridad<ColaPrioridad.SolicitudAyuda> solicitudesAyuda,
                       ListaEnlazada<GrupoEstudio> gruposEstudio) {
         super(id, nombre, email, contrasenia, intereses, historialContenidos, valoraciones);
         this.solicitudesAyuda = solicitudesAyuda;
@@ -109,7 +114,7 @@ public class Estudiante<T> extends Usuario {
     /**
      * @return Cola de solicitudes de ayuda del estudiante.
      */
-    public ColaPrioridad<SolicitudAyuda> getSolicitudesAyuda() { return solicitudesAyuda; }
+    public ColaPrioridad<ColaPrioridad.SolicitudAyuda> getSolicitudesAyuda() { return solicitudesAyuda; }
     /**
      * @return Lista de grupos de estudio a los que pertenece el estudiante.
      */
@@ -117,7 +122,7 @@ public class Estudiante<T> extends Usuario {
     /**
      * @param solicitudesAyuda Nueva cola de solicitudes de ayuda.
      */
-    public void setSolicitudesAyuda(ColaPrioridad<SolicitudAyuda> solicitudesAyuda) {
+    public void setSolicitudesAyuda(ColaPrioridad<ColaPrioridad.SolicitudAyuda> solicitudesAyuda) {
         this.solicitudesAyuda = solicitudesAyuda;
     }
     /**

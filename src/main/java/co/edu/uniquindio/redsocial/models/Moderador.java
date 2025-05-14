@@ -1,7 +1,8 @@
 package co.edu.uniquindio.redsocial.models;
 
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * Clase que representa un moderador en la red social.

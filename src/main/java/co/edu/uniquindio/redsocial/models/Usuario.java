@@ -1,5 +1,7 @@
 package co.edu.uniquindio.redsocial.models;
 
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+
 /**
  * Representa un usuario registrado en la red social, incluyendo sus intereses,
  * historial de contenidos y valoraciones.

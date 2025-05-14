@@ -1,4 +1,5 @@
-package co.edu.uniquindio.redsocial.models;
+package co.edu.uniquindio.redsocial.models.structures;
+
 /**
  * Clase que representa un Árbol Binario de Búsqueda (ABB) genérico,
  * utilizado para almacenar pares clave-valor donde la clave es un String

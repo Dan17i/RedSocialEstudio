@@ -1,5 +1,7 @@
 package co.edu.uniquindio.redsocial.models;
 
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+
 /**
  * Representa un grupo de estudio compuesto por varios estudiantes y un tema específico.
  *

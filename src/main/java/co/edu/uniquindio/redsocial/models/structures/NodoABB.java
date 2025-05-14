@@ -1,4 +1,4 @@
-package co.edu.uniquindio.redsocial.models;
+package co.edu.uniquindio.redsocial.models.structures;
 /**
  * Clase que representa un nodo en un Árbol Binario de Búsqueda (ABB).
  * Cada nodo contiene una clave de tipo String, un valor de tipo genérico T,

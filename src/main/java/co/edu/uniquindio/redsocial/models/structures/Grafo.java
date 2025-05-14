@@ -16,7 +16,7 @@ import co.edu.uniquindio.redsocial.models.NodoLista;
  * @author Juan Soto
  * @since 2025-05-12
  */
-class Grafo<T> {
+public class Grafo<T> {
 
     /**
      * Lista de nodos que forman el grafo.

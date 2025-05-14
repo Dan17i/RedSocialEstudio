@@ -10,7 +10,7 @@ package co.edu.uniquindio.redsocial.models.structures;
  * @author Juan Soto
  * @since 2025-05-12
  */
-class NodoLista<T> {
+public class NodoLista<T> {
     private T dato;                // Valor almacenado en el nodo
     private NodoLista<T> siguiente; // Referencia al siguiente nodo de la lista
 

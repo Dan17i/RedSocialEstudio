@@ -10,7 +10,7 @@ package co.edu.uniquindio.redsocial.models.structures;
  * @author Juan Soto
  * @since 2025-05-12
  */
-class NodoGrafo<T> {
+public class NodoGrafo<T> {
     private T dato;                                  // Valor asociado al nodo
     private ListaEnlazada<NodoGrafo<T>> adyacentes;   // Lista de nodos adyacentes
     private ListaEnlazada<Double> pesos;             // Lista de pesos de las aristas

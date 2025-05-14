@@ -1,60 +1,79 @@
 package co.edu.uniquindio.redsocial.models.structures;
 
+import java.util.Objects;
 /**
- * Clase que representa un nodo en una lista de prioridad.
- * Cada nodo contiene un dato de tipo T, una prioridad de tipo entero,
- * y una referencia al siguiente nodo de la lista.
+ * Clase que representa un nodo en una estructura de prioridad.
+ * Cada nodo contiene un dato genérico, una prioridad numérica y una
+ * referencia al siguiente nodo en la estructura.
  *
- * @param <T> Tipo de dato que almacena el nodo.
+ * @param <T> Tipo del dato almacenado en el nodo.
  * @author Daniel Jurado
  * @author Sebastian Torres
  * @author Juan Soto
  * @since 2025-05-12
  */
-public class NodoPrioridad<T> {
-    private T dato;           // Valor almacenado en el nodo
-    private int prioridad;    // Prioridad asociada al nodo
-    private NodoPrioridad<T> siguiente; // Referencia al siguiente nodo en la lista
+public class NodoPrioridad<T> implements Comparable<NodoPrioridad<T>> {
 
+    private T dato;                        // Dato almacenado
+    private int prioridad;                 // Prioridad del nodo
+    private NodoPrioridad<T> siguiente;    // Enlace al siguiente nodo
     /**
-     * Constructor para crear un nodo con un dato, una prioridad,
-     * y un siguiente nodo inicializado como null.
+     * Crea un nodo con el dato y la prioridad proporcionados.
+     * La referencia al siguiente nodo se inicializa en null.
      *
-     * @param dato     Valor almacenado en el nodo.
-     * @param prioridad Prioridad asociada al nodo.
+     * @param dato      El valor que almacena el nodo (no puede ser null).
+     * @param prioridad La prioridad asociada al nodo.
+     * @throws IllegalArgumentException si el dato es null.
      */
     public NodoPrioridad(T dato, int prioridad) {
+        if (dato == null) {
+            throw new IllegalArgumentException("El dato no puede ser null");
+        }
         this.dato = dato;
         this.prioridad = prioridad;
-        this.siguiente = null;  // El siguiente nodo es null por defecto
+        this.siguiente = null;
     }
-
     /**
-     * Verifica si el nodo es el último en la lista.
-     * Un nodo es el último si su referencia 'siguiente' es null.
+     * Verifica si el nodo es el último de la lista (no tiene siguiente).
      *
-     * @return true si el nodo es el último, false en caso contrario.
+     * @return true si no hay siguiente nodo; false en caso contrario.
      */
     public boolean esUltimo() {
         return siguiente == null;
     }
-
     /**
-     * Devuelve una representación en cadena del nodo y su prioridad.
+     * Devuelve una representación textual del nodo.
      *
-     * @return Cadena con la representación del nodo.
+     * @return Cadena con el dato y su prioridad.
      */
     @Override
     public String toString() {
         return "NodoPrioridad{" + "dato=" + dato + ", prioridad=" + prioridad + '}';
     }
+    /**
+     * Compara este nodo con otro según la prioridad.
+     * Una menor prioridad numérica indica mayor prioridad lógica.
+     *
+     * @param otro El nodo a comparar.
+     * @return Un valor negativo si este nodo tiene mayor prioridad,
+     *         cero si son iguales,
+     *         positivo si este nodo tiene menor prioridad.
+     */
+    @Override
+    public int compareTo(NodoPrioridad<T> otro) {
+        return Integer.compare(this.prioridad, otro.prioridad);
+    }
 
     // Getters y Setters
+
     public T getDato() {
         return dato;
     }
 
     public void setDato(T dato) {
+        if (dato == null) {
+            throw new IllegalArgumentException("El dato no puede ser null");
+        }
         this.dato = dato;
     }
 
@@ -72,5 +91,18 @@ public class NodoPrioridad<T> {
 
     public void setSiguiente(NodoPrioridad<T> siguiente) {
         this.siguiente = siguiente;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof NodoPrioridad)) return false;
+        NodoPrioridad<?> otro = (NodoPrioridad<?>) obj;
+        return prioridad == otro.prioridad && Objects.equals(dato, otro.dato);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dato, prioridad);
     }
 }

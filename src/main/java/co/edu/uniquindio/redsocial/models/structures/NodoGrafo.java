@@ -2,7 +2,6 @@ package co.edu.uniquindio.redsocial.models.structures;
 
 import java.util.HashMap;
 import java.util.Map;
-
 /**
  * Clase que representa un nodo dentro de un grafo (dirigido o no dirigido).
  * Cada nodo tiene un dato genérico y un mapa de adyacencias, donde se almacenan
@@ -93,6 +92,29 @@ public class NodoGrafo<T> {
                     .append(" (Peso: ").append(entry.getValue()).append("), ");
         }
         return sb.toString();
+    }
+    /**
+     * Compara este nodo con otro objeto para verificar si son equivalentes.
+     * Dos nodos son iguales si contienen el mismo dato.
+     *
+     * @param obj El objeto a comparar.
+     * @return true si ambos objetos representan el mismo nodo; false en caso contrario.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        NodoGrafo<?> otro = (NodoGrafo<?>) obj;
+        return dato.equals(otro.dato);
+    }
+    /**
+     * Genera un código hash para este nodo basado en su dato.
+     *
+     * @return El código hash del dato contenido en el nodo.
+     */
+    @Override
+    public int hashCode() {
+        return dato.hashCode();
     }
 
     // Getters y Setters

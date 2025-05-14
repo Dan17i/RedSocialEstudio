@@ -69,6 +69,39 @@ public class Grafo<T> {
             }
         }
     }
+    /**
+     * Elimina un nodo del grafo junto con todas las conexiones hacia él desde otros nodos.
+     *
+     * @param dato El dato del nodo a eliminar.
+     */
+    public void eliminarNodo(T dato) {
+        NodoGrafo<T> nodoAEliminar = buscarNodo(dato);
+        if (nodoAEliminar == null) return;
+
+        // Eliminar el nodo de la lista de nodos
+        nodos.eliminar(nodoAEliminar);
+
+        // Eliminar referencias en otros nodos
+        for (NodoGrafo<T> nodo : nodos) {
+            nodo.eliminarAdyacente(nodoAEliminar);
+        }
+    }
+    /**
+     * Elimina una arista entre dos nodos del grafo.
+     *
+     * @param nodo1 El dato del primer nodo.
+     * @param nodo2 El dato del segundo nodo.
+     */
+    public void eliminarArista(T nodo1, T nodo2) {
+        NodoGrafo<T> n1 = buscarNodo(nodo1);
+        NodoGrafo<T> n2 = buscarNodo(nodo2);
+        if (n1 == null || n2 == null) return;
+
+        n1.eliminarAdyacente(n2);
+        if (!esDirigido) {
+            n2.eliminarAdyacente(n1);
+        }
+    }
 
     /**
      * Busca la ruta más corta entre dos nodos usando el algoritmo de Dijkstra.

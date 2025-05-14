@@ -116,6 +116,34 @@ public class ListaEnlazada<T> implements Iterable<T> {
     }
 
     /**
+     * Elimina la primera ocurrencia de un nodo que contenga el valor especificado.
+     *
+     * @param dato El dato a eliminar de la lista.
+     * @return true si se eliminó correctamente; false si el dato no se encontró.
+     */
+    public boolean eliminar(T dato) {
+        if (cabeza == null) return false;
+
+        if (cabeza.getDato().equals(dato)) {
+            cabeza = cabeza.getSiguiente();
+            tamanio--;
+            return true;
+        }
+
+        NodoLista<T> actual = cabeza;
+        while (actual.getSiguiente() != null) {
+            if (actual.getSiguiente().getDato().equals(dato)) {
+                actual.setSiguiente(actual.getSiguiente().getSiguiente());
+                tamanio--;
+                return true;
+            }
+            actual = actual.getSiguiente();
+        }
+        return false;
+    }
+
+
+    /**
      * Verifica si un elemento está en la lista.
      *
      * @param elemento elemento a buscar

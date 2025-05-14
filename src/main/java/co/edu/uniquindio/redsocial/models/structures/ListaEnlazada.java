@@ -1,15 +1,14 @@
 package co.edu.uniquindio.redsocial.models.structures;
 
-import co.edu.uniquindio.redsocial.models.NodoLista;
-
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Clase que representa una lista enlazada simple.
  *
  * @param <T> tipo de dato que contiene la lista
  */
-public class ListaEnlazada<T> implements Iterable<T>{
+public class ListaEnlazada<T> implements Iterable<T> {
 
     private NodoLista<T> cabeza;
     private int tamanio;
@@ -56,6 +55,19 @@ public class ListaEnlazada<T> implements Iterable<T>{
     }
 
     /**
+     * Reemplaza el elemento en la posición indicada con un nuevo dato.
+     * Este método es equivalente al método set().
+     *
+     * @param index posición del nodo a actualizar.
+     * @param dato nuevo dato para asignar.
+     * @throws IndexOutOfBoundsException si el índice está fuera de rango.
+     */
+    public void put(int index, T dato) {
+        set(index, dato);  // Reutiliza lógica ya implementada
+    }
+
+
+    /**
      * Agrega un nuevo elemento al final de la lista.
      *
      * @param elemento dato a agregar
@@ -73,6 +85,19 @@ public class ListaEnlazada<T> implements Iterable<T>{
         }
         tamanio++;
     }
+
+    /**
+     * Agrega un nuevo elemento al inicio de la lista enlazada.
+     *
+     * @param elemento el dato a insertar al inicio.
+     */
+    public void agregarInicio(T elemento) {
+        NodoLista<T> nuevo = new NodoLista<>(elemento);
+        nuevo.setSiguiente(cabeza);  // Apunta al nodo actual
+        cabeza = nuevo;              // Ahora este es el nuevo primero
+        tamanio++;
+    }
+
 
     /**
      * Elimina el nodo en la posición especificada.
@@ -104,20 +129,12 @@ public class ListaEnlazada<T> implements Iterable<T>{
      * Retorna el dato en una posición específica.
      *
      * @param posicion índice del dato
-     * @return el dato, o null si el índice no es válido
+     * @return el dato
+     * @throws IndexOutOfBoundsException si el índice no es válido
      */
     public T obtener(int posicion) {
-        if (posicion < 0 || posicion >= tamanio) return null;
+        validarIndice(posicion);
         return obtenerNodo(posicion).getDato();
-    }
-
-    /**
-     * Verifica si la lista está vacía.
-     *
-     * @return true si está vacía
-     */
-    public boolean estaVacia() {
-        return tamanio == 0;
     }
 
     /**
@@ -158,6 +175,7 @@ public class ListaEnlazada<T> implements Iterable<T>{
      *
      * @param index posición de inserción
      * @param dato elemento a insertar
+     * @throws IndexOutOfBoundsException si el índice es inválido
      */
     public void insertarEn(int index, T dato) {
         if (index < 0 || index > tamanio) {
@@ -186,13 +204,12 @@ public class ListaEnlazada<T> implements Iterable<T>{
      */
     private void validarIndice(int indice) {
         if (indice < 0 || indice >= tamanio) {
-            throw new IndexOutOfBoundsException("Índice fuera de rango");
+            throw new IndexOutOfBoundsException("Índice fuera de rango: " + indice);
         }
     }
 
     /**
      * Invierte el orden de los elementos en la lista.
-     * El nodo cabeza apunta ahora al último nodo original.
      */
     public void invertir() {
         NodoLista<T> anterior = null;
@@ -200,19 +217,19 @@ public class ListaEnlazada<T> implements Iterable<T>{
         NodoLista<T> siguiente;
 
         while (actual != null) {
-            siguiente = actual.getSiguiente();     // Guardar el siguiente
-            actual.setSiguiente(anterior);         // Invertir el puntero
-            anterior = actual;                     // Mover anterior hacia adelante
-            actual = siguiente;                    // Mover actual hacia adelante
+            siguiente = actual.getSiguiente();
+            actual.setSiguiente(anterior);
+            anterior = actual;
+            actual = siguiente;
         }
 
-        cabeza = anterior;  // Actualizar la nueva cabeza
+        cabeza = anterior;
     }
 
     /**
-     * Crea una copia profunda (clon) de la lista enlazada.
+     * Crea una copia profunda de la lista.
      *
-     * @return Una nueva ListaEnlazada con los mismos elementos en el mismo orden.
+     * @return Lista clonada
      */
     public ListaEnlazada<T> clonar() {
         ListaEnlazada<T> clon = new ListaEnlazada<>();
@@ -227,12 +244,11 @@ public class ListaEnlazada<T> implements Iterable<T>{
     }
 
     /**
-     * Retorna una sublista con los elementos desde el índice 'desde' (inclusive)
-     * hasta el índice 'hasta' (exclusivo).
+     * Retorna una sublista desde el índice 'desde' (inclusive) hasta 'hasta' (exclusivo).
      *
-     * @param desde Índice de inicio (inclusive)
-     * @param hasta Índice de fin (exclusivo)
-     * @return Sublista con los elementos del rango especificado
+     * @param desde Índice de inicio
+     * @param hasta Índice de fin (no incluido)
+     * @return Sublista con los elementos deseados
      * @throws IndexOutOfBoundsException si los índices no son válidos
      */
     public ListaEnlazada<T> sublista(int desde, int hasta) {
@@ -254,57 +270,42 @@ public class ListaEnlazada<T> implements Iterable<T>{
 
         return sublista;
     }
+
     /**
-     * Crea un iterador para recorrer los elementos de la lista enlazada de manera secuencial.
-     * Este método implementa la interfaz {@link Iterable} y devuelve un iterador que permite recorrer
-     * los elementos de la lista, uno por uno, sin necesidad de acceder directamente a los nodos.
+     * Retorna un iterador para recorrer secuencialmente los elementos de la lista.
      *
-     * @return Un iterador {@link Iterator} que permite recorrer los elementos de la lista enlazada.
-     * El iterador devuelve cada elemento en orden desde el inicio hasta el final de la lista.
-     *
-     * @throws IllegalStateException Si se intenta llamar al método {@link Iterator#next()} cuando no hay más elementos
-     * en la lista (es decir, si {@link Iterator#hasNext()} retorna {@code false}).
+     * @return Iterador que implementa {@link Iterator}
      */
     @Override
     public Iterator<T> iterator() {
-        return new Iterator<T>() {
-            private NodoLista<T> actual = cabeza;  // NodoLista<T> es el tipo de nodo que contiene los elementos de la lista
-
-            /**
-             * Verifica si hay más elementos en la lista para iterar.
-             * Este método devuelve {@code true} si el iterador puede avanzar al siguiente elemento,
-             * es decir, si aún hay elementos en la lista.
-             *
-             * @return {@code true} si hay más elementos en la lista; {@code false} si se ha alcanzado el final de la lista.
-             */
-            @Override
-            public boolean hasNext() {
-                return actual != null;  // Si 'actual' es null, significa que hemos llegado al final de la lista
-            }
-
-            /**
-             * Devuelve el siguiente elemento de la lista y avanza el iterador.
-             * Este método obtiene el valor del nodo actual y mueve el iterador al siguiente nodo.
-             *
-             * @return El siguiente valor en la lista.
-             *
-             * @throws IllegalStateException Si se llama a este método cuando no hay más elementos en la lista.
-             */
-            @Override
-            public T next() {
-                if (hasNext()) {
-                    T valor = actual.getDato();  // Se obtiene el valor del nodo actual
-                    actual = actual.getSiguiente();  // Se mueve al siguiente nodo
-                    return valor;
-                }
-                throw new IllegalStateException("No more elements");  // Si no hay más elementos, se lanza una excepción
-            }
-        };
+        return new ListaIterator();
     }
 
+    /**
+     * Clase privada que implementa un iterador interno para la lista enlazada.
+     */
+    private class ListaIterator implements Iterator<T> {
 
+        private NodoLista<T> actual = cabeza;
+
+        @Override
+        public boolean hasNext() {
+            return actual != null;
+        }
+
+        @Override
+        public T next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException("No hay más elementos en la lista");
+            }
+            T dato = actual.getDato();
+            actual = actual.getSiguiente();
+            return dato;
+        }
+    }
 
     // Getters y Setters
+
     public NodoLista<T> getCabeza() {
         return cabeza;
     }
@@ -321,6 +322,11 @@ public class ListaEnlazada<T> implements Iterable<T>{
         this.tamanio = tamanio;
     }
 
+    /**
+     * Verifica si la lista está vacía.
+     *
+     * @return true si no hay elementos
+     */
     public boolean isEmpty() {
         return cabeza == null;
     }

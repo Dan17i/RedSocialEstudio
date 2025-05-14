@@ -1,7 +1,6 @@
 package co.edu.uniquindio.redsocial.models.structures;
 
-import co.edu.uniquindio.redsocial.models.NodoGrafo;
-import co.edu.uniquindio.redsocial.models.NodoLista;
+import java.util.*;
 
 /**
  * Clase que representa un Grafo genérico. Un grafo es una estructura de datos compuesta por nodos
@@ -18,87 +17,163 @@ import co.edu.uniquindio.redsocial.models.NodoLista;
  */
 public class Grafo<T> {
 
-    /**
-     * Lista de nodos que forman el grafo.
-     */
-    private ListaEnlazada<NodoGrafo<T>> nodos = new ListaEnlazada<>();
+    private ListaEnlazada<NodoGrafo<T>> nodos;
+    private boolean esDirigido;
 
     /**
-     * Constructor que inicializa el grafo con una lista de nodos.
-     *
-     * @param nodos Lista de nodos inicial para el grafo.
+     * Constructor que inicializa un grafo no dirigido vacío.
      */
-    public Grafo(ListaEnlazada<NodoGrafo<T>> nodos) {
-        this.nodos = nodos;
+    public Grafo() {
+        this(false);
     }
 
     /**
-     * Agrega un nuevo nodo al grafo.
+     * Constructor que permite definir si el grafo es dirigido.
+     *
+     * @param esDirigido true si el grafo es dirigido, false si no
+     */
+    public Grafo(boolean esDirigido) {
+        this.nodos = new ListaEnlazada<>();
+        this.esDirigido = esDirigido;
+    }
+
+    /**
+     * Agrega un nuevo nodo al grafo si no existe previamente.
      *
      * @param dato El dato que representa el nodo a agregar.
      */
     public void agregarNodo(T dato) {
-        nodos.agregar(new NodoGrafo<>(dato));
+        if (buscarNodo(dato) == null) {
+            nodos.agregar(new NodoGrafo<>(dato));
+        }
     }
 
     /**
-     * Agrega una arista entre dos nodos del grafo. Si los nodos no existen, primero los agrega.
-     * Este método debe ser mejorado para implementar correctamente la lógica de la arista.
+     * Agrega una arista entre dos nodos del grafo con peso 1.0 por defecto.
+     * Si los nodos no existen, no se hace nada.
+     * Para grafos no dirigidos, la conexión es bidireccional.
      *
      * @param nodo1 El primer nodo de la arista.
      * @param nodo2 El segundo nodo de la arista.
      */
     public void agregarArista(T nodo1, T nodo2) {
-        // Lógica para agregar la arista entre nodo1 y nodo2
-        // Asegurarse de que ambos nodos existan y conectar sus respectivos enlaces
         NodoGrafo<T> n1 = buscarNodo(nodo1);
         NodoGrafo<T> n2 = buscarNodo(nodo2);
 
-        if (n1 != null && n2 != null) {
-            n1.agregarAdyacente(n2, 1.0); // Asignar un peso por defecto de 1.0, puedes cambiarlo si es necesario
-            n2.agregarAdyacente(n1, 1.0); // Si el grafo es no dirigido
+        if (n1 == null || n2 == null) return;
+
+        if (!n1.esAdyacente(n2)) {
+            n1.agregarAdyacente(n2, 1.0);
+            if (!esDirigido) {
+                n2.agregarAdyacente(n1, 1.0);
+            }
         }
     }
 
     /**
-     * Busca la ruta más corta entre dos nodos usando el algoritmo de búsqueda deseado (por ejemplo, Dijkstra).
+     * Busca la ruta más corta entre dos nodos usando el algoritmo de Dijkstra.
      *
      * @param origen Nodo de inicio.
      * @param destino Nodo de destino.
-     * @return Lista de nodos que representan la ruta más corta.
+     * @return Lista de nodos que representan la ruta más corta o null si no hay conexión.
      */
     public ListaEnlazada<T> buscarRutaCorta(T origen, T destino) {
-        // Implementar algoritmo de ruta más corta (por ejemplo, Dijkstra)
-        return new ListaEnlazada<>(); // Retorna una lista vacía por ahora
+        NodoGrafo<T> nodoOrigen = buscarNodo(origen);
+        NodoGrafo<T> nodoDestino = buscarNodo(destino);
+
+        if (nodoOrigen == null || nodoDestino == null) {
+            return null;
+        }
+
+        Map<NodoGrafo<T>, Double> distancias = new HashMap<>();
+        Map<NodoGrafo<T>, NodoGrafo<T>> predecesores = new HashMap<>();
+        Set<NodoGrafo<T>> visitados = new HashSet<>();
+
+        for (NodoGrafo<T> nodo : nodos) {
+            distancias.put(nodo, Double.MAX_VALUE);
+        }
+        distancias.put(nodoOrigen, 0.0);
+
+        while (visitados.size() < nodos.getTamanio()) {
+            NodoGrafo<T> actual = obtenerNodoDistanciaMinima(distancias, visitados);
+            if (actual == null) break;
+
+            visitados.add(actual);
+
+            // Recorrer los adyacentes del nodo actual
+            for (Map.Entry<NodoGrafo<T>, Double> vecino : actual.getAdyacentes().entrySet()) {
+                NodoGrafo<T> adyacente = vecino.getKey();
+                double peso = vecino.getValue();  // Obtener el peso directamente del Map
+
+                if (!visitados.contains(adyacente)) {
+                    double nuevaDistancia = distancias.get(actual) + peso;
+                    if (nuevaDistancia < distancias.get(adyacente)) {
+                        distancias.put(adyacente, nuevaDistancia);
+                        predecesores.put(adyacente, actual);
+                    }
+                }
+            }
+        }
+
+
+        if (distancias.get(nodoDestino) == Double.MAX_VALUE) {
+            return null;
+        }
+
+        return reconstruirRuta(nodoDestino, predecesores);
+    }
+
+    private NodoGrafo<T> obtenerNodoDistanciaMinima(Map<NodoGrafo<T>, Double> distancias, Set<NodoGrafo<T>> visitados) {
+        NodoGrafo<T> minimo = null;
+        double menorDistancia = Double.MAX_VALUE;
+
+        for (NodoGrafo<T> nodo : distancias.keySet()) {
+            if (!visitados.contains(nodo) && distancias.get(nodo) < menorDistancia) {
+                menorDistancia = distancias.get(nodo);
+                minimo = nodo;
+            }
+        }
+        return minimo;
+    }
+
+    private ListaEnlazada<T> reconstruirRuta(NodoGrafo<T> destino, Map<NodoGrafo<T>, NodoGrafo<T>> predecesores) {
+        ListaEnlazada<T> ruta = new ListaEnlazada<>();
+        NodoGrafo<T> actual = destino;
+
+        while (actual != null) {
+            ruta.agregarInicio(actual.getDato());
+            actual = predecesores.get(actual);
+        }
+
+        return ruta;
     }
 
     /**
-     * Detecta comunidades dentro del grafo. Este método puede usar algún algoritmo de detección de comunidades
-     * como el algoritmo de Louvain.
+     * Detecta comunidades dentro del grafo. Método de ejemplo a implementar.
      *
-     * @return Lista de comunidades, cada una representada por una lista de nodos.
+     * @return Lista vacía por ahora.
      */
     public ListaEnlazada<ListaEnlazada<T>> detectarComunidades() {
-        return new ListaEnlazada<>(); // Lista vacía por ahora, implementar lógica más adelante
+        return new ListaEnlazada<>();
     }
 
     /**
-     * Actualiza las conexiones entre dos nodos, asignando un peso a la arista entre ellos.
-     * El peso podría representar distancia, tiempo, o cualquier otro factor relevante.
+     * Actualiza o agrega una conexión entre dos nodos con un peso dado.
+     * Para grafos no dirigidos, la conexión es bidireccional.
      *
-     * @param nodo1 El primer nodo de la conexión.
-     * @param nodo2 El segundo nodo de la conexión.
-     * @param peso El peso de la arista entre los dos nodos.
+     * @param nodo1 Nodo origen.
+     * @param nodo2 Nodo destino.
+     * @param peso Peso de la arista.
      */
     public void actualizarConexiones(T nodo1, T nodo2, double peso) {
-        // Actualizar pesos entre nodo1 y nodo2, asegurarse de que los nodos existan
         NodoGrafo<T> n1 = buscarNodo(nodo1);
         NodoGrafo<T> n2 = buscarNodo(nodo2);
 
-        if (n1 != null && n2 != null) {
-            // Actualizamos los pesos entre los nodos
-            n1.actualizarPeso(n2, peso);
-            n2.actualizarPeso(n1, peso); // Si el grafo es no dirigido
+        if (n1 == null || n2 == null) return;
+
+        n1.getAdyacentes().put(n2, peso);
+        if (!esDirigido) {
+            n2.getAdyacentes().put(n1, peso);
         }
     }
 
@@ -109,23 +184,31 @@ public class Grafo<T> {
      * @return El nodo encontrado, o null si no se encuentra.
      */
     public NodoGrafo<T> buscarNodo(T dato) {
-        NodoLista<NodoGrafo<T>> nodoActual = nodos.getCabeza();  // Obtén la cabeza de la lista
-        while (nodoActual != null) {
-            if (nodoActual.getDato().equals(dato)) {
-                return nodoActual.getDato();   // Cast al tipo correcto
+        NodoLista<NodoGrafo<T>> actual = nodos.getCabeza();
+        while (actual != null) {
+            if (actual.getDato().getDato().equals(dato)) {
+                return actual.getDato();
             }
-            nodoActual = nodoActual.getSiguiente();  // Usar getSiguiente() para avanzar
+            actual = actual.getSiguiente();
         }
         return null;
     }
 
-
     // Getters y Setters
+
     public ListaEnlazada<NodoGrafo<T>> getNodos() {
         return nodos;
     }
 
     public void setNodos(ListaEnlazada<NodoGrafo<T>> nodos) {
         this.nodos = nodos;
+    }
+
+    public boolean isDirigido() {
+        return esDirigido;
+    }
+
+    public void setEsDirigido(boolean esDirigido) {
+        this.esDirigido = esDirigido;
     }
 }

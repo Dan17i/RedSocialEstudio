@@ -17,7 +17,11 @@ public class ArbolBinarioBusqueda<Contenido> {
     private NodoABB<Contenido> raiz;
 
     public ArbolBinarioBusqueda(NodoABB<Contenido> raiz) {
+
         this.raiz = raiz;
+    }
+    public ArbolBinarioBusqueda() {
+        this.raiz = null;
     }
 
     public void insertar(String clave, Contenido valor) {

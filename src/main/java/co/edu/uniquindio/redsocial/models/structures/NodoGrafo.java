@@ -1,8 +1,12 @@
 package co.edu.uniquindio.redsocial.models.structures;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * Clase que representa un nodo en un grafo dirigido o no dirigido.
- * Cada nodo tiene un valor de tipo T y una lista de nodos adyacentes con sus respectivos pesos.
+ * Clase que representa un nodo dentro de un grafo (dirigido o no dirigido).
+ * Cada nodo tiene un dato genérico y un mapa de adyacencias, donde se almacenan
+ * los nodos vecinos junto con el peso de la arista que los conecta.
  *
  * @param <T> Tipo de dato que almacena el nodo.
  * @author Daniel Jurado
@@ -11,97 +15,88 @@ package co.edu.uniquindio.redsocial.models.structures;
  * @since 2025-05-12
  */
 public class NodoGrafo<T> {
-    private T dato;                                  // Valor asociado al nodo
-    private ListaEnlazada<NodoGrafo<T>> adyacentes;   // Lista de nodos adyacentes
-    private ListaEnlazada<Double> pesos;             // Lista de pesos de las aristas
+
+    private T dato;  // Valor asociado al nodo
+    private Map<NodoGrafo<T>, Double> adyacentes;  // Mapa de nodos adyacentes y sus pesos
+
     /**
-     * Constructor que crea un nodo con un valor y inicializa las listas de adyacentes y pesos.
+     * Constructor que crea un nodo con el dato especificado.
      *
-     * @param dato Valor del nodo.
+     * @param dato Valor o entidad que representa este nodo.
      */
     public NodoGrafo(T dato) {
         this.dato = dato;
-        this.adyacentes = new ListaEnlazada<>();
-        this.pesos = new ListaEnlazada<>();
-    }
-    /**
-     * Agrega un nodo adyacente con su peso a la lista de adyacentes.
-     *
-     * @param nodo Nodo adyacente a agregar.
-     * @param peso Peso de la arista entre el nodo actual y el nodo adyacente.
-     */
-    public void agregarAdyacente(NodoGrafo<T> nodo, Double peso) {
-        adyacentes.agregar(nodo);
-        pesos.agregar(peso);
-    }
-    /**
-     * Actualiza el peso de la arista entre el nodo actual y el nodo adyacente especificado.
-     *
-     * @param nodo Nodo adyacente cuya arista se actualizará.
-     * @param peso Nuevo peso de la arista.
-     */
-    public void actualizarPeso(NodoGrafo<T> nodo, double peso) {
-        // Obtener el índice del nodo adyacente
-        int indice = adyacentes.obtenerIndice(nodo);
-        if (indice != -1) {  // Si el nodo adyacente existe en la lista
-            pesos.set(indice, peso);  // Actualizamos el peso en la lista de pesos
-        }
+        this.adyacentes = new HashMap<>();
     }
 
     /**
-     * Elimina un nodo adyacente y su peso de las listas correspondientes.
+     * Agrega una adyacencia desde este nodo hacia otro nodo con un peso determinado.
+     *
+     * @param nodo Nodo adyacente.
+     * @param peso Peso de la arista entre los nodos.
+     */
+    public void agregarAdyacente(NodoGrafo<T> nodo, Double peso) {
+        adyacentes.put(nodo, peso);
+    }
+
+    /**
+     * Elimina la conexión entre este nodo y el nodo especificado.
      *
      * @param nodo Nodo adyacente a eliminar.
      */
     public void eliminarAdyacente(NodoGrafo<T> nodo) {
-        int indice = adyacentes.obtenerIndice(nodo);
-        if (indice != -1) {
-            adyacentes.eliminar(indice);  // Eliminar nodo adyacente
-            pesos.eliminar(indice);  // Eliminar peso asociado
-        }
+        adyacentes.remove(nodo);
     }
 
     /**
-     * Obtiene el peso de la arista entre el nodo actual y un nodo adyacente.
+     * Actualiza el peso de la arista hacia un nodo adyacente.
+     * Si no existe la conexión, se agregará.
      *
-     * @param nodo Nodo adyacente cuyo peso se quiere obtener.
-     * @return Peso de la arista entre el nodo actual y el nodo adyacente, o -1 si no está adyacente.
+     * @param nodo Nodo adyacente.
+     * @param peso Nuevo peso de la arista.
+     */
+    public void actualizarPeso(NodoGrafo<T> nodo, double peso) {
+        adyacentes.put(nodo, peso);
+    }
+
+    /**
+     * Obtiene el peso de la conexión hacia un nodo adyacente.
+     *
+     * @param nodo Nodo adyacente.
+     * @return Peso de la arista o -1 si no existe conexión.
      */
     public double getPeso(NodoGrafo<T> nodo) {
-        int indice = adyacentes.obtenerIndice(nodo);
-        if (indice != -1) {
-            return pesos.obtener(indice);  // Devolver peso correspondiente
-        }
-        return -1;  // Retornar -1 si el nodo no es adyacente
+        return adyacentes.getOrDefault(nodo, -1.0);
     }
 
     /**
-     * Verifica si un nodo es adyacente al nodo actual.
+     * Verifica si el nodo especificado es adyacente a este nodo.
      *
-     * @param nodo Nodo a verificar si es adyacente.
-     * @return true si el nodo es adyacente, false de lo contrario.
+     * @param nodo Nodo a verificar.
+     * @return true si es adyacente, false en caso contrario.
      */
     public boolean esAdyacente(NodoGrafo<T> nodo) {
-        return adyacentes.obtenerIndice(nodo) != -1;  // Si el nodo existe en la lista de adyacentes
+        return adyacentes.containsKey(nodo);
     }
 
     /**
-     * Devuelve una representación en cadena del nodo y sus adyacentes con sus pesos.
+     * Devuelve una representación en cadena del nodo y sus adyacentes.
      *
-     * @return Cadena que representa el nodo y sus adyacentes.
+     * @return Cadena con el dato y los vecinos con sus pesos.
      */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Nodo: ").append(dato.toString()).append("\nAdyacentes: ");
-        for (int i = 0; i < adyacentes.getTamanio(); i++) {
-            sb.append(adyacentes.obtener(i).getDato().toString())
-                    .append(" (Peso: ").append(pesos.obtener(i)).append(") ");
+        sb.append("Nodo: ").append(dato).append("\nAdyacentes: ");
+        for (Map.Entry<NodoGrafo<T>, Double> entry : adyacentes.entrySet()) {
+            sb.append(entry.getKey().dato)
+                    .append(" (Peso: ").append(entry.getValue()).append("), ");
         }
         return sb.toString();
     }
 
     // Getters y Setters
+
     public T getDato() {
         return dato;
     }
@@ -110,19 +105,11 @@ public class NodoGrafo<T> {
         this.dato = dato;
     }
 
-    public ListaEnlazada<NodoGrafo<T>> getAdyacentes() {
+    public Map<NodoGrafo<T>, Double> getAdyacentes() {
         return adyacentes;
     }
 
-    public void setAdyacentes(ListaEnlazada<NodoGrafo<T>> adyacentes) {
+    public void setAdyacentes(Map<NodoGrafo<T>, Double> adyacentes) {
         this.adyacentes = adyacentes;
-    }
-
-    public ListaEnlazada<Double> getPesos() {
-        return pesos;
-    }
-
-    public void setPesos(ListaEnlazada<Double> pesos) {
-        this.pesos = pesos;
     }
 }

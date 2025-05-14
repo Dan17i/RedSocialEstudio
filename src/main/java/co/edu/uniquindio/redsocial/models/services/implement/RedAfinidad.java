@@ -4,6 +4,7 @@ import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.structures.Grafo;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import co.edu.uniquindio.redsocial.models.structures.NodoGrafo;
+import co.edu.uniquindio.redsocial.models.services.interf.IRedAfinidad;
 
 /**
  * Clase que representa una red de afinidad entre estudiantes,
@@ -18,7 +19,7 @@ import co.edu.uniquindio.redsocial.models.structures.NodoGrafo;
  * @author Juan Soto
  * @since 2025-05-12
  */
-public class RedAfinidad {
+public class RedAfinidad implements  IRedAfinidad{
     private Grafo<Estudiante> grafoEstudiantes;
     private static RedAfinidad instancia;
     /**
@@ -32,7 +33,8 @@ public class RedAfinidad {
 
     public static RedAfinidad getInstancia() {
         if (instancia==null){
-            instancia = new RedAfinidad(null);
+            instancia = new RedAfinidad(new Grafo<>());
+
         }
         return instancia;
     }

@@ -5,7 +5,6 @@ import co.edu.uniquindio.redsocial.models.structures.Grafo;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import co.edu.uniquindio.redsocial.models.structures.NodoGrafo;
 import co.edu.uniquindio.redsocial.models.services.interf.IRedAfinidad;
-
 /**
  * Clase que representa una red de afinidad entre estudiantes,
  * utilizando un grafo para establecer relaciones y sugerencias
@@ -38,8 +37,6 @@ public class RedAfinidad implements  IRedAfinidad{
         }
         return instancia;
     }
-
-
     /**
      * Sugiere compañeros afines a un estudiante en base al número de intereses en común.
      *

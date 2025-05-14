@@ -1,5 +1,12 @@
 package co.edu.uniquindio.redsocial.models.services.implement;
 
+/*
+ *
+ *
+ *
+ *
+ * */
+
 import co.edu.uniquindio.redsocial.models.Contenido;
 import co.edu.uniquindio.redsocial.models.services.interf.IGestorContenidos;
 import co.edu.uniquindio.redsocial.models.structures.ArbolBinarioBusqueda;
@@ -49,7 +56,7 @@ public class GestorContenidos implements IGestorContenidos {
 
     @Override
     public ListaEnlazada<Contenido> buscarPorTema(String tema) {
-        return arbolContenidos.listarContenidosPorTema(tema);
+        return arbolContenidos.listarContenidosPorTema(tema);  // Ahora devuelve la lista filtrada por tema
     }
 
     @Override

@@ -1,5 +1,6 @@
 package co.edu.uniquindio.redsocial.models;
 
+import co.edu.uniquindio.redsocial.models.services.interf.Tematico;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import co.edu.uniquindio.redsocial.models.structures.NodoLista;
 
@@ -12,7 +13,7 @@ import co.edu.uniquindio.redsocial.models.structures.NodoLista;
  * @author Juan Soto
  * @since 2025-05-12
  */
-public class Contenido {
+public class Contenido  implements Tematico {
     private String id;
     private String tema;
     private String autor;
@@ -89,4 +90,5 @@ public class Contenido {
      * @param valoraciones Nueva lista de valoraciones.
      */
     public void setValoraciones(ListaEnlazada<Valoracion> valoraciones) { this.valoraciones = valoraciones; }
+
 }

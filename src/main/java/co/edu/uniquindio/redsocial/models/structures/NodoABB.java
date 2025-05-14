@@ -1,29 +1,18 @@
 package co.edu.uniquindio.redsocial.models.structures;
+
 /**
  * Clase que representa un nodo en un Árbol Binario de Búsqueda (ABB).
  * Cada nodo contiene una clave de tipo String, un valor de tipo genérico T,
  * y dos referencias a sus nodos izquierdo y derecho.
  *
  * @param <T> Tipo de datos que almacena el valor del nodo.
- * @author Daniel Jurado
- * @author Sebastian Torres
- * @author Juan Soto
- * @since 2025-05-12
  */
 class NodoABB<T> {
-    private String clave;          // Clave única asociada al nodo
-    private T valor;               // Valor asociado al nodo
-    private NodoABB<T> izquierda;  // Nodo izquierdo del árbol
-    private NodoABB<T> derecha;    // Nodo derecho del árbol
+    private String clave;
+    private T valor;
+    private NodoABB<T> izquierda;
+    private NodoABB<T> derecha;
 
-    /**
-     * Constructor que crea un nodo con la clave, valor y referencias a los nodos izquierdo y derecho.
-     *
-     * @param clave     Clave única del nodo
-     * @param valor     Valor almacenado en el nodo
-     * @param izquierda Nodo izquierdo del árbol
-     * @param derecha   Nodo derecho del árbol
-     */
     public NodoABB(String clave, T valor, NodoABB<T> izquierda, NodoABB<T> derecha) {
         this.clave = clave;
         this.valor = valor;
@@ -31,70 +20,52 @@ class NodoABB<T> {
         this.derecha = derecha;
     }
 
-    /**
-     * Constructor que crea un nodo con la clave y el valor, sin referencias a los nodos izquierdo y derecho.
-     * Los nodos izquierdo y derecho se inicializan como null.
-     *
-     * @param clave     Clave única del nodo
-     * @param valor     Valor almacenado en el nodo
-     */
     public NodoABB(String clave, T valor) {
-        this(clave, valor, null, null);  // Reutiliza el otro constructor
+        this(clave, valor, null, null);
     }
 
-    // Getters y Setters
+    public String getClave() { return clave; }
+    public void setClave(String clave) { this.clave = clave; }
 
-    public String getClave() {
-        return clave;
-    }
+    public T getValor() { return valor; }
+    public void setValor(T valor) { this.valor = valor; }
 
-    public void setClave(String clave) {
-        this.clave = clave;
-    }
+    public NodoABB<T> getIzquierda() { return izquierda; }
+    public void setIzquierda(NodoABB<T> izquierda) { this.izquierda = izquierda; }
 
-    public T getValor() {
-        return valor;
-    }
-
-    public void setValor(T valor) {
-        this.valor = valor;
-    }
-
-    public NodoABB<T> getIzquierda() {
-        return izquierda;
-    }
-
-    public void setIzquierda(NodoABB<T> izquierda) {
-        this.izquierda = izquierda;
-    }
-
-    public NodoABB<T> getDerecha() {
-        return derecha;
-    }
-
-    public void setDerecha(NodoABB<T> derecha) {
-        this.derecha = derecha;
-    }
-
+    public NodoABB<T> getDerecha() { return derecha; }
+    public void setDerecha(NodoABB<T> derecha) { this.derecha = derecha; }
     /**
-     * Método que devuelve una representación en cadena del nodo.
+     * Verifica si el nodo no tiene hijos.
      *
-     * @return Cadena con la clave y el valor del nodo.
+     * @return true si el nodo es una hoja, false en caso contrario.
      */
+    public boolean isLeaf() {
+        return izquierda == null && derecha == null;
+    }
+    /**
+     * Verifica si el nodo tiene exactamente un hijo.
+     *
+     * @return true si tiene solo un hijo, false si tiene ambos o ninguno.
+     */
+    public boolean hasOnlyOneChild() {
+        return (izquierda == null && derecha != null) || (izquierda != null && derecha == null);
+    }
+    /**
+     * Retorna el único hijo del nodo si tiene uno.
+     *
+     * @return Referencia al único hijo o null si tiene ambos o ninguno.
+     */
+    public NodoABB<T> getOnlyChild() {
+        if (izquierda != null && derecha == null) return izquierda;
+        if (derecha != null && izquierda == null) return derecha;
+        return null;
+    }
     @Override
     public String toString() {
         return "NodoABB{" +
                 "clave='" + clave + '\'' +
                 ", valor=" + valor +
                 '}';
-    }
-
-    /**
-     * Método que determina si el nodo es una hoja (no tiene hijos).
-     *
-     * @return true si el nodo es una hoja, false si tiene al menos un hijo.
-     */
-    public boolean isLeaf() {
-        return izquierda == null && derecha == null;
     }
 }

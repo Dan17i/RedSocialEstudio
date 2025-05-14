@@ -141,6 +141,29 @@ public class ListaEnlazada<T> implements Iterable<T> {
         }
         return false;
     }
+    /**
+     * Elimina el nodo en la posición especificada y retorna su dato.
+     *
+     * @param posicion índice del nodo a eliminar
+     * @return Dato del nodo eliminado
+     */
+    public T eliminarEn(int posicion) {
+        validarIndice(posicion);
+        T dato;
+
+        if (posicion == 0) {
+            dato = cabeza.getDato();
+            cabeza = cabeza.getSiguiente();
+        } else {
+            NodoLista<T> anterior = obtenerNodo(posicion - 1);
+            NodoLista<T> nodoAEliminar = anterior.getSiguiente();
+            dato = nodoAEliminar.getDato();
+            anterior.setSiguiente(nodoAEliminar.getSiguiente());
+        }
+
+        tamanio--;
+        return dato;
+    }
 
 
     /**

@@ -3,106 +3,124 @@ package co.edu.uniquindio.redsocial.models.structures;
 import co.edu.uniquindio.redsocial.models.Estudiante;
 
 /**
- * Clase genérica que representa una cola de prioridad basada en una lista enlazada.
- * Los elementos se encolan junto con una prioridad, y se atienden en orden según esa prioridad.
+ * Cola de prioridad basada en lista enlazada.
+ * Los elementos se almacenan como NodoPrioridad<T> y se insertan
+ * ordenadamente de acuerdo a su prioridad (menor valor = mayor prioridad).
  *
+ * @param <T> Tipo de dato almacenado en la cola.
  * @author Daniel Jurado
  * @author Sebastian Torres
  * @author Juan Soto
  * @since 2025-05-12
- * @param <T> Tipo de los elementos almacenados en la cola.
  */
 public class ColaPrioridad<T> {
-    private ListaEnlazada<T> elementos = new ListaEnlazada<>();
+
+    private ListaEnlazada<NodoPrioridad<T>> elementos = new ListaEnlazada<>();
+
     /**
-     * Constructor que inicializa la cola con una lista enlazada existente.
-     *
-     * @param elementos Lista enlazada con los elementos iniciales de la cola.
+     * Constructor por defecto.
      */
-    public ColaPrioridad(ListaEnlazada<T> elementos) {
+    public ColaPrioridad() {
+    }
+
+    /**
+     * Constructor que permite iniciar la cola con una lista enlazada existente.
+     *
+     * @param elementos Lista enlazada de nodos de prioridad.
+     */
+    public ColaPrioridad(ListaEnlazada<NodoPrioridad<T>> elementos) {
         this.elementos = elementos;
     }
 
-    public ColaPrioridad() {
-
-    }
-
     /**
-     * Agrega un elemento a la cola con una prioridad dada.
-     * La lógica de inserción debe asegurarse de mantener el orden según la prioridad.
+     * Encola un nuevo dato según su nivel de prioridad.
      *
-     * @param elemento  Elemento a agregar.
-     * @param prioridad Prioridad del elemento (a menor valor, mayor prioridad, por ejemplo).
-     *
+     * @param dato      Dato a encolar.
+     * @param prioridad Prioridad del dato (a menor número, mayor prioridad).
      */
-    public void encolar(T elemento, int prioridad) {
-        NodoPrioridad<T> nuevo = new NodoPrioridad<>(elemento, prioridad);
-        int index = 0;
-        while (index < elementos.getTamanio() && ((NodoPrioridad<T>) elementos.obtener(index)).getPrioridad() >= prioridad) {
-            index++;
+    public void encolar(T dato, int prioridad) {
+        NodoPrioridad<T> nuevoNodo = new NodoPrioridad<>(dato, prioridad);
+        int indice = 0;
+
+        // Se inserta en la posición que mantiene el orden por prioridad ascendente.
+        while (indice < elementos.getTamanio() &&
+                elementos.obtener(indice).getPrioridad() <= prioridad) {
+            indice++;
         }
-        elementos.insertarEn(index, (T) nuevo);
+
+        elementos.insertarEn(indice, nuevoNodo);
     }
+
     /**
-     * Elimina y retorna el primer elemento de la cola (de mayor prioridad).
-     * En esta versión simplificada, simplemente retorna el primer elemento de la lista.
+     * Desencola y devuelve el dato con mayor prioridad.
      *
-     * @return Elemento de mayor prioridad (o el primero de la lista actual).
+     * @return Dato del nodo con mayor prioridad o null si la cola está vacía.
      */
     public T desencolar() {
-        return elementos.obtener(0);
+        if (elementos.isEmpty()) {
+            return null;
+        }
+        NodoPrioridad<T> nodo = elementos.eliminarEn(0);  // Necesita método eliminarEn en ListaEnlazada
+        return nodo.getDato();
     }
+
     /**
-     * Retorna la lista enlazada de elementos actuales en la cola.
+     * Verifica si la cola está vacía.
      *
-     * @return Lista de elementos.
+     * @return true si no hay elementos, false si hay al menos uno.
      */
-    public ListaEnlazada<T> getElementos() {
+    public boolean estaVacia() {
+        return elementos.isEmpty();
+    }
+
+    /**
+     * Retorna el número de elementos en la cola.
+     *
+     * @return Tamaño de la lista enlazada.
+     */
+    public int tamanio() {
+        return elementos.getTamanio();
+    }
+
+    /**
+     * Retorna la lista completa de nodos con prioridad.
+     *
+     * @return Lista enlazada de NodoPrioridad<T>.
+     */
+    public ListaEnlazada<NodoPrioridad<T>> getElementos() {
         return elementos;
     }
-    /**
-     * Reemplaza la lista de elementos actual por una nueva.
-     *
-     * @param elementos Nueva lista de elementos.
-     */
-    public void setElementos(ListaEnlazada<T> elementos) {
+
+    public void setElementos(ListaEnlazada<NodoPrioridad<T>> elementos) {
         this.elementos = elementos;
     }
 
     /**
-     * Representa una solicitud de ayuda realizada por un estudiante.
-     * Cada solicitud tiene un tema, un nivel de urgencia y el estudiante solicitante.
-     *
-     * Puede ser utilizada en una cola de prioridad para gestionar solicitudes por nivel de urgencia.
-     *
-     * @author Daniel Jurado
-     * @author Sebastian Torres
-     * @author Juan Soto
-     * @since 2025-05-13
+     * Representa una solicitud de ayuda que puede usarse con la cola de prioridad.
      */
     public static class SolicitudAyuda implements Comparable<SolicitudAyuda> {
+
         private String tema;
-        private int urgencia; // Entre 1 (menos urgente) y 10 (muy urgente)
+        private int urgencia; // 1 a 10
         private Estudiante estudiante;
 
-        /**
-         * Constructor para crear una nueva solicitud de ayuda.
-         *
-         * @param tema      Tema sobre el cual se requiere ayuda.
-         * @param urgencia  Nivel de urgencia (1 a 10).
-         * @param estudiante Estudiante que solicita la ayuda.
-         */
         public SolicitudAyuda(String tema, int urgencia, Estudiante estudiante) {
             this.tema = tema;
-            setUrgencia(urgencia); // Validación
+            setUrgencia(urgencia);
             this.estudiante = estudiante;
         }
 
-        // Getters y Setters
-        public String getTema() { return tema; }
-        public void setTema(String tema) { this.tema = tema; }
+        public String getTema() {
+            return tema;
+        }
 
-        public int getUrgencia() { return urgencia; }
+        public void setTema(String tema) {
+            this.tema = tema;
+        }
+
+        public int getUrgencia() {
+            return urgencia;
+        }
 
         public void setUrgencia(int urgencia) {
             if (urgencia < 1 || urgencia > 10) {
@@ -111,21 +129,22 @@ public class ColaPrioridad<T> {
             this.urgencia = urgencia;
         }
 
-        public Estudiante getEstudiante() { return estudiante; }
-        public void setEstudiante(Estudiante estudiante) { this.estudiante = estudiante; }
+        public Estudiante getEstudiante() {
+            return estudiante;
+        }
 
-        /**
-         * Permite comparar dos solicitudes de ayuda por su urgencia.
-         * Se da prioridad a valores más altos de urgencia.
-         */
-        @Override
-        public int compareTo(SolicitudAyuda otra) {
-            return Integer.compare(otra.urgencia, this.urgencia); // Descendente
+        public void setEstudiante(Estudiante estudiante) {
+            this.estudiante = estudiante;
         }
 
         /**
-         * Representación en texto de la solicitud.
+         * Se ordena por urgencia descendente (mayor urgencia, mayor prioridad).
          */
+        @Override
+        public int compareTo(SolicitudAyuda otra) {
+            return Integer.compare(otra.urgencia, this.urgencia);
+        }
+
         @Override
         public String toString() {
             return "SolicitudAyuda{" +

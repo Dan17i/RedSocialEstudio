@@ -57,5 +57,11 @@ public class Nodo<T> {
     public void setSiguiente(Nodo<T> siguiente) {
         this.siguiente = siguiente;
     }
+
+    @Override
+    public String toString() {
+        return dato.toString();
+    }
+
 }
 

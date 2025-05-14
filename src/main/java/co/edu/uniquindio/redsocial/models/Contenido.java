@@ -40,7 +40,7 @@ public class Contenido {
      * @return Valoración promedio como número decimal. Devuelve 0 si no hay valoraciones.
      */
     public float calcularValoracionPromedio() {
-        if (valoraciones.estaVacia()) return 0;
+        if (valoraciones.isEmpty()) return 0;
         int suma = 0;
         NodoLista<Valoracion> actual = valoraciones.getCabeza();
         while (actual != null) {

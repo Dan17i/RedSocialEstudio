@@ -30,6 +30,6 @@ public class RegistroUsuarioServlet extends HttpServlet {
 
         // Redirigir o mostrar mensaje
         System.out.println("Registro exitoso. Redirigiendo a la página de inicio...");
-        response.sendRedirect("InicioSesion.html"); // Cambia esto a la página
+        // response.sendRedirect("InicioSesion.html"); // Cambia esto a la página
     }
 }

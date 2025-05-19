@@ -4,7 +4,7 @@ package co.edu.uniquindio.redsocial.models;
  * Clase que representa una valoración realizada por un estudiante a un contenido.
  * Una valoración incluye la puntuación dada, un comentario opcional, y el estudiante que realizó la valoración.
  */
-class Valoracion {
+public class Valoracion {
 
     // Atributos de la clase
     private Estudiante estudiante;  // Estudiante que realiza la valoración

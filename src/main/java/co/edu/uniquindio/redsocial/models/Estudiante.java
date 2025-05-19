@@ -64,9 +64,17 @@ public class Estudiante<T> extends Usuario {
      * @param grupo Grupo de estudio al que desea unirse.
      */
     public void unirseAGrupo(GrupoEstudio grupo) {
-        this.gruposEstudio.agregar(grupo);
-        grupo.agregarMiembro(this);
+        // Evitar agregar grupo duplicado
+        if (!gruposEstudio.contiene(grupo)) {
+            gruposEstudio.agregar(grupo);
+        }
+
+        // Evitar agregar estudiante duplicado al grupo
+        if (!grupo.getMiembros().contiene(this)) {
+            grupo.getMiembros().agregar(this);
+        }
     }
+
     /**
      * Busca contenidos dentro del historial del estudiante que coincidan con los filtros dados.
      *

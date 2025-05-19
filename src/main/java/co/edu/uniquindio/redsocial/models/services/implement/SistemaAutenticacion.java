@@ -2,6 +2,7 @@ package co.edu.uniquindio.redsocial.models.services.implement;
 
 import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.Usuario;
+import co.edu.uniquindio.redsocial.models.services.interf.ISistemaAutenticacion;
 import co.edu.uniquindio.redsocial.models.structures.ColaPrioridad;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import co.edu.uniquindio.redsocial.models.structures.NodoLista;
@@ -19,7 +20,7 @@ import java.util.UUID;
  * @author Juan Soto
  * @since 2025-05-13
  */
-public class SistemaAutenticacion {
+public class SistemaAutenticacion implements ISistemaAutenticacion {
     private ListaEnlazada<Usuario> usuariosRegistrados = new ListaEnlazada<>();
 
     /**

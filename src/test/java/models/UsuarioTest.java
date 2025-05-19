@@ -111,6 +111,5 @@ public class UsuarioTest {
         assertEquals(1, estudiante.getHistorialContenidos().getTamanio());
         assertEquals(contenido, estudiante.getHistorialContenidos().obtener(0));
 
-        // Nota: La prueba sobre GestorContenidos queda implícita o requiere mock si quieres aislar la prueba
     }
 }

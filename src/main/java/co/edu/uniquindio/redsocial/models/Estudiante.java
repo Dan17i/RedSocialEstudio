@@ -13,38 +13,37 @@ import java.util.Objects;
  * Hereda de {@link Usuario} y tiene funcionalidades adicionales como unirse a grupos,
  * valorar contenido, buscar contenidos, publicar y enviar mensajes.
  *
- * @param <T> Tipo genérico (no se utiliza directamente en esta clase, puede omitirse si no es necesario).
- *
- * @author Daniel Jurado
- * @author Sebastian Torres
- * @author Juan Soto
+ * @author Daniel Jurado, Sebastian Torres, Juan Soto
  * @since 2025-04-02
  */
-public class Estudiante<T> extends Usuario {
+public class Estudiante extends Usuario {
 
     private ColaPrioridad<ColaPrioridad.SolicitudAyuda> solicitudesAyuda;
     private ListaEnlazada<GrupoEstudio> gruposEstudio;
+
     /**
      * Constructor del estudiante.
      *
      * @param id                 Identificador único del estudiante.
      * @param nombre             Nombre del estudiante.
      * @param email              Correo electrónico del estudiante.
-     * @param contrasenia         Contraseña del estudiante.
+     * @param contrasenia        Contraseña del estudiante.
      * @param intereses          Lista de intereses académicos.
      * @param historialContenidos Lista de contenidos publicados o consumidos.
      * @param valoraciones       Lista de valoraciones realizadas.
-     * @param solicitudesAyuda   Cola de solicitudes de ayuda priorizadas.
-     * @param gruposEstudio      Lista de grupos de estudio a los que pertenece.
+     * @param solicitudesAyuda   Cola de solicitudes de ayuda priorizadas. Si es null, se inicializa vacía.
+     * @param gruposEstudio      Lista de grupos de estudio a los que pertenece. Si es null, se inicializa vacía.
      */
     public Estudiante(String id, String nombre, String email, String contrasenia,
                       ListaEnlazada<String> intereses, ListaEnlazada<Contenido> historialContenidos,
-                      ListaEnlazada<Valoracion> valoraciones, ColaPrioridad<ColaPrioridad.SolicitudAyuda> solicitudesAyuda,
+                      ListaEnlazada<Valoracion> valoraciones,
+                      ColaPrioridad<ColaPrioridad.SolicitudAyuda> solicitudesAyuda,
                       ListaEnlazada<GrupoEstudio> gruposEstudio) {
         super(id, nombre, email, contrasenia, intereses, historialContenidos, valoraciones);
-        this.solicitudesAyuda = solicitudesAyuda;
-        this.gruposEstudio = gruposEstudio;
+        this.solicitudesAyuda = (solicitudesAyuda != null) ? solicitudesAyuda : new ColaPrioridad<>();
+        this.gruposEstudio = (gruposEstudio != null) ? gruposEstudio : new ListaEnlazada<>();
     }
+
     /**
      * Permite al estudiante valorar un contenido.
      * Se registra la valoración tanto en el contenido como en el perfil del estudiante.
@@ -52,28 +51,34 @@ public class Estudiante<T> extends Usuario {
      * @param contenido  Contenido a valorar.
      * @param puntuacion Puntuación dada (por ejemplo, de 1 a 5).
      * @param comentario Comentario opcional del estudiante.
+     * @throws IllegalArgumentException si contenido es null o puntuacion no está en rango esperado.
      */
     public void valorarContenido(Contenido contenido, int puntuacion, String comentario) {
+        if (contenido == null) {
+            throw new IllegalArgumentException("El contenido no puede ser null");
+        }
+        if (puntuacion < 1 || puntuacion > 5) {
+            throw new IllegalArgumentException("La puntuación debe estar entre 1 y 5");
+        }
         Valoracion nuevaValoracion = new Valoracion(this, puntuacion, comentario);
         contenido.getValoraciones().agregar(nuevaValoracion);
         this.getValoraciones().agregar(nuevaValoracion);
     }
+
     /**
      * Une al estudiante a un grupo de estudio dado y actualiza ambos registros.
      *
-     * @param grupo Grupo de estudio al que desea unirse.
+     * @param grupo Grupo de estudio al que desea unirse. No puede ser null.
+     * @throws IllegalArgumentException si grupo es null.
      */
     public void unirseAGrupo(GrupoEstudio grupo) {
-        // Evitar agregar grupo duplicado
-        if (!gruposEstudio.contiene(grupo)) {
-            gruposEstudio.agregar(grupo);
+        if (grupo == null) {
+            throw new IllegalArgumentException("El grupo no puede ser null");
         }
-
-        // Evitar agregar estudiante duplicado al grupo
-        if (!grupo.getMiembros().contiene(this)) {
-            grupo.getMiembros().agregar(this);
-        }
+        // Solo llamas a agregarMiembro, que se encarga de todo
+        grupo.agregarMiembro(this);
     }
+
 
     /**
      * Busca contenidos dentro del historial del estudiante que coincidan con los filtros dados.
@@ -98,76 +103,70 @@ public class Estudiante<T> extends Usuario {
         }
         return resultados;
     }
+
     /**
      * Envía un mensaje a otro estudiante.
      *
      * @param destino Estudiante destinatario del mensaje.
      * @param mensaje Contenido textual del mensaje.
+     * @throws IllegalArgumentException si destino es null o mensaje es null o vacío.
      */
     public void enviarMensaje(Estudiante destino, String mensaje) {
+        if (destino == null) {
+            throw new IllegalArgumentException("El destinatario no puede ser null");
+        }
+        if (mensaje == null || mensaje.isEmpty()) {
+            throw new IllegalArgumentException("El mensaje no puede estar vacío");
+        }
         Mensaje nuevoMensaje = new Mensaje(this, destino, mensaje, LocalDateTime.now());
-        nuevoMensaje.enviar(); // Requiere implementación de lógica en clase Mensaje
+        nuevoMensaje.enviar(); // Implementa la lógica en la clase Mensaje
     }
+
     /**
      * Publica un contenido y lo añade al historial del estudiante.
      *
      * @param contenido Contenido que se desea publicar.
+     * @throws IllegalArgumentException si contenido es null.
      */
     public void publicarContenido(Contenido contenido) {
+        if (contenido == null) {
+            throw new IllegalArgumentException("El contenido no puede ser null");
+        }
         GestorContenidos.getInstancia().agregarContenido(contenido);
         this.getHistorialContenidos().agregar(contenido);
-        // Se puede extender para agregarlo al repositorio global de contenidos
     }
 
-    /**
-     * @return Cola de solicitudes de ayuda del estudiante.
-     */
-    public ColaPrioridad<ColaPrioridad.SolicitudAyuda> getSolicitudesAyuda() { return solicitudesAyuda; }
-    /**
-     * @return Lista de grupos de estudio a los que pertenece el estudiante.
-     */
-    public ListaEnlazada<GrupoEstudio> getGruposEstudio() { return gruposEstudio; }
-    /**
-     * @param solicitudesAyuda Nueva cola de solicitudes de ayuda.
-     */
+    // Getters y setters
+
+    public ListaEnlazada<GrupoEstudio> getGrupos() {
+        return gruposEstudio;
+    }
+
+
+    public ColaPrioridad<ColaPrioridad.SolicitudAyuda> getSolicitudesAyuda() {
+        return solicitudesAyuda;
+    }
+
     public void setSolicitudesAyuda(ColaPrioridad<ColaPrioridad.SolicitudAyuda> solicitudesAyuda) {
-        this.solicitudesAyuda = solicitudesAyuda;
+        this.solicitudesAyuda = solicitudesAyuda != null ? solicitudesAyuda : new ColaPrioridad<>();
     }
-    /**
-     * @param gruposEstudio Nueva lista de grupos de estudio.
-     */
+
+    public ListaEnlazada<GrupoEstudio> getGruposEstudio() {
+        return gruposEstudio;
+    }
+
     public void setGruposEstudio(ListaEnlazada<GrupoEstudio> gruposEstudio) {
-        this.gruposEstudio = gruposEstudio;
+        this.gruposEstudio = gruposEstudio != null ? gruposEstudio : new ListaEnlazada<>();
     }
-    /**
-     * Compara este objeto con otro para determinar si son iguales.
-     *
-     * Dos objetos `Estudiante` se consideran iguales si su `id` es el mismo.
-     * Este método se utiliza para verificar la equivalencia de dos objetos y es
-     * útil cuando los estudiantes se almacenan en colecciones como `HashSet` o
-     * se buscan en mapas como `HashMap`.
-     *
-     * @param obj el objeto con el que se comparará este objeto `Estudiante`
-     * @return `true` si ambos objetos son iguales (mismo `id`), `false` en caso contrario
-     */
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (!(obj instanceof Estudiante)) return false;
         Estudiante that = (Estudiante) obj;
         return this.getId().equals(that.getId());
     }
-    /**
-     * Devuelve el código hash para este objeto `Estudiante`.
-     *
-     * El código hash se genera utilizando el `id` del estudiante. Este método
-     * es consistente con el método `equals()`, lo que significa que si dos
-     * objetos son iguales según el método `equals()`, también tendrán el mismo
-     * código hash. Es útil cuando los objetos `Estudiante` se utilizan en
-     * colecciones basadas en hash como `HashSet` o `HashMap`.
-     *
-     * @return el código hash de este objeto `Estudiante`, basado en su `id`
-     */
+
     @Override
     public int hashCode() {
         return Objects.hash(getId());

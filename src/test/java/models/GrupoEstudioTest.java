@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GrupoEstudioTest {
-
+ // metodos
     private GrupoEstudio grupo;
     private Estudiante estudiante1;
     private Estudiante estudiante2;

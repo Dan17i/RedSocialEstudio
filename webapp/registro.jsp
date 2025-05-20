@@ -50,7 +50,7 @@
             </div>
 
             <div class="text-center">
-              <a href="InicioSesion.jsp" class="btn btn-link">¿Ya tienes cuenta? Iniciar sesión</a>
+              <a href="inicioSesion.jsp" class="btn btn-link">¿Ya tienes cuenta? Iniciar sesión</a>
             </div>
           </form>
         </div>

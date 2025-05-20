@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-<% response.sendRedirect("Inicio.jsp"); %>
+<% response.sendRedirect("inicio.jsp"); %>
 
 </body>
 </html>

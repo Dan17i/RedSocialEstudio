@@ -20,7 +20,7 @@ public class DashboardServlet extends HttpServlet {
 
         if (session == null || session.getAttribute("usuario") == null) {
             // No hay usuario en sesión: redirigir a login
-            response.sendRedirect("InicioSesion.jsp"); // Cambia a tu página de login
+            response.sendRedirect("inicioSesion.jsp"); // Cambia a tu página de login
             return;
         }
 
@@ -31,7 +31,7 @@ public class DashboardServlet extends HttpServlet {
         request.setAttribute("nombreUsuario", nombreUsuario);
 
         // Forward a dashboard.jsp
-        request.getRequestDispatcher("/dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("/inicio.jsp").forward(request, response);
     }
 
     @Override

@@ -19,7 +19,7 @@ public class CerrarSesionServlet extends HttpServlet {
             session.invalidate(); // destruir sesión
         }
         // Redirigir a página de login 
-        response.sendRedirect("InicioSesion.jsp");
+        response.sendRedirect("inicioSesion.jsp");
     }
 
     @Override

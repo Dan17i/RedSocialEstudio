@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page session="true" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -43,7 +44,7 @@
         </div>
 
         <div class="card-footer text-center">
-          ¿No tienes cuenta? <a href="Registro.jsp">Regístrate aquí</a>
+          ¿No tienes cuenta? <a href="registro.jsp">Regístrate aquí</a>
         </div>
       </div>
     </div>

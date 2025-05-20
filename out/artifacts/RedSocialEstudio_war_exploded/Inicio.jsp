@@ -1,9 +1,14 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" session="true" %>
 <%
-    // Obtener el nombre de usuario desde sesión
-    String nombreUsuario = "Invitado"; // valor por defecto
+    String nombreUsuario = "Invitado";
     if (session.getAttribute("usuario") != null) {
         nombreUsuario = (String) session.getAttribute("usuario");
+    }
+
+    // Parámetro para determinar qué sección cargar
+    String seccion = request.getParameter("seccion");
+    if (seccion == null || seccion.isEmpty()) {
+        seccion = "perfil"; // valor por defecto
     }
 %>
 <!DOCTYPE html>
@@ -12,7 +17,6 @@
     <title>Dashboard - Red Social</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <!--Separar el css del html por buenas practicas-->
     <style>
         body {
             background-color: #f4f6fa;
@@ -69,16 +73,16 @@
 <div class="sidebar d-flex flex-column">
     <div class="profile">
         <div class="rounded-circle bg-secondary" style="width: 80px; height: 80px; margin: auto;"></div>
-        <h6><%= nombreUsuario %></h6> <!-- nombre dinámico -->
+        <h6><%= nombreUsuario %></h6>
         <small>Página principal</small>
     </div>
 
     <nav class="nav flex-column mt-3">
-        <a class="nav-link" href="PerfilServlet"><i class="bi bi-person"></i> Perfil</a>
-        <a class="nav-link" href="GruposServlet"><i class="bi bi-people"></i> Grupos</a>
-        <a class="nav-link" href="ChatsServlet"><i class="bi bi-chat-dots"></i> Chats</a>
-        <a class="nav-link" href="SugerenciasServlet"><i class="bi bi-lightbulb"></i> Grupos sugeridos</a>
-        <a class="nav-link" href="PublicacionServlet"><i class="bi bi-pencil-square"></i> Crear publicación</a>
+        <a class="nav-link" href="inicio.jsp?seccion=perfil"><i class="bi bi-person"></i> Perfil</a>
+        <a class="nav-link" href="inicio.jsp?seccion=grupos"><i class="bi bi-people"></i> Grupos</a>
+        <a class="nav-link" href="inicio.jsp?seccion=chats"><i class="bi bi-chat-dots"></i> Chats</a>
+        <a class="nav-link" href="inicio.jsp?seccion=sugerencias"><i class="bi bi-lightbulb"></i> Grupos sugeridos</a>
+        <a class="nav-link" href="inicio.jsp?seccion=publicar"><i class="bi bi-pencil-square"></i> Crear publicación</a>
     </nav>
 
     <div class="logout mt-auto">
@@ -88,13 +92,33 @@
 
 <div class="main-content">
     <div class="header">
-        <h4>Hola, <%= nombreUsuario %></h4> <!-- nombre dinámico -->
+        <h4>Hola, <%= nombreUsuario %></h4>
         <p>Bienvenido a tu espacio personal en la red social universitaria</p>
     </div>
 
-    <!-- Área de contenido dinámico -->
     <div id="contenido">
-        <p>Selecciona una opción del menú para comenzar.</p>
+        <%
+            switch (seccion) {
+                case "perfil":
+        %><jsp:include page="perfil.jsp" /><%
+            break;
+        case "grupos":
+    %><jsp:include page="grupos.jsp" /><%
+            break;
+        case "chats":
+    %><jsp:include page="chats.jsp" /><%
+            break;
+        case "sugerencias":
+    %><jsp:include page="sugerencias.jsp" /><%
+            break;
+        case "publicar":
+    %><jsp:include page="publicar.jsp" /><%
+            break;
+        default:
+    %><p>Bienvenido a tu espacio personal en la red social universitaria.</p><%
+                break;
+        }
+    %>
     </div>
 </div>
 

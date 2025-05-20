@@ -10,6 +10,8 @@ import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -39,7 +41,12 @@ public class EstudianteTest {
         );
 
         ListaEnlazada<Valoracion> listaVacia = new ListaEnlazada<>();
-        contenidoEjemplo = new Contenido("001", "Matemáticas", "Juan Pérez", "Video", listaVacia);
+
+        Estudiante Juanes = new Estudiante("idJuan", "Juanes", "juanes@email.com", "12345",
+                new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
+                new ColaPrioridad<>(), new ListaEnlazada<>());
+
+        contenidoEjemplo = new Contenido("001", "Matemáticas","trata de matematicas", Juanes, "Video", LocalDateTime.now(),new ListaEnlazada<>());
     }
 
     /**
@@ -87,8 +94,16 @@ public class EstudianteTest {
     public void testBuscarContenido() {
         ListaEnlazada<Valoracion> valoracionesVacias = new ListaEnlazada<>();
 
-        Contenido c1 = new Contenido("101", "Matemáticas", "Juan Pérez", "Video", valoracionesVacias);
-        Contenido c2 = new Contenido("102", "Historia", "Ana López", "Artículo", valoracionesVacias);
+        Estudiante juan = new Estudiante("idJuan", "Juan Pérez", "juan@email.com", "1234",
+                new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
+                new ColaPrioridad<>(), new ListaEnlazada<>());
+
+        Estudiante ana = new Estudiante("idAna", "Ana López", "ana@email.com", "5678",
+                new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
+                new ColaPrioridad<>(), new ListaEnlazada<>());
+
+        Contenido c1 = new Contenido("101", "Matemáticas", "trata sobre matematicas",juan, "Video",LocalDateTime.now(), valoracionesVacias);
+        Contenido c2 = new Contenido("102", "Historia","Trata sobre historia", ana, "Artículo", LocalDateTime.now(),valoracionesVacias);
 
         estudiante.getHistorialContenidos().agregar(c1);
         estudiante.getHistorialContenidos().agregar(c2);

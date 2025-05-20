@@ -1,6 +1,10 @@
 package co.edu.uniquindio.redsocial.models;
 
+import co.edu.uniquindio.redsocial.models.services.interf.Tematico;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+import co.edu.uniquindio.redsocial.models.structures.NodoLista;
+
+import java.time.LocalDateTime;
 
 /**
  * Representa un contenido publicado por un estudiante dentro de la red social.
@@ -11,7 +15,7 @@ import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
  * Daniel Jurado, Sebastián Torres, Juan Soto
  * @since 2025-05-12
  */
-public class Contenido {
+public class Contenido implements Tematico {
 
     /** Identificador único del contenido. */
     private final String id;
@@ -19,11 +23,17 @@ public class Contenido {
     /** Tema o título del contenido. */
     private String tema;
 
+    /** Descripción del contenido. */
+    private String descripcion;
+
     /** Estudiante que publicó el contenido. */
     private final Estudiante autor;
 
     /** Tipo de contenido (ej: Texto, Video, Imagen, etc.). */
     private String tipo;
+
+    /** Fecha de creación del contenido. */
+    private final LocalDateTime fechaCreacion;
 
     /** Lista de valoraciones que ha recibido el contenido. */
     private final ListaEnlazada<Valoracion> valoraciones;
@@ -33,12 +43,14 @@ public class Contenido {
      *
      * @param id Identificador único del contenido. No debe ser nulo ni vacío.
      * @param tema Tema o título del contenido. No debe ser nulo ni vacío.
+     * @param descripcion Descripción del contenido. Puede ser nula o vacía.
      * @param autor Estudiante que publica el contenido. No debe ser nulo.
      * @param tipo Tipo de contenido. No debe ser nulo ni vacío.
-     * @param valoraciones Lista de valoraciones asociadas. No debe ser nula.
-     * @throws IllegalArgumentException Si alguno de los parámetros es inválido.
+     * @param fechaCreacion Fecha en que se creó el contenido. No debe ser nula.
+     * @param valoraciones Lista de valoraciones asociadas. No debe ser nula (puede estar vacía).
+     * @throws IllegalArgumentException Si alguno de los parámetros obligatorios es inválido.
      */
-    public Contenido(String id, String tema, Estudiante autor, String tipo, ListaEnlazada<Valoracion> valoraciones) {
+    public Contenido(String id, String tema, String descripcion, Estudiante autor, String tipo, LocalDateTime fechaCreacion, ListaEnlazada<Valoracion> valoraciones) {
         if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("El id no puede ser nulo ni vacío");
         }
@@ -51,15 +63,45 @@ public class Contenido {
         if (tipo == null || tipo.isBlank()) {
             throw new IllegalArgumentException("El tipo no puede ser nulo ni vacío");
         }
+        if (fechaCreacion == null) {
+            throw new IllegalArgumentException("La fecha de creación no puede ser nula");
+        }
         if (valoraciones == null) {
             throw new IllegalArgumentException("La lista de valoraciones no puede ser nula");
         }
 
         this.id = id;
         this.tema = tema;
+        this.descripcion = descripcion;
         this.autor = autor;
         this.tipo = tipo;
+        this.fechaCreacion = fechaCreacion;
         this.valoraciones = valoraciones;
+    }
+
+    /**
+     * Calcula el promedio de las valoraciones del contenido.
+     *
+     * Este método recorre la lista enlazada de valoraciones asociadas al contenido,
+     * suma los puntajes de cada valoración y devuelve el promedio.
+     * Si no hay valoraciones o la lista es nula, devuelve 0.0f.
+     *
+     * @return El promedio de los puntajes de las valoraciones como un valor float.
+     */
+    public float calcularValoracionPromedio() {
+        if (valoraciones == null || valoraciones.getTamanio() == 0) {
+            return 0.0f;
+        }
+
+        float suma = 0;
+        NodoLista<Valoracion> actual = valoraciones.getCabeza();
+
+        while (actual != null) {
+            suma += actual.getDato().getPuntuacion();
+            actual = actual.getSiguiente();
+        }
+
+        return suma / valoraciones.getTamanio();
     }
 
     /** @return Identificador único del contenido. */
@@ -84,6 +126,20 @@ public class Contenido {
         this.tema = tema;
     }
 
+    /** @return Descripción del contenido. */
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    /**
+     * Modifica la descripción del contenido.
+     *
+     * @param descripcion Nueva descripción. Puede ser vacía.
+     */
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
     /** @return Estudiante autor del contenido. */
     public Estudiante getAutor() {
         return autor;
@@ -104,6 +160,11 @@ public class Contenido {
             throw new IllegalArgumentException("El tipo no puede ser nulo ni vacío");
         }
         this.tipo = tipo;
+    }
+
+    /** @return Fecha de creación del contenido. */
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
     }
 
     /** @return Lista de valoraciones del contenido. */

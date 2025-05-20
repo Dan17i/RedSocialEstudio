@@ -95,7 +95,7 @@ public class Estudiante extends Usuario {
         while (actual != null) {
             Contenido c = actual.getDato();
             if (c.getTema().equalsIgnoreCase(tema)
-                    && c.getAutor().equalsIgnoreCase(autor)
+                    && c.getAutor().getNombre().equalsIgnoreCase(autor)
                     && c.getTipo().equalsIgnoreCase(tipo)) {
                 resultados.agregar(c);
             }
@@ -103,6 +103,7 @@ public class Estudiante extends Usuario {
         }
         return resultados;
     }
+
 
     /**
      * Envía un mensaje a otro estudiante.

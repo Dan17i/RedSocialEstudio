@@ -6,6 +6,8 @@ import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GrupoEstudioTest {
@@ -27,7 +29,7 @@ public class GrupoEstudioTest {
                 new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
                 new ColaPrioridad<>(), new ListaEnlazada<>());
 
-        contenido = new Contenido("c1", "Integrales", estudiante1, "Texto", new ListaEnlazada<>());
+        contenido = new Contenido("c1", "Integrales","sobre integrales", estudiante1, "Texto", LocalDateTime.now(),new ListaEnlazada<>());
     }
 
 

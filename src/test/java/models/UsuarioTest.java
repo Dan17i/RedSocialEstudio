@@ -10,6 +10,8 @@ import co.edu.uniquindio.redsocial.models.Estudiante;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UsuarioTest {
@@ -45,7 +47,20 @@ public class UsuarioTest {
     @Test
     public void testValorarContenido() {
         ListaEnlazada<Valoracion> valoracionesContenido = new ListaEnlazada<>();
-        Contenido contenido = new Contenido("101", "Matemáticas", "Juan Pérez", "Video", valoracionesContenido);
+        Estudiante juan = new Estudiante("idJuan", "Juan Pérez", "juan@email.com", "1234",
+                new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
+                new ColaPrioridad<>(), new ListaEnlazada<>());
+
+        Contenido contenido = new Contenido(
+                "101",                          // id
+                "Matemáticas",                  // tema
+                "sobre Matemáticas",            // descripción
+                juan,                          // autor (Estudiante)
+                "Teoría",                      // tipo (String)
+                LocalDateTime.now(),           // fechaCreacion
+                valoracionesContenido          // lista de valoraciones
+        );
+
 
         estudiante.valorarContenido(contenido, 5, "Excelente contenido");
 
@@ -88,8 +103,16 @@ public class UsuarioTest {
     @Test
     public void testBuscarContenido() {
         ListaEnlazada<Valoracion> valoracionesVacias = new ListaEnlazada<>();
-        Contenido c1 = new Contenido("101", "Matemáticas", "Juan Pérez", "Video", valoracionesVacias);
-        Contenido c2 = new Contenido("102", "Historia", "Ana López", "Artículo", valoracionesVacias);
+
+        Estudiante juan = new Estudiante("idJuan", "Juan Pérez", "juan@email.com", "12346",
+                new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
+                new ColaPrioridad<>(), new ListaEnlazada<>());
+        Estudiante ana = new Estudiante("idJuan", "Ana", "ana@email.com", "12345",
+        new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
+                new ColaPrioridad<>(), new ListaEnlazada<>());
+
+        Contenido c1 = new Contenido("101", "Matemáticas", "Descripción Matemáticas", juan, "Video", LocalDateTime.now(), valoracionesVacias);
+        Contenido c2 = new Contenido("102", "Historia", "Descripción Historia", ana, "Artículo", LocalDateTime.now(), valoracionesVacias);
 
         estudiante.getHistorialContenidos().agregar(c1);
         estudiante.getHistorialContenidos().agregar(c2);
@@ -102,8 +125,15 @@ public class UsuarioTest {
 
     @Test
     public void testPublicarContenido() {
+
+        Estudiante ana = new Estudiante("idJuan", "Ana", "ana@email.com", "12345",
+                new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
+                new ColaPrioridad<>(), new ListaEnlazada<>());
+
         ListaEnlazada<Valoracion> valoracionesVacias = new ListaEnlazada<>();
-        Contenido contenido = new Contenido("103", "Física", "Ana López", "Video", valoracionesVacias);
+
+
+        Contenido contenido = new Contenido("103", "Física", "Temas de fisica", ana,"Video", LocalDateTime.now(), valoracionesVacias);
 
         estudiante.publicarContenido(contenido);
 

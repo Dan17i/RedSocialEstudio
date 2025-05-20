@@ -1,11 +1,5 @@
 package co.edu.uniquindio.redsocial.models.services.implement;
 
-/*
- *
- *
- *
- *
- * */
 
 import co.edu.uniquindio.redsocial.models.Contenido;
 import co.edu.uniquindio.redsocial.models.services.interf.IGestorContenidos;
@@ -66,7 +60,8 @@ public class GestorContenidos implements IGestorContenidos {
         NodoLista<Contenido> actual = todos.getCabeza();
         while (actual != null) {
             Contenido c = actual.getDato();
-            if (c.getAutor().equalsIgnoreCase(autor)) {
+            // Suponiendo que comparas por nombre del autor
+            if (c.getAutor().getNombre().equalsIgnoreCase(autor)) {
                 resultados.agregar(c);
             }
             actual = actual.getSiguiente();
@@ -100,7 +95,7 @@ public class GestorContenidos implements IGestorContenidos {
         while (actual != null) {
             Contenido c = actual.getDato();
             if (c.getTema().equalsIgnoreCase(tema)
-                    && c.getAutor().equalsIgnoreCase(autor)
+                    && c.getAutor().getNombre().equalsIgnoreCase(autor) // corregido aquí
                     && c.getTipo().equalsIgnoreCase(tipo)) {
                 resultados.agregar(c);
             }

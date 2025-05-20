@@ -43,7 +43,7 @@
         </div>
 
         <div class="card-footer text-center">
-          ¿No tienes cuenta? <a href="Registro.html">Regístrate aquí</a>
+          ¿No tienes cuenta? <a href="Registro.jsp">Regístrate aquí</a>
         </div>
       </div>
     </div>

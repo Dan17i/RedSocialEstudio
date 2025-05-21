@@ -62,8 +62,8 @@ public class GrupoEstudio {
             miembros.agregar(estudiante);
         }
 
-        if (!estudiante.getGrupos().contiene(this)) {
-            estudiante.getGrupos().agregar(this);
+        if (!estudiante.getGruposEstudio().contiene(this)) {
+            estudiante.getGruposEstudio().agregar(this);
         }
     }
 
@@ -95,6 +95,12 @@ public class GrupoEstudio {
         }
         publicaciones.agregar(contenido);
     }
+
+    // Solo para uso interno del modelo, no exponer fuera del paquete
+    ListaEnlazada<Estudiante> getMiembrosInterno() {
+        return miembros;
+    }
+
 
     /**
      * Obtiene una copia superficial de las publicaciones actuales del grupo.

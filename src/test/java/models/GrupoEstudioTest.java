@@ -50,7 +50,7 @@ public class GrupoEstudioTest {
     public void testAgregarMiembro() {
         grupo.agregarMiembro(estudiante1);
         assertEquals(1, grupo.getMiembros().getTamanio());
-        assertTrue(estudiante1.getGrupos().contiene(grupo));
+        assertTrue(estudiante1.getGruposEstudio().contiene(grupo));
     }
 
     @Test

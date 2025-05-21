@@ -136,6 +136,33 @@ public class Estudiante extends Usuario {
         }
         return res;
     }
+    /**
+     * Busca contenidos en el historial del estudiante según los filtros dados.
+     *
+     * @param tema  Tema del contenido (puede ser null o vacío para ignorar).
+     * @param autor Nombre del autor del contenido (puede ser null o vacío para ignorar).
+     * @param tipo  Tipo del contenido (puede ser null o vacío para ignorar).
+     * @return Una lista de contenidos que coincidan con los filtros.
+     */
+    public ListaEnlazada<Contenido> buscarEnHistorial(String tema, String autor, String tipo) {
+        ListaEnlazada<Contenido> resultados = new ListaEnlazada<>();
+        NodoLista<Contenido> actual = getHistorialContenidos().getCabeza(); // Acceso por getter
+
+        while (actual != null) {
+            Contenido c = actual.getDato();
+            boolean coincideTema = (tema == null || tema.isEmpty()) || c.getTema().equalsIgnoreCase(tema);
+            boolean coincideAutor = (autor == null || autor.isEmpty()) || c.getAutor().getNombre().equalsIgnoreCase(autor);
+            boolean coincideTipo = (tipo == null || tipo.isEmpty()) || c.getTipo().equalsIgnoreCase(tipo);
+
+            if (coincideTema && coincideAutor && coincideTipo) {
+                resultados.agregar(c);
+            }
+
+            actual = actual.getSiguiente();
+        }
+
+        return resultados;
+    }
 
     /**
      * Envía un mensaje a otro estudiante.
@@ -191,10 +218,11 @@ public class Estudiante extends Usuario {
             gruposEstudio.agregar(grupo);
         }
 
-        if (!grupo.getMiembros().buscar(this)) {
-            grupo.getMiembros().agregar(this);
+        if (!grupo.getMiembrosInterno().buscar(this)) {
+            grupo.getMiembrosInterno().agregar(this); // Ahora sí modifica la lista real
         }
     }
+
 
 
     // =====================================
@@ -204,6 +232,7 @@ public class Estudiante extends Usuario {
     public ListaEnlazada<GrupoEstudio> getGruposEstudio() {
         return gruposEstudio;
     }
+
 
     public ColaPrioridad<SolicitudAyuda> getSolicitudesAyuda() {
         return solicitudesAyuda;

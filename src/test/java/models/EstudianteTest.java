@@ -3,6 +3,8 @@ package models;
 import co.edu.uniquindio.redsocial.models.*;
 import co.edu.uniquindio.redsocial.models.structures.ColaPrioridad;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+import co.edu.uniquindio.redsocial.models.services.implement.GestorContenidos;
+
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -98,17 +100,27 @@ public class EstudianteTest {
                 new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
                 new ColaPrioridad<>(), new ListaEnlazada<>());
 
-        Contenido c1 = new Contenido("101", "Matemáticas", "trata sobre matematicas",juan, "Video",LocalDateTime.now(), valoracionesVacias);
-        Contenido c2 = new Contenido("102", "Historia","Trata sobre historia", ana, "Artículo", LocalDateTime.now(),valoracionesVacias);
+        Contenido c1 = new Contenido("101", "Matemáticas", "trata sobre matemáticas", juan, "Video", LocalDateTime.now(), valoracionesVacias);
+        Contenido c2 = new Contenido("102", "Historia", "Trata sobre historia", ana, "Artículo", LocalDateTime.now(), valoracionesVacias);
 
-        estudiante.getHistorialContenidos().agregar(c1);
-        estudiante.getHistorialContenidos().agregar(c2);
+        GestorContenidos gestor = GestorContenidos.getInstancia();
 
-        ListaEnlazada<Contenido> resultados = estudiante.buscarContenido("Matemáticas", "Juan Pérez", "Video");
+        // Insertar contenidos en el árbol para que la búsqueda funcione
+        gestor.agregarContenido(c1);
+        gestor.agregarContenido(c2);
+
+        // También marcarlos como destacados si se quiere
+        gestor.marcarComoDestacado(c1);
+        gestor.marcarComoDestacado(c2);
+
+        // Ahora buscar con el mismo objeto que tiene el método buscarContenido
+        ListaEnlazada<Contenido> resultados = juan.buscarContenido("Matemáticas", "Juan Pérez", "Video");
 
         assertEquals(1, resultados.getTamanio());
         assertEquals(c1, resultados.obtener(0));
     }
+
+
 
     /**
      * Verifica que dos estudiantes con la misma cédula sean considerados iguales.

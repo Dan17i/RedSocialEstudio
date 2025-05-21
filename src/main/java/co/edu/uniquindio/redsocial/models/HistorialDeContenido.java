@@ -121,9 +121,21 @@ public class HistorialDeContenido {
      * @param hasta Índice de fin (inclusive)
      * @return Una lista de {@link Contenido} que representa los contenidos en el rango especificado
      */
-    public ListaEnlazada<Contenido> obtenerContenidosRecientes(int desde, int hasta) {
-        return contenidos.sublista(desde, hasta);
+    public ListaEnlazada<Contenido> obtenerContenidosRecientes(int cantidad) {
+        ListaEnlazada<Contenido> recientes = new ListaEnlazada<>();
+
+        int total = contenidos.getTamanio(); // total de elementos en el historial
+
+        // Si la cantidad pedida es mayor al total, ajusta para no dar error
+        int desde = Math.max(0, total - cantidad);
+
+        for (int i = desde; i < total; i++) {
+            recientes.agregar(contenidos.obtener(i));
+        }
+
+        return recientes;
     }
+
 
     // Getters y Setters
 

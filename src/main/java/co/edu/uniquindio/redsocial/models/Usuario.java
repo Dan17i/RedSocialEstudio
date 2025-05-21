@@ -125,6 +125,8 @@ public class Usuario {
         this.valoraciones = valoraciones;
     }
 
+
+
     /**
      * Representación en texto del usuario, sin mostrar la contraseña.
      */

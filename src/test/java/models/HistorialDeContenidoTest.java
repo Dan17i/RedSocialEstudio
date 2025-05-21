@@ -145,7 +145,7 @@ public class HistorialDeContenidoTest {
 
         // Crear lista de contenidos
         ListaEnlazada<Contenido> contenidos = new ListaEnlazada<>();
-        Contenido contenido = new Contenido("C1", "Tema 1", "Descripción X", autor, "Texto",
+        Contenido contenido1 = new Contenido("C1", "Tema 1", "Descripción X", autor, "Texto",
                 LocalDateTime.now(), new ListaEnlazada<>());
 
         Contenido contenido2 = new Contenido("C2", "Tema 2", "Descripción X", autor, "Texto",
@@ -174,14 +174,12 @@ public class HistorialDeContenidoTest {
         HistorialDeContenido historial = new HistorialDeContenido("usuario1", contenidos, fechas);
 
         // Probar método: índice 1 a 3 (debería incluir los elementos en posición 1 y 2)
-        ListaEnlazada<Contenido> sublista = historial.obtenerContenidosRecientes(1, 3);
-
-        assertEquals(2, sublista.getTamanio());
+        ListaEnlazada<Contenido> sublista = historial.obtenerContenidosRecientes( 3);
+        assertEquals(3, sublista.getTamanio());
         assertEquals(contenido2, sublista.obtener(0));
         assertEquals(contenido3, sublista.obtener(1));
+        assertEquals(contenido4, sublista.obtener(2));
     }
-
-
 
 }
 

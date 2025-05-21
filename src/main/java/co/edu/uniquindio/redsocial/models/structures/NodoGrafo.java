@@ -43,8 +43,9 @@ public class NodoGrafo<T> {
      *
      * @param nodo Nodo adyacente a eliminar.
      */
-    public void eliminarAdyacente(NodoGrafo<T> nodo) {
-        adyacentes.remove(nodo);
+    public boolean eliminarAdyacente(NodoGrafo<T> nodo) {
+        // remove() devuelve el peso (Double) si existía, o null si no
+        return adyacentes.remove(nodo) != null;
     }
 
     /**
@@ -134,4 +135,26 @@ public class NodoGrafo<T> {
     public void setAdyacentes(Map<NodoGrafo<T>, Double> adyacentes) {
         this.adyacentes = adyacentes;
     }
+
+    /**
+     * Devuelve el peso de la arista entre este nodo y el nodo dado,
+     * o -1 si no existe conexión.
+     */
+    public double getPesoArista(NodoGrafo<T> nodo) {
+        // redirige a tu método getPeso existente
+        return getPeso(nodo);
+    }
+
+    /**
+     * Calcula el grado (ponderado) de este nodo,
+     * es decir, la suma de los pesos de todas sus aristas salientes.
+     */
+    public double getGrado() {
+        double suma = 0.0;
+        for (Double peso : adyacentes.values()) {
+            suma += peso;
+        }
+        return suma;
+    }
+
 }

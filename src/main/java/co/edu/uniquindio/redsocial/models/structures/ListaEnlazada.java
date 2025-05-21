@@ -303,7 +303,7 @@ public class ListaEnlazada<T> implements Iterable<T> {
      * @throws IndexOutOfBoundsException si los índices no son válidos
      */
     public ListaEnlazada<T> sublista(int desde, int hasta) {
-        if (desde < 0 || hasta > tamanio || desde >= hasta) {
+        if (desde < 0 || hasta >= tamanio || desde > hasta) {
             throw new IndexOutOfBoundsException("Rango inválido: desde=" + desde + ", hasta=" + hasta);
         }
 
@@ -311,16 +311,23 @@ public class ListaEnlazada<T> implements Iterable<T> {
         NodoLista<T> actual = cabeza;
         int indice = 0;
 
-        while (actual != null && indice < hasta) {
-            if (indice >= desde) {
-                sublista.agregar(actual.getDato());
-            }
+        // Avanzar hasta 'desde'
+        while (indice < desde) {
+            actual = actual.getSiguiente();
+            indice++;
+        }
+
+        // Agregar elementos desde 'desde' hasta 'hasta'
+        while (indice <= hasta && actual != null) {
+            sublista.agregar(actual.getDato());
             actual = actual.getSiguiente();
             indice++;
         }
 
         return sublista;
     }
+
+
 
     /**
      * Retorna un iterador para recorrer secuencialmente los elementos de la lista.

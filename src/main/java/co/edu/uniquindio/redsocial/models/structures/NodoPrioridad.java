@@ -96,8 +96,7 @@ public class NodoPrioridad<T> implements Comparable<NodoPrioridad<T>> {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (!(obj instanceof NodoPrioridad)) return false;
-        NodoPrioridad<?> otro = (NodoPrioridad<?>) obj;
+        if (!(obj instanceof NodoPrioridad<?> otro)) return false;
         return prioridad == otro.prioridad && Objects.equals(dato, otro.dato);
     }
 

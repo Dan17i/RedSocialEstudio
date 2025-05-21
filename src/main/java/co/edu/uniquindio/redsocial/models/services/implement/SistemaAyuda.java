@@ -1,5 +1,6 @@
 package co.edu.uniquindio.redsocial.models.services.implement;
 
+import co.edu.uniquindio.redsocial.models.SolicitudAyuda;
 import co.edu.uniquindio.redsocial.models.services.interf.ISistemaAyuda;
 import co.edu.uniquindio.redsocial.models.structures.ColaPrioridad;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
@@ -7,17 +8,17 @@ import co.edu.uniquindio.redsocial.models.structures.NodoPrioridad;
 
 public class SistemaAyuda implements ISistemaAyuda {
 
-    private ColaPrioridad<ColaPrioridad.SolicitudAyuda> solicitudesGlobales;
+    private final ColaPrioridad<SolicitudAyuda> solicitudesGlobales;
 
     public SistemaAyuda() {
         this.solicitudesGlobales = new ColaPrioridad<>();
     }
 
-    public void agregarSolicitud(ColaPrioridad.SolicitudAyuda solicitud) {
+    public void agregarSolicitud(SolicitudAyuda solicitud) {
         solicitudesGlobales.encolar(solicitud, solicitud.getUrgencia());
     }
 
-    public ColaPrioridad.SolicitudAyuda atenderSolicitud() {
+    public SolicitudAyuda atenderSolicitud() {
         return solicitudesGlobales.desencolar();
     }
 
@@ -31,13 +32,13 @@ public class SistemaAyuda implements ISistemaAyuda {
      * @return Una lista enlazada con todas las solicitudes que coinciden con el tema dado.
      */
     @Override
-    public ListaEnlazada<ColaPrioridad.SolicitudAyuda> obtenerSolicitudesPorTema(String tema) {
-        ListaEnlazada<ColaPrioridad.SolicitudAyuda> resultado = new ListaEnlazada<>();
+    public ListaEnlazada<SolicitudAyuda> obtenerSolicitudesPorTema(String tema) {
+        ListaEnlazada<SolicitudAyuda> resultado = new ListaEnlazada<>();
 
-        ListaEnlazada<NodoPrioridad<ColaPrioridad.SolicitudAyuda>> nodos = solicitudesGlobales.getElementos();
+        ListaEnlazada<NodoPrioridad<SolicitudAyuda>> nodos = solicitudesGlobales.getElementos();
         for (int i = 0; i < nodos.getTamanio(); i++) {
-            NodoPrioridad<ColaPrioridad.SolicitudAyuda> nodo = nodos.obtener(i);
-            ColaPrioridad.SolicitudAyuda solicitud = nodo.getDato();
+            NodoPrioridad<SolicitudAyuda> nodo = nodos.obtener(i);
+            SolicitudAyuda solicitud = nodo.getDato();
             if (solicitud.getTema().equalsIgnoreCase(tema)) {
                 resultado.agregar(solicitud);
             }
@@ -45,7 +46,4 @@ public class SistemaAyuda implements ISistemaAyuda {
 
         return resultado;
     }
-
-
 }
-

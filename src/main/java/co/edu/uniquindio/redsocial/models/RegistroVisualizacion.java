@@ -3,8 +3,8 @@ package co.edu.uniquindio.redsocial.models;
 import java.time.LocalDateTime;
 
 public class RegistroVisualizacion {
-    private Contenido contenido;
-    private LocalDateTime fechaVisualizacion;
+    private final Contenido contenido;
+    private final LocalDateTime fechaVisualizacion;
 
     public RegistroVisualizacion(Contenido contenido, LocalDateTime fechaVisualizacion) {
         this.contenido = contenido;

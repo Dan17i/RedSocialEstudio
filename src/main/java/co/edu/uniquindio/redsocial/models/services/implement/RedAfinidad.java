@@ -19,7 +19,7 @@ import co.edu.uniquindio.redsocial.models.services.interf.IRedAfinidad;
  * @since 2025-05-12
  */
 public class RedAfinidad implements  IRedAfinidad{
-    private Grafo<Estudiante> grafoEstudiantes;
+    private final Grafo<Estudiante> grafoEstudiantes;
     private static RedAfinidad instancia;
     /**
      * Constructor que inicializa la red con un grafo de estudiantes.

@@ -1,6 +1,9 @@
 package co.edu.uniquindio.redsocial.models.structures;
 
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
+
 /**
  * Clase que representa un nodo en una lista enlazada.
  * Cada nodo contiene un dato de tipo T y una referencia al siguiente nodo de la lista.
@@ -63,7 +66,7 @@ public class NodoLista<T> {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         NodoLista<?> that = (NodoLista<?>) obj;
-        return dato != null ? dato.equals(that.dato) : that.dato == null;
+        return Objects.equals(dato, that.dato);
     }
     /**
      * Devuelve un valor hash basado en el dato almacenado en el nodo.

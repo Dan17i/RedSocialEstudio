@@ -19,8 +19,8 @@ import co.edu.uniquindio.redsocial.models.structures.NodoLista;
  */
 public class SistemaRecomendaciones {
 
-    private RedAfinidad redAfinidad;
-    private GestorContenidos gestorContenidos;
+    private final RedAfinidad redAfinidad;
+    private final GestorContenidos gestorContenidos;
 
     /**
      * Constructor que inicializa las instancias únicas de RedAfinidad y GestorContenidos.

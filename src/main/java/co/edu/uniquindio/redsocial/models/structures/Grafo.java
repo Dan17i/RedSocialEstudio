@@ -18,7 +18,7 @@ import java.util.*;
 public class Grafo<T> {
 
     private ListaEnlazada<NodoGrafo<T>> nodos;
-    private Map<T, NodoGrafo<T>> mapaDeNodos; // Para búsqueda optimizada O(1)
+    private final Map<T, NodoGrafo<T>> mapaDeNodos; // Para búsqueda optimizada O(1)
     private boolean esDirigido;
 
     /**

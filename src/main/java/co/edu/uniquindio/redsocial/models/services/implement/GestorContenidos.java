@@ -11,8 +11,8 @@ import java.util.HashMap;
 
 public class GestorContenidos implements IGestorContenidos {
 
-    private ArbolBinarioBusqueda<Contenido> arbolContenidos;
-    private ListaEnlazada<Contenido> contenidoDestacado;
+    private final ArbolBinarioBusqueda<Contenido> arbolContenidos;
+    private final ListaEnlazada<Contenido> contenidoDestacado;
     private static GestorContenidos instancia;
 
     public GestorContenidos(ArbolBinarioBusqueda<Contenido> arbolContenidos,

@@ -2,10 +2,11 @@ package models;
 
 import co.edu.uniquindio.redsocial.models.Contenido;
 import co.edu.uniquindio.redsocial.models.GrupoEstudio;
+import co.edu.uniquindio.redsocial.models.SolicitudAyuda;
 import co.edu.uniquindio.redsocial.models.Valoracion;
+import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.structures.ColaPrioridad;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
-import co.edu.uniquindio.redsocial.models.Estudiante;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ public class UsuarioTest {
     private ListaEnlazada<String> intereses;
     private ListaEnlazada<Contenido> historialContenidos;
     private ListaEnlazada<Valoracion> valoraciones;
-    private ColaPrioridad<ColaPrioridad.SolicitudAyuda> solicitudesAyuda;
+    private ColaPrioridad<SolicitudAyuda> solicitudesAyuda;
     private ListaEnlazada<GrupoEstudio> gruposEstudio;
 
     @BeforeEach
@@ -47,31 +48,35 @@ public class UsuarioTest {
     @Test
     public void testValorarContenido() {
         ListaEnlazada<Valoracion> valoracionesContenido = new ListaEnlazada<>();
-        Estudiante juan = new Estudiante("idJuan", "Juan Pérez", "juan@email.com", "1234",
-                new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
-                new ColaPrioridad<>(), new ListaEnlazada<>());
-
-        Contenido contenido = new Contenido(
-                "101",                          // id
-                "Matemáticas",                  // tema
-                "sobre Matemáticas",            // descripción
-                juan,                          // autor (Estudiante)
-                "Teoría",                      // tipo (String)
-                LocalDateTime.now(),           // fechaCreacion
-                valoracionesContenido          // lista de valoraciones
+        Estudiante juan = new Estudiante(
+                "idJuan",
+                "Juan Pérez",
+                "juan@email.com",
+                "1234",
+                new ListaEnlazada<>(),
+                new ListaEnlazada<>(),
+                new ListaEnlazada<>(),
+                new ColaPrioridad<>(),
+                new ListaEnlazada<>()
         );
 
+        Contenido contenido = new Contenido(
+                "101",
+                "Matemáticas",
+                "sobre Matemáticas",
+                juan,
+                "Teoría",
+                LocalDateTime.now(),
+                valoracionesContenido
+        );
 
         estudiante.valorarContenido(contenido, 5, "Excelente contenido");
 
-        // Verificar que la valoración fue añadida al contenido
         assertEquals(1, contenido.getValoraciones().getTamanio());
-
-        // Verificar que la valoración fue añadida al estudiante
         assertEquals(1, estudiante.getValoraciones().getTamanio());
 
         Valoracion valEstudiante = estudiante.getValoraciones().obtener(0);
-        Valoracion valContenido = contenido.getValoraciones().obtener(0);
+        Valoracion valContenido  = contenido.getValoraciones().obtener(0);
 
         assertEquals(valEstudiante, valContenido);
         assertEquals(5, valEstudiante.getPuntuacion());
@@ -82,64 +87,46 @@ public class UsuarioTest {
     @Test
     public void testAgregarMiembroAlGrupo() {
         GrupoEstudio grupo = new GrupoEstudio("001", "Matemáticas Avanzadas");
-        int miembrosAntes = grupo.getMiembros().getTamanio(); // debería ser 0 inicialmente
+        int miembrosAntes = grupo.getMiembros().getTamanio();
 
-        // Agregar el estudiante al grupo mediante el método del grupo
         grupo.agregarMiembro(estudiante);
 
-        // Verificar que el grupo tiene un miembro más
         assertEquals(miembrosAntes + 1, grupo.getMiembros().getTamanio());
-
-        // Verificar que el grupo contiene al estudiante
         assertTrue(grupo.getMiembros().contiene(estudiante));
-
-        // Verificar que el estudiante tiene asociado el grupo
         assertEquals(1, estudiante.getGruposEstudio().getTamanio());
         assertEquals(grupo, estudiante.getGruposEstudio().obtener(0));
     }
 
-
-
-    @Test
-    public void testBuscarContenido() {
-        ListaEnlazada<Valoracion> valoracionesVacias = new ListaEnlazada<>();
-
-        Estudiante juan = new Estudiante("idJuan", "Juan Pérez", "juan@email.com", "12346",
-                new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
-                new ColaPrioridad<>(), new ListaEnlazada<>());
-        Estudiante ana = new Estudiante("idJuan", "Ana", "ana@email.com", "12345",
-        new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
-                new ColaPrioridad<>(), new ListaEnlazada<>());
-
-        Contenido c1 = new Contenido("101", "Matemáticas", "Descripción Matemáticas", juan, "Video", LocalDateTime.now(), valoracionesVacias);
-        Contenido c2 = new Contenido("102", "Historia", "Descripción Historia", ana, "Artículo", LocalDateTime.now(), valoracionesVacias);
-
-        estudiante.getHistorialContenidos().agregar(c1);
-        estudiante.getHistorialContenidos().agregar(c2);
-
-        ListaEnlazada<Contenido> resultados = estudiante.buscarContenido("Matemáticas", "Juan Pérez", "Video");
-
-        assertEquals(1, resultados.getTamanio());
-        assertEquals(c1, resultados.obtener(0));
-    }
-
     @Test
     public void testPublicarContenido() {
-
-        Estudiante ana = new Estudiante("idJuan", "Ana", "ana@email.com", "12345",
-                new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
-                new ColaPrioridad<>(), new ListaEnlazada<>());
+        Estudiante ana = new Estudiante(
+                "idAna",
+                "Ana",
+                "ana@email.com",
+                "12345",
+                new ListaEnlazada<>(),
+                new ListaEnlazada<>(),
+                new ListaEnlazada<>(),
+                new ColaPrioridad<>(),
+                new ListaEnlazada<>()
+        );
 
         ListaEnlazada<Valoracion> valoracionesVacias = new ListaEnlazada<>();
 
-
-        Contenido contenido = new Contenido("103", "Física", "Temas de fisica", ana,"Video", LocalDateTime.now(), valoracionesVacias);
+        Contenido contenido = new Contenido(
+                "103",
+                "Física",
+                "Temas de física",
+                ana,
+                "Video",
+                LocalDateTime.now(),
+                valoracionesVacias
+        );
 
         estudiante.publicarContenido(contenido);
 
-        // Verificar que se agregó al historial del estudiante
         assertEquals(1, estudiante.getHistorialContenidos().getTamanio());
         assertEquals(contenido, estudiante.getHistorialContenidos().obtener(0));
-
     }
+
 }

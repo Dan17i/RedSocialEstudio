@@ -41,9 +41,8 @@ class Mensaje {
         if (destinatario instanceof Estudiante) {
             // Enviar mensaje a un solo estudiante
             System.out.println("Mensaje enviado a " + ((Estudiante) destinatario).getNombre() + ": " + this.texto);
-        } else if (destinatario instanceof GrupoEstudio) {
+        } else if (destinatario instanceof GrupoEstudio grupo) {
             // Enviar mensaje a todos los miembros del grupo de estudio
-            GrupoEstudio grupo = (GrupoEstudio) destinatario;
             for (Estudiante estudiante : grupo.getMiembros()) {
                 System.out.println("Mensaje enviado a " + estudiante.getNombre() + ": " + this.texto);
             }

@@ -1,9 +1,6 @@
 package models;
 
-import co.edu.uniquindio.redsocial.models.Contenido;
-import co.edu.uniquindio.redsocial.models.Estudiante;
-import co.edu.uniquindio.redsocial.models.GrupoEstudio;
-import co.edu.uniquindio.redsocial.models.Valoracion;
+import co.edu.uniquindio.redsocial.models.*;
 import co.edu.uniquindio.redsocial.models.structures.ColaPrioridad;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
@@ -32,7 +29,7 @@ public class EstudianteTest {
 
         ListaEnlazada<Contenido> historial = new ListaEnlazada<>();
         ListaEnlazada<Valoracion> valoraciones = new ListaEnlazada<>();
-        ColaPrioridad<ColaPrioridad.SolicitudAyuda> solicitudesAyuda = new ColaPrioridad<>();
+        ColaPrioridad<SolicitudAyuda> solicitudesAyuda = new ColaPrioridad<>();
         ListaEnlazada<GrupoEstudio> grupos = new ListaEnlazada<>();
 
         estudiante = new Estudiante(
@@ -40,14 +37,13 @@ public class EstudianteTest {
                 intereses, historial, valoraciones, solicitudesAyuda, grupos
         );
 
-        ListaEnlazada<Valoracion> listaVacia = new ListaEnlazada<>();
-
         Estudiante Juanes = new Estudiante("idJuan", "Juanes", "juanes@email.com", "12345",
                 new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
                 new ColaPrioridad<>(), new ListaEnlazada<>());
 
-        contenidoEjemplo = new Contenido("001", "Matemáticas","trata de matematicas", Juanes, "Video", LocalDateTime.now(),new ListaEnlazada<>());
+        contenidoEjemplo = new Contenido("001", "Matemáticas", "trata de matematicas", Juanes, "Video", LocalDateTime.now(), new ListaEnlazada<>());
     }
+
 
     /**
      * Verifica que el contenido publicado se agrega al historial del estudiante.
@@ -75,13 +71,13 @@ public class EstudianteTest {
     public void testUnirseAGrupo() {
         GrupoEstudio grupo = new GrupoEstudio("G01", "Grupo de Álgebra");
 
-        int gruposAntes = estudiante.getGrupos().getTamanio();
+        int gruposAntes = estudiante.getGruposEstudio().getTamanio();
         int miembrosAntes = grupo.getMiembros().getTamanio();
 
         estudiante.unirseAGrupo(grupo);
 
-        assertEquals(gruposAntes + 1, estudiante.getGrupos().getTamanio(), "El estudiante no agregó el grupo");
-        assertTrue(estudiante.getGrupos().buscar(grupo), "El grupo no fue encontrado en los grupos del estudiante");
+        assertEquals(gruposAntes + 1, estudiante.getGruposEstudio().getTamanio(), "El estudiante no agregó el grupo");
+        assertTrue(estudiante.getGruposEstudio().buscar(grupo), "El grupo no fue encontrado en los grupos del estudiante");
 
         assertEquals(miembrosAntes + 1, grupo.getMiembros().getTamanio(), "El grupo no tiene un miembro más");
         assertTrue(grupo.getMiembros().buscar(estudiante), "El estudiante no fue encontrado en los miembros del grupo");

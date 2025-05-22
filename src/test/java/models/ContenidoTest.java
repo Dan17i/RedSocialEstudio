@@ -48,13 +48,25 @@ public class ContenidoTest {
                 new ListaEnlazada<>()              // grupos de estudio
         );
 
-        // Agregar valoración al contenido
-        valoraciones.agregar(new Valoracion(estudiante, 4, "Buena explicación"));
+        // Crear un contenido de prueba
+        Contenido contenido = new Contenido(
+                "c1",                             // id
+                "Matemáticas",                   // tema
+                "Explicación de integrales",     // descripción
+                estudiante,                      // autor
+                "Video",                        // tipo
+                LocalDateTime.now(),             // fecha de creación
+                new ListaEnlazada<>()            // valoraciones vacías inicialmente
+        );
+
+        // Agregar valoración al contenido (incluyendo el contenido en el constructor)
+        contenido.getValoraciones().agregar(new Valoracion(estudiante, contenido, 4, "Buena explicación"));
 
         float promedio = contenido.calcularValoracionPromedio();
 
-        //assertEquals(4.0f, promedio, 0.01, "El promedio debe ser igual a la única puntuación");
+        assertEquals(4.0f, promedio, 0.01, "El promedio debe ser igual a la única puntuación");
     }
+
 
 
     @Test
@@ -66,9 +78,9 @@ public class ContenidoTest {
         Estudiante estudiante3 = new Estudiante("e3", "Usuario3", "usuario3@correo.com", "1234",
                 new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(), new ColaPrioridad<>(), new ListaEnlazada<>());
 
-        valoraciones.agregar(new Valoracion(estudiante1, 4, "Buena"));
-        valoraciones.agregar(new Valoracion(estudiante2, 5, "Excelente"));
-        valoraciones.agregar(new Valoracion(estudiante3, 3, "Regular"));
+        valoraciones.agregar(new Valoracion(estudiante1, contenido, 4, "Buena"));
+        valoraciones.agregar(new Valoracion(estudiante2, contenido, 5, "Excelente"));
+        valoraciones.agregar(new Valoracion(estudiante3, contenido, 3, "Regular"));
 
         float promedio = contenido.calcularValoracionPromedio();
 

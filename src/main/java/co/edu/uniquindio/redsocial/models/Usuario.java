@@ -69,7 +69,7 @@ public class Usuario {
      */
     public void valorarContenido(Contenido contenido, int puntuacion, String comentario) {
         // Crear una nueva valoración
-        Valoracion nuevaValoracion = new Valoracion((Estudiante) this, puntuacion, comentario);
+        Valoracion nuevaValoracion = new Valoracion((Estudiante) this,contenido, puntuacion, comentario);
 
         // Agregar la valoración al contenido
         contenido.getValoraciones().agregar(nuevaValoracion);

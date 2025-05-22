@@ -4,20 +4,33 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Clase que representa una lista enlazada simple.
+ * Clase que representa una lista enlazada simple genérica.
+ * Permite operaciones como agregar, eliminar, buscar, obtener sublistas, clonar e iterar elementos.
  *
- * @param <T> tipo de dato que contiene la lista
+ * @param <T> Tipo de dato que contendrá la lista enlazada
+ * @author Daniel
+ * @author Sebastian
+ * @author Juan
+ * @since 2025-04-02
  */
 public class ListaEnlazada<T> implements Iterable<T> {
 
     private NodoLista<T> cabeza;
     private int tamanio;
 
+    /**
+     * Constructor que inicializa una lista vacía.
+     */
     public ListaEnlazada() {
         this.cabeza = null;
         this.tamanio = 0;
     }
 
+    /**
+     * Constructor que permite inicializar con una cabeza y tamaño específicos.
+     * @param cabeza Nodo inicial de la lista
+     * @param tamanio Número de elementos de la lista
+     */
     public ListaEnlazada(NodoLista<T> cabeza, int tamanio) {
         this.cabeza = cabeza;
         this.tamanio = tamanio;
@@ -63,9 +76,8 @@ public class ListaEnlazada<T> implements Iterable<T> {
      * @throws IndexOutOfBoundsException si el índice está fuera de rango.
      */
     public void put(int index, T dato) {
-        set(index, dato);  // Reutiliza lógica ya implementada
+        set(index, dato);
     }
-
 
     /**
      * Agrega un nuevo elemento al final de la lista.
@@ -93,11 +105,10 @@ public class ListaEnlazada<T> implements Iterable<T> {
      */
     public void agregarInicio(T elemento) {
         NodoLista<T> nuevo = new NodoLista<>(elemento);
-        nuevo.setSiguiente(cabeza);  // Apunta al nodo actual
-        cabeza = nuevo;              // Ahora este es el nuevo primero
+        nuevo.setSiguiente(cabeza);
+        cabeza = nuevo;
         tamanio++;
     }
-
 
     /**
      * Elimina el nodo en la posición especificada.
@@ -141,6 +152,7 @@ public class ListaEnlazada<T> implements Iterable<T> {
         }
         return false;
     }
+
     /**
      * Elimina el nodo en la posición especificada y retorna su dato.
      *
@@ -164,7 +176,6 @@ public class ListaEnlazada<T> implements Iterable<T> {
         tamanio--;
         return dato;
     }
-
 
     /**
      * Verifica si un elemento está en la lista.
@@ -311,13 +322,11 @@ public class ListaEnlazada<T> implements Iterable<T> {
         NodoLista<T> actual = cabeza;
         int indice = 0;
 
-        // Avanzar hasta 'desde'
         while (indice < desde) {
             actual = actual.getSiguiente();
             indice++;
         }
 
-        // Agregar elementos desde 'desde' hasta 'hasta'
         while (indice <= hasta && actual != null) {
             sublista.agregar(actual.getDato());
             actual = actual.getSiguiente();
@@ -326,8 +335,6 @@ public class ListaEnlazada<T> implements Iterable<T> {
 
         return sublista;
     }
-
-
 
     /**
      * Retorna un iterador para recorrer secuencialmente los elementos de la lista.

@@ -10,7 +10,7 @@ import java.util.Objects;
  * @author Juan Soto
  * @since 2025-05-12
  */
-class Mensaje {
+public class Mensaje {
     private Estudiante remitente;
     private Object destinatario; // Puede ser un Estudiante o un Grupo
     private String texto;

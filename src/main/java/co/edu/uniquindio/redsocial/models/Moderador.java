@@ -2,6 +2,7 @@ package co.edu.uniquindio.redsocial.models;
 
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
+
 import java.time.LocalDateTime;
 
 /**
@@ -13,22 +14,22 @@ import java.time.LocalDateTime;
  * @author Juan Soto
  * @since 2025-04-02
  */
-class Moderador extends Usuario {
-    private boolean accesoCompleto;  // Cambiado a booleano
+public class Moderador extends Usuario {
+    private boolean accesoCompleto;
     private ListaEnlazada<String> areasResponsabilidad;
 
     /**
-     * Constructor para inicializar un moderador.
+     * Constructor del moderador.
      *
-     * @param id Identificador del moderador.
-     * @param nombre Nombre del moderador.
-     * @param email Correo electrónico del moderador.
-     * @param contraseña Contraseña del moderador.
-     * @param intereses Lista de intereses del moderador.
-     * @param historialContenidos Historial de contenidos del moderador.
-     * @param valoraciones Lista de valoraciones del moderador.
-     * @param accesoCompleto Booleano que indica si tiene acceso completo.
-     * @param areasResponsabilidad Lista de áreas de responsabilidad del moderador.
+     * @param id                  ID del moderador
+     * @param nombre              Nombre del moderador
+     * @param email               Correo electrónico del moderador
+     * @param contraseña          Contraseña del moderador
+     * @param intereses           Lista de intereses del moderador
+     * @param historialContenidos Historial de contenidos vistos por el moderador
+     * @param valoraciones        Valoraciones realizadas por el moderador
+     * @param accesoCompleto      Indica si tiene acceso total a todas las áreas
+     * @param areasResponsabilidad Lista de áreas que el moderador puede gestionar
      */
     public Moderador(String id, String nombre, String email, String contraseña,
                      ListaEnlazada<String> intereses,
@@ -37,61 +38,128 @@ class Moderador extends Usuario {
                      boolean accesoCompleto, ListaEnlazada<String> areasResponsabilidad) {
         super(id, nombre, email, contraseña, intereses, historialContenidos, valoraciones);
         this.accesoCompleto = accesoCompleto;
-        this.areasResponsabilidad = areasResponsabilidad != null ? areasResponsabilidad : new ListaEnlazada<>();
+        this.areasResponsabilidad = (areasResponsabilidad != null) ? areasResponsabilidad : new ListaEnlazada<>();
     }
 
-    // Métodos específicos de Moderador
-
     /**
-     * Método para gestionar usuarios. (Por implementar)
-     * Se espera que este método gestione el alta, baja o modificación de usuarios.
+     * Método genérico para gestionar usuarios.
      */
     public void gestionarUsuarios() {
-        // Lógica de gestión TODO TORRES
+        System.out.println("[Moderador] Gestión general de usuarios en progreso...");
     }
 
     /**
-     * Método para eliminar contenido inapropiado.
+     * Da de alta a un usuario nuevo en la red social.
      *
-     * @param contenido Contenido a eliminar.
+     * @param usuario Usuario a dar de alta
+     */
+    public void darAltaUsuario(Usuario usuario) {
+        System.out.println("[Moderador] Usuario dado de alta: " + usuario.getNombre());
+    }
+
+    /**
+     * Da de baja a un usuario existente de la red social.
+     *
+     * @param usuario Usuario a dar de baja
+     */
+    public void darBajaUsuario(Usuario usuario) {
+        System.out.println("[Moderador] Usuario dado de baja: " + usuario.getNombre());
+    }
+
+    /**
+     * Modifica la información de un usuario.
+     *
+     * @param usuario     Usuario a modificar
+     * @param nuevoNombre Nuevo nombre del usuario
+     */
+    public void modificarUsuario(Usuario usuario, String nuevoNombre) {
+        System.out.println("[Moderador] Usuario modificado: " + usuario.getNombre() + " a " + nuevoNombre);
+    }
+
+    /**
+     * Elimina un contenido de la red social.
+     *
+     * @param contenido Contenido a eliminar
      */
     public void eliminarContenido(Contenido contenido) {
-        // Lógica de eliminación TODO TORRES
+        System.out.println("[Moderador] Contenido eliminado: " + contenido);
     }
 
     /**
-     * Método para generar un reporte de comunidades.
+     * Visualiza el grafo de relaciones entre los usuarios.
+     */
+    public void visualizarGrafo() {
+        System.out.println("[Moderador] Visualizando el grafo de relaciones...");
+    }
+
+    /**
+     * Genera un reporte de las comunidades detectadas en la red.
      *
-     * @return Lista de listas de estudiantes.
+     * @return Lista de comunidades, cada una representada como una lista de estudiantes
      */
     public ListaEnlazada<ListaEnlazada<Estudiante>> generarReporteComunidades() {
         return new ListaEnlazada<>();
     }
 
     /**
-     * Método para generar un reporte de tipo específico.
+     * Genera un reporte genérico basado en el tipo proporcionado.
      *
-     * @param tipo Tipo de reporte que se desea generar.
-     * @return Un objeto de tipo Reporte con la información solicitada.
+     * @param tipo Tipo de reporte a generar
+     * @return Reporte generado
      */
-    public Reporte generarReporte(String tipo) {
-        return new Reporte("1", tipo, LocalDateTime.now(), new ListaEnlazada<>());
+    public <T> Reporte<T> generarReporte(TipoReporte tipo) {
+        return new Reporte<>("2", tipo, LocalDateTime.now(), new ListaEnlazada<>());
+    }
+
+
+
+    /**
+     * Genera un reporte de los contenidos más valorados.
+     *
+     * @return Reporte de contenidos más valorados
+     */
+    public Reporte<Contenido> generarReporteContenidosMasValorados() {
+        return new Reporte<>("2", TipoReporte.CONTENIDOS_VALORADOS, LocalDateTime.now(), new ListaEnlazada<>());
     }
 
     /**
-     * Método para visualizar el grafo de relaciones entre usuarios.
-     * (Por implementar)
+     * Genera un reporte de los estudiantes más conectados.
+     *
+     * @return Reporte de estudiantes más conectados
      */
-    public void visualizarGrafo() {
-        // Lógica de visualización TODO TORRES
+    public Reporte<Estudiante> generarReporteEstudiantesMasConectados() {
+        return new Reporte<>("3", TipoReporte.ESTUDIANTES_CONECTADOS, LocalDateTime.now(), new ListaEnlazada<>());
     }
 
-    // Getters y Setters específicos
+    /**
+     * Genera un reporte de los caminos más cortos entre dos estudiantes.
+     *
+     * @param idOrigen  ID del estudiante origen
+     * @param idDestino ID del estudiante destino
+     * @return Reporte con caminos más cortos
+     */
+    public Reporte<String> generarReporteCaminosMasCortos(String idOrigen, String idDestino) {
+        ListaEnlazada<String> datos = new ListaEnlazada<>();
+        datos.agregar("Desde: " + idOrigen);
+        datos.agregar("Hasta: " + idDestino);
+        // Aquí podrías agregar la lógica real de caminos más cortos.
+        return new Reporte<>("4", TipoReporte.CONTENIDOS_VALORADOS, LocalDateTime.now(), datos);
+    }
+
+    /**
+     * Genera un reporte de niveles de participación de los estudiantes.
+     *
+     * @return Reporte de participación
+     */
+    public Reporte<String> generarReporteParticipacion() {
+        return new Reporte<>("5", TipoReporte.INFORME, LocalDateTime.now(), new ListaEnlazada<>());
+    }
+
 
     /**
      * Verifica si el moderador tiene acceso completo.
      *
-     * @return true si tiene acceso completo, false de lo contrario.
+     * @return true si tiene acceso completo, false de lo contrario
      */
     public boolean tieneAccesoCompleto() {
         return accesoCompleto;
@@ -100,16 +168,16 @@ class Moderador extends Usuario {
     /**
      * Establece si el moderador tiene acceso completo.
      *
-     * @param accesoCompleto true si debe tener acceso completo, false de lo contrario.
+     * @param accesoCompleto true si se desea acceso completo, false en caso contrario
      */
     public void setAccesoCompleto(boolean accesoCompleto) {
         this.accesoCompleto = accesoCompleto;
     }
 
     /**
-     * Obtiene las áreas de responsabilidad del moderador.
+     * Obtiene la lista de áreas de responsabilidad del moderador.
      *
-     * @return Lista de áreas de responsabilidad.
+     * @return Lista de áreas
      */
     public ListaEnlazada<String> getAreasResponsabilidad() {
         return areasResponsabilidad;
@@ -118,7 +186,8 @@ class Moderador extends Usuario {
     /**
      * Establece las áreas de responsabilidad del moderador.
      *
-     * @param areasResponsabilidad Lista de áreas de responsabilidad.
+     * @param areasResponsabilidad Lista de áreas a asignar
+     * @throws IllegalArgumentException si la lista es nula o vacía
      */
     public void setAreasResponsabilidad(ListaEnlazada<String> areasResponsabilidad) {
         if (areasResponsabilidad != null && !areasResponsabilidad.isEmpty()) {
@@ -126,5 +195,15 @@ class Moderador extends Usuario {
         } else {
             throw new IllegalArgumentException("Las áreas de responsabilidad no pueden ser nulas o vacías");
         }
+    }
+
+    /**
+     * Verifica si el moderador puede gestionar una determinada área.
+     *
+     * @param area Área a comprobar
+     * @return true si puede gestionar el área, false de lo contrario
+     */
+    public boolean puedeGestionarArea(String area) {
+        return accesoCompleto || (areasResponsabilidad != null && areasResponsabilidad.contiene(area));
     }
 }

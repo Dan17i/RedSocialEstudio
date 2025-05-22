@@ -77,10 +77,11 @@ public class Estudiante extends Usuario {
         if (puntuacion < 1 || puntuacion > 5) {
             throw new IllegalArgumentException("La puntuación debe estar entre 1 y 5");
         }
-        Valoracion v = new Valoracion(this, puntuacion, comentario);
+        Valoracion v = new Valoracion(this, contenido, puntuacion, comentario);
         contenido.getValoraciones().agregar(v);
         getValoraciones().agregar(v);
     }
+
 
     /**
      * Publica un contenido en la plataforma y lo añade al historial.

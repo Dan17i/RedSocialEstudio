@@ -12,6 +12,19 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Clase de prueba unitaria para {@link Mensaje}.
+ * Verifica la funcionalidad del envío de mensajes a estudiantes y grupos,
+ * así como la validación de parámetros, método toString, equals y hashCode.
+ * <p>
+ * Estas pruebas están diseñadas para garantizar que la clase Mensaje cumpla
+ * correctamente con sus responsabilidades de encapsular y enviar información
+ * entre estudiantes y grupos de estudio.
+ * </p>
+ *
+ * @author Daniel Jurado
+ * @since 2025-05-21
+ */
 public class MensajeTest {
 
     private Estudiante emisor;
@@ -19,15 +32,19 @@ public class MensajeTest {
     private GrupoEstudio grupo;
     private LocalDateTime fecha;
 
+    /**
+     * Configura los objetos necesarios antes de cada prueba:
+     * estudiantes, grupo de estudio y fecha del mensaje.
+     */
     @BeforeEach
     public void setUp() {
         emisor = new Estudiante(
                 "E1", "Juan", "juan@mail.com", "1234",
-                new ListaEnlazada<>(),                 // intereses (String)
-                new ListaEnlazada<>(),                 // historialContenidos (Contenido)
-                new ListaEnlazada<>(),                 // valoraciones
-                new ColaPrioridad<>(),                 // solicitudesAyuda
-                new ListaEnlazada<>()                  // gruposEstudio
+                new ListaEnlazada<>(),
+                new ListaEnlazada<>(),
+                new ListaEnlazada<>(),
+                new ColaPrioridad<>(),
+                new ListaEnlazada<>()
         );
 
         receptor = new Estudiante(
@@ -39,44 +56,33 @@ public class MensajeTest {
                 new ListaEnlazada<>()
         );
 
-
-        Estudiante tutor = new Estudiante(
-                "T1",                                  // id
-                "Tutor",                               // nombre
-                "tutor@mail.com",                      // email
-                "1234",                                // contrasenia
-                new ListaEnlazada<>(),                 // intereses (String)
-                new ListaEnlazada<>(),                 // historialContenidos (Contenido)
-                new ListaEnlazada<>(),                 // valoraciones
-                new ColaPrioridad<>(),                 // solicitudesAyuda
-                new ListaEnlazada<>()                  // gruposEstudio
-        );
-
-
         grupo = new GrupoEstudio("G1", "Grupo Álgebra");
 
         grupo.agregarMiembro(new Estudiante(
                 "E3", "Luis", "luis@mail.com", "1234",
-                new ListaEnlazada<>(),                 // intereses (String)
-                new ListaEnlazada<>(),                 // historialContenidos (Contenido)
-                new ListaEnlazada<>(),                 // valoraciones
-                new ColaPrioridad<>(),                 // solicitudesAyuda
+                new ListaEnlazada<>(),
+                new ListaEnlazada<>(),
+                new ListaEnlazada<>(),
+                new ColaPrioridad<>(),
                 new ListaEnlazada<>()
         ));
 
         grupo.agregarMiembro(new Estudiante(
                 "E4", "Sofía", "sofia@mail.com", "1234",
-                new ListaEnlazada<>(),                 // intereses (String)
-                new ListaEnlazada<>(),                 // historialContenidos (Contenido)
-                new ListaEnlazada<>(),                 // valoraciones
-                new ColaPrioridad<>(),                 // solicitudesAyuda
+                new ListaEnlazada<>(),
+                new ListaEnlazada<>(),
+                new ListaEnlazada<>(),
+                new ColaPrioridad<>(),
                 new ListaEnlazada<>()
         ));
 
         fecha = LocalDateTime.now();
     }
 
-
+    /**
+     * Verifica que el método {@code enviar()} funcione correctamente
+     * cuando el receptor es un estudiante individual.
+     */
     @Test
     public void testEnviarMensajeAEstudiante() {
         Mensaje mensaje = new Mensaje(emisor, receptor, "Hola Ana", fecha);
@@ -91,6 +97,10 @@ public class MensajeTest {
         assertTrue(output.contains("Mensaje enviado a Ana: Hola Ana"));
     }
 
+    /**
+     * Verifica que el método {@code enviar()} funcione correctamente
+     * cuando el receptor es un grupo de estudio.
+     */
     @Test
     public void testEnviarMensajeAGrupo() {
         Mensaje mensaje = new Mensaje(emisor, grupo, "Reunión mañana", fecha);
@@ -105,6 +115,10 @@ public class MensajeTest {
         assertTrue(output.contains("Mensaje enviado a Sofía: Reunión mañana"));
     }
 
+    /**
+     * Verifica que el constructor de {@code Mensaje} arroje excepciones
+     * al recibir parámetros inválidos (nulos o mensaje vacío).
+     */
     @Test
     public void testConstructorParametrosInvalidos() {
         assertThrows(IllegalArgumentException.class, () -> new Mensaje(null, receptor, "Hola", fecha));
@@ -112,6 +126,9 @@ public class MensajeTest {
         assertThrows(IllegalArgumentException.class, () -> new Mensaje(emisor, receptor, "", fecha));
     }
 
+    /**
+     * Verifica que el método {@code toString()} incluya los datos relevantes del mensaje.
+     */
     @Test
     public void testToString() {
         Mensaje mensaje = new Mensaje(emisor, receptor, "Hola", fecha);
@@ -121,6 +138,9 @@ public class MensajeTest {
         assertTrue(result.contains("Mensaje: Hola"));
     }
 
+    /**
+     * Verifica el comportamiento de los métodos {@code equals()} y {@code hashCode()}.
+     */
     @Test
     public void testEqualsAndHashCode() {
         Mensaje m1 = new Mensaje(emisor, receptor, "Hola", fecha);
@@ -132,4 +152,3 @@ public class MensajeTest {
         assertNotEquals(m1, m3);
     }
 }
-

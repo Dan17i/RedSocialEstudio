@@ -13,6 +13,18 @@
 <div class="container mt-5">
   <div class="row">
     <!-- Columna del formulario -->
+    <% if (request.getAttribute("mensaje") != null) { %>
+    <div class="alert alert-success" role="alert">
+      <%= request.getAttribute("mensaje") %>
+    </div>
+    <% } %>
+
+    <% if (request.getAttribute("error") != null) { %>
+    <div class="alert alert-danger" role="alert">
+      <%= request.getAttribute("error") %>
+    </div>
+    <% } %>
+
     <div class="col-md-6">
       <div class="card shadow-sm">
         <div class="card-header text-center bg-primary text-white">

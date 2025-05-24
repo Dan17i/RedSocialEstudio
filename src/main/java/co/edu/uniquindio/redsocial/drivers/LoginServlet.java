@@ -1,6 +1,8 @@
 package co.edu.uniquindio.redsocial.drivers;
 
 import co.edu.uniquindio.redsocial.models.Estudiante;
+import co.edu.uniquindio.redsocial.models.Usuario;
+import co.edu.uniquindio.redsocial.models.services.implement.SistemaAutenticacion;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
 import javax.servlet.ServletException;
@@ -11,29 +13,64 @@ import java.io.IOException;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
+    private SistemaAutenticacion sistemaAutenticacion;
+
+    // Credenciales fijas del moderador
+    private static final String MODERADOR_EMAIL = "moderador@redsocial.com";
+    private static final String MODERADOR_PASS = "moderador123";
+
+    @Override
+    public void init() throws ServletException {
+        sistemaAutenticacion = (SistemaAutenticacion) getServletContext().getAttribute("sistemaAutenticacion");
+        if (sistemaAutenticacion == null) {
+            sistemaAutenticacion = new SistemaAutenticacion();
+            getServletContext().setAttribute("sistemaAutenticacion", sistemaAutenticacion);
+        }
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Simula autenticación
-        String email = request.getParameter("email");
-        String password = request.getParameter("contrasenia");
+        String email = request.getParameter("correo");
+        String password = request.getParameter("contrasena");
 
-        // Simulamos un estudiante con datos de ejemplo
-        Estudiante estudiante = new Estudiante(
-                "123", "Juan Esteban", "Juan@gmail", "123",
-                new ListaEnlazada<>(), new ListaEnlazada<>(),
-                new ListaEnlazada<>(), null, null
-        );
+        try {
+            // Verificar primero si es moderador fijo
+            if (MODERADOR_EMAIL.equalsIgnoreCase(email) && MODERADOR_PASS.equals(password)) {
+                // Creamos un Usuario para moderador
+                Estudiante moderador = new Estudiante(
+                        "MOD-0001",                       // id (puedes asignar un id fijo)
+                        "Moderador Principal",            // nombre
+                        "moderador@redsocial.com",   // email
+                        "moderador123",                        // contraseña
+                        new ListaEnlazada<>(),           // intereses (vacío)
+                        new ListaEnlazada<>(),           // historial (vacío)
+                        new ListaEnlazada<>(),           // valoraciones (vacío)
+                        null,                           // cola de solicitudes (según constructor Estudiante)
+                        new ListaEnlazada<>()            // grupos (vacío)
+                );
 
-        estudiante.getIntereses().agregar("Seguridad Informática");
-        estudiante.getIntereses().agregar("Redes");
-        // Puedes agregar contenidos al historial si quieres probar
+                // Guardamos en sesión
+                request.getSession().setAttribute("usuarioActual", moderador);
 
-        // Guarda en sesión
-        request.getSession().setAttribute("usuarioActual", estudiante);
+                // Redirigimos a página especial del moderador
+                response.sendRedirect("dashboardModerador.jsp");
+                return;
+            }
 
-        // Redirige al perfil
-        response.sendRedirect("inicio.jsp");
+            // Si no es moderador, validar usuario normal
+            Usuario usuario = sistemaAutenticacion.iniciarSesion(email, password);
+
+            // Guardar usuario en sesión
+            request.getSession().setAttribute("usuarioActual", usuario);
+
+            // Redirigir al perfil normal
+            response.sendRedirect("inicio.jsp");
+
+        } catch (SecurityException e) {
+            request.setAttribute("error", "Credenciales inválidas");
+            request.getRequestDispatcher("inicioSesion.jsp").forward(request, response);
+        }
     }
 }

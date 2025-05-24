@@ -1,10 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" session="true" %>
+<%@ page import="co.edu.uniquindio.redsocial.models.Estudiante" %>
 <%
     String nombreUsuario = "Invitado";
-    if (session.getAttribute("usuario") != null) {
-        nombreUsuario = (String) session.getAttribute("usuario");
+    Estudiante estudiante = (Estudiante) session.getAttribute("usuarioActual");
+    if (estudiante != null) {
+        nombreUsuario = estudiante.getNombre();
     }
+%>
 
+<%
     // Parámetro para determinar qué sección cargar
     String seccion = request.getParameter("seccion");
     if (seccion == null || seccion.isEmpty()) {

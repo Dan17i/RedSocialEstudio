@@ -1,5 +1,7 @@
 package models;
 
+import co.edu.uniquindio.redsocial.ArchivoMultimedia;
+import co.edu.uniquindio.redsocial.models.Enums.TipoContenido;
 import co.edu.uniquindio.redsocial.models.Contenido;
 import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.HistorialDeContenido;
@@ -9,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,6 +29,7 @@ public class HistorialDeContenidoTest {
     private Contenido contenido3;
     private LocalDateTime ahora;
     private Estudiante autor;
+    private ArchivoMultimedia archivo;
 
     /**
      * Inicializa los datos antes de cada prueba.
@@ -44,9 +46,10 @@ public class HistorialDeContenidoTest {
                 "Integrales",
                 "Descripción sobre integrales", // descripción, puede ser breve o vacía si quieres
                 autor,
-                "Teoría",
+                TipoContenido.TEXTO,
                 LocalDateTime.now(),  // fecha actual para creación
-                new ListaEnlazada<>()
+                new ListaEnlazada<>(),
+                archivo
         );
 
         contenido2 = new Contenido(
@@ -54,9 +57,10 @@ public class HistorialDeContenidoTest {
                 "Derivadas",
                 "Descripción sobre derivadas",
                 autor,
-                "Teoría",
+                TipoContenido.TEXTO,
                 LocalDateTime.now(),
-                new ListaEnlazada<>()
+                new ListaEnlazada<>(),
+                archivo
         );
 
         contenido3 = new Contenido(
@@ -64,9 +68,10 @@ public class HistorialDeContenidoTest {
                 "Límites",
                 "Ejercicios de límites",
                 autor,
-                "Ejercicio",
+                TipoContenido.TEXTO,
                 LocalDateTime.now(),
-                new ListaEnlazada<>()
+                new ListaEnlazada<>(),
+                archivo
         );
 
 
@@ -145,17 +150,17 @@ public class HistorialDeContenidoTest {
 
         // Crear lista de contenidos
         ListaEnlazada<Contenido> contenidos = new ListaEnlazada<>();
-        Contenido contenido1 = new Contenido("C1", "Tema 1", "Descripción X", autor, "Texto",
-                LocalDateTime.now(), new ListaEnlazada<>());
+        Contenido contenido1 = new Contenido("C1", "Tema 1", "Descripción X", autor, TipoContenido.TEXTO,
+                LocalDateTime.now(), new ListaEnlazada<>(),archivo);
 
-        Contenido contenido2 = new Contenido("C2", "Tema 2", "Descripción X", autor, "Texto",
-                LocalDateTime.now(), new ListaEnlazada<>());
+        Contenido contenido2 = new Contenido("C2", "Tema 2", "Descripción X", autor, TipoContenido.TEXTO,
+                LocalDateTime.now(), new ListaEnlazada<>(),archivo);
 
-        Contenido contenido3 = new Contenido("C3", "Tema 3", "Descripción X", autor, "Texto",
-                LocalDateTime.now(), new ListaEnlazada<>());
+        Contenido contenido3 = new Contenido("C3", "Tema 3", "Descripción X", autor, TipoContenido.TEXTO,
+                LocalDateTime.now(), new ListaEnlazada<>(), archivo);
 
-        Contenido contenido4 = new Contenido("C4", "Tema 4", "Descripción X", autor, "Texto",
-                LocalDateTime.now(), new ListaEnlazada<>());
+        Contenido contenido4 = new Contenido("C4", "Tema 4", "Descripción X", autor, TipoContenido.TEXTO,
+                LocalDateTime.now(), new ListaEnlazada<>(),archivo);
 
 
         contenidos.agregar(contenido1);

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LoginServlet.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.drivers</a> &gt; <span class="el_source">LoginServlet.java</span></div><h1>LoginServlet.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.drivers;
+
+import co.edu.uniquindio.redsocial.models.Estudiante;
+import co.edu.uniquindio.redsocial.models.Usuario;
+import co.edu.uniquindio.redsocial.models.services.implement.SistemaAutenticacion;
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+import java.io.IOException;
+
+@WebServlet(&quot;/login&quot;)
+<span class="nc" id="L14">public class LoginServlet extends HttpServlet {</span>
+
+    private SistemaAutenticacion sistemaAutenticacion;
+
+    // Credenciales fijas del moderador
+    private static final String MODERADOR_EMAIL = &quot;moderador@redsocial.com&quot;;
+    private static final String MODERADOR_PASS = &quot;moderador123&quot;;
+
+    @Override
+    public void init() throws ServletException {
+<span class="nc" id="L24">        sistemaAutenticacion = (SistemaAutenticacion) getServletContext().getAttribute(&quot;sistemaAutenticacion&quot;);</span>
+<span class="nc bnc" id="L25" title="All 2 branches missed.">        if (sistemaAutenticacion == null) {</span>
+<span class="nc" id="L26">            sistemaAutenticacion = new SistemaAutenticacion();</span>
+<span class="nc" id="L27">            getServletContext().setAttribute(&quot;sistemaAutenticacion&quot;, sistemaAutenticacion);</span>
+        }
+<span class="nc" id="L29">    }</span>
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+<span class="nc" id="L35">        String email = request.getParameter(&quot;correo&quot;);</span>
+<span class="nc" id="L36">        String password = request.getParameter(&quot;contrasena&quot;);</span>
+
+        try {
+            // Verificar primero si es moderador fijo
+<span class="nc bnc" id="L40" title="All 4 branches missed.">            if (MODERADOR_EMAIL.equalsIgnoreCase(email) &amp;&amp; MODERADOR_PASS.equals(password)) {</span>
+                // Creamos un Usuario para moderador
+<span class="nc" id="L42">                Estudiante moderador = new Estudiante(</span>
+                        &quot;MOD-0001&quot;,                    // id (puedes asignar un id fijo)
+                        &quot;Moderador Principal&quot;,            // nombre
+                        &quot;moderador@redsocial.com&quot;,        // email
+                        &quot;moderador123&quot;,                   // contraseña
+                        new ListaEnlazada&lt;&gt;(),            // intereses (vacío)
+                        new ListaEnlazada&lt;&gt;(),            // historial (vacío)
+                        new ListaEnlazada&lt;&gt;(),            // valoraciones (vacío)
+                        null,                             // cola de solicitudes (según constructor Estudiante)
+                        new ListaEnlazada&lt;&gt;(),            // grupos (vacío)
+                        new ListaEnlazada&lt;&gt;()
+                );
+
+                // Guardamos en sesión
+<span class="nc" id="L56">                request.getSession().setAttribute(&quot;usuarioActual&quot;, moderador);</span>
+
+                // Redirigimos a página especial del moderador
+<span class="nc" id="L59">                response.sendRedirect(&quot;dashboardModerador.jsp&quot;);</span>
+<span class="nc" id="L60">                return;</span>
+            }
+
+            // Si no es moderador, validar usuario normal
+<span class="nc" id="L64">            Usuario usuario = sistemaAutenticacion.iniciarSesion(email, password);</span>
+
+            // Guardar usuario en sesión
+<span class="nc" id="L67">            request.getSession().setAttribute(&quot;usuarioActual&quot;, usuario);</span>
+
+            // Redirigir al perfil normal
+<span class="nc" id="L70">            response.sendRedirect(&quot;inicio.jsp&quot;);</span>
+
+<span class="nc" id="L72">        } catch (SecurityException e) {</span>
+<span class="nc" id="L73">            request.setAttribute(&quot;error&quot;, &quot;Credenciales inválidas&quot;);</span>
+<span class="nc" id="L74">            request.getRequestDispatcher(&quot;inicioSesion.jsp&quot;).forward(request, response);</span>
+<span class="nc" id="L75">        }</span>
+<span class="nc" id="L76">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

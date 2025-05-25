@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GrafoNoDirigido.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models.structures</a> &gt; <span class="el_source">GrafoNoDirigido.java</span></div><h1>GrafoNoDirigido.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models.structures;
+
+import java.util.*;
+
+/**
+ * Representa un grafo no dirigido genérico.
+ * @author Daniel Jurado
+ * @param &lt;T&gt; Tipo del nodo en el grafo.
+ */
+public class GrafoNoDirigido&lt;T&gt; extends GrafoImpl&lt;T&gt; {
+
+    /**
+     * Mapa que asocia cada nodo con su lista de vecinos adyacentes.
+     */
+    private final Map&lt;T, List&lt;T&gt;&gt; listaAdyacencia;
+
+    /**
+     * Constructor que inicializa un grafo no dirigido vacío.
+     */
+<span class="nc" id="L20">    public GrafoNoDirigido() {</span>
+<span class="nc" id="L21">        this.listaAdyacencia = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L22">    }</span>
+
+    /**
+     * Agrega un nodo al grafo. Si ya existe, no hace nada.
+     *
+     * @param nodo Nodo a agregar.
+     */
+    public void agregarNodo(T nodo) {
+<span class="nc" id="L30">        listaAdyacencia.putIfAbsent(nodo, new ArrayList&lt;&gt;());</span>
+<span class="nc" id="L31">    }</span>
+
+    /**
+     * Agrega una arista no dirigida entre dos nodos.
+     * Si los nodos no existen, los crea.
+     *
+     * @param nodo1 Primer nodo.
+     * @param nodo2 Segundo nodo.
+     */
+    public void agregarArista(T nodo1, T nodo2) {
+<span class="nc" id="L41">        agregarNodo(nodo1);</span>
+<span class="nc" id="L42">        agregarNodo(nodo2);</span>
+<span class="nc" id="L43">        listaAdyacencia.get(nodo1).add(nodo2);</span>
+<span class="nc" id="L44">        listaAdyacencia.get(nodo2).add(nodo1);</span>
+<span class="nc" id="L45">    }</span>
+
+    /**
+     * Obtiene los vecinos adyacentes de un nodo.
+     *
+     * @param nodo Nodo cuyo vecinos se buscan.
+     * @return Lista de vecinos, o lista vacía si el nodo no existe.
+     */
+    public List&lt;T&gt; obtenerVecinos(T nodo) {
+<span class="nc" id="L54">        return listaAdyacencia.getOrDefault(nodo, Collections.emptyList());</span>
+    }
+
+    /**
+     * Detecta las comunidades o componentes conexos del grafo no dirigido.
+     * Cada comunidad es una lista de nodos conectados.
+     *
+     * @return Lista de comunidades (listas de nodos).
+     */
+    public List&lt;List&lt;T&gt;&gt; detectarComunidades() {
+<span class="nc" id="L64">        List&lt;List&lt;T&gt;&gt; comunidades = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L65">        Set&lt;T&gt; visitados = new HashSet&lt;&gt;();</span>
+
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        for (T nodo : listaAdyacencia.keySet()) {</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">            if (!visitados.contains(nodo)) {</span>
+<span class="nc" id="L69">                List&lt;T&gt; comunidad = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L70">                dfs(nodo, visitados, comunidad);</span>
+<span class="nc" id="L71">                comunidades.add(comunidad);</span>
+            }
+<span class="nc" id="L73">        }</span>
+
+<span class="nc" id="L75">        return comunidades;</span>
+    }
+
+    /**
+     * DFS auxiliar para recorrer el grafo y encontrar una comunidad.
+     *
+     * @param nodo     Nodo actual.
+     * @param visitados Conjunto de nodos visitados.
+     * @param comunidad Lista donde se acumulan nodos de la comunidad.
+     */
+    private void dfs(T nodo, Set&lt;T&gt; visitados, List&lt;T&gt; comunidad) {
+<span class="nc" id="L86">        visitados.add(nodo);</span>
+<span class="nc" id="L87">        comunidad.add(nodo);</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        for (T vecino : listaAdyacencia.getOrDefault(nodo, Collections.emptyList())) {</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">            if (!visitados.contains(vecino)) {</span>
+<span class="nc" id="L90">                dfs(vecino, visitados, comunidad);</span>
+            }
+<span class="nc" id="L92">        }</span>
+<span class="nc" id="L93">    }</span>
+
+    // Métodos adicionales típicos podrían incluir eliminar nodo/arista,
+    // verificar existencia de nodo/arista, obtener grado, etc.
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

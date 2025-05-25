@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GestorContenidos.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models.services.implement</a> &gt; <span class="el_source">GestorContenidos.java</span></div><h1>GestorContenidos.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models.services.implement;
+
+
+import co.edu.uniquindio.redsocial.models.Contenido;
+import co.edu.uniquindio.redsocial.models.services.interf.IGestorContenidos;
+import co.edu.uniquindio.redsocial.models.structures.ArbolBinarioBusqueda;
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+import co.edu.uniquindio.redsocial.models.structures.NodoLista;
+
+import java.util.HashMap;
+
+public class GestorContenidos implements IGestorContenidos {
+
+    private final ArbolBinarioBusqueda&lt;Contenido&gt; arbolContenidos;
+    private final ListaEnlazada&lt;Contenido&gt; contenidoDestacado;
+    private static GestorContenidos instancia;
+<span class="fc" id="L17">    private ListaEnlazada&lt;Contenido&gt; listaDeContenidos = new ListaEnlazada&lt;&gt;();</span>
+    private String rutaArchivo;
+    private String mimeType;
+    private long tamanioArchivo;
+
+
+    public GestorContenidos(ArbolBinarioBusqueda&lt;Contenido&gt; arbolContenidos,
+<span class="fc" id="L24">                            ListaEnlazada&lt;Contenido&gt; contenidoDestacado) {</span>
+<span class="fc" id="L25">        this.arbolContenidos = arbolContenidos;</span>
+<span class="fc" id="L26">        this.contenidoDestacado = contenidoDestacado;</span>
+<span class="fc" id="L27">    }</span>
+
+    public static GestorContenidos getInstancia() {
+<span class="pc bpc" id="L30" title="1 of 2 branches missed.">        if (instancia == null) {</span>
+<span class="fc" id="L31">            instancia = new GestorContenidos(new ArbolBinarioBusqueda&lt;&gt;(), new ListaEnlazada&lt;&gt;());</span>
+        }
+<span class="fc" id="L33">        return instancia;</span>
+    }
+
+    @Override
+    public void agregarContenido(Contenido contenido) {
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">        if (contenido != null) {</span>
+<span class="fc" id="L39">            arbolContenidos.insertar(contenido.getTema(), contenido);</span>
+<span class="fc" id="L40">            listaDeContenidos.agregar(contenido);</span>
+        }
+<span class="fc" id="L42">    }</span>
+
+    @Override
+    public boolean eliminarContenido (String id){
+<span class="nc" id="L46">        ListaEnlazada&lt;Contenido&gt; todos = arbolContenidos.listarTodos();</span>
+<span class="nc" id="L47">        NodoLista&lt;Contenido&gt; actual = todos.getCabeza();</span>
+<span class="nc bnc" id="L48" title="All 2 branches missed.">        while (actual != null) {</span>
+<span class="nc" id="L49">            Contenido c = actual.getDato();</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">            if (c.getId().equals(id)) {</span>
+<span class="nc" id="L51">                arbolContenidos.eliminar(c.getTema());</span>
+<span class="nc" id="L52">                return true;</span>
+            }
+<span class="nc" id="L54">            actual = actual.getSiguiente();</span>
+<span class="nc" id="L55">        }</span>
+<span class="nc" id="L56">        return false;</span>
+    }
+
+    @Override
+    public ListaEnlazada&lt;Contenido&gt; buscarPorTema(String tema) {
+<span class="nc" id="L61">        return arbolContenidos.listarContenidosPorTema(tema);  // Ahora devuelve la lista filtrada por tema</span>
+    }
+
+    @Override
+    public ListaEnlazada&lt;Contenido&gt; buscarPorAutor(String autor) {
+<span class="nc" id="L66">        ListaEnlazada&lt;Contenido&gt; resultados = new ListaEnlazada&lt;&gt;();</span>
+<span class="nc" id="L67">        ListaEnlazada&lt;Contenido&gt; todos = arbolContenidos.listarTodos();</span>
+<span class="nc" id="L68">        NodoLista&lt;Contenido&gt; actual = todos.getCabeza();</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        while (actual != null) {</span>
+<span class="nc" id="L70">            Contenido c = actual.getDato();</span>
+            // Suponiendo que comparas por nombre del autor
+<span class="nc bnc" id="L72" title="All 2 branches missed.">            if (c.getAutor().getNombre().equalsIgnoreCase(autor)) {</span>
+<span class="nc" id="L73">                resultados.agregar(c);</span>
+            }
+<span class="nc" id="L75">            actual = actual.getSiguiente();</span>
+<span class="nc" id="L76">        }</span>
+<span class="nc" id="L77">        return resultados;</span>
+    }
+
+    @Override
+    public void marcarComoDestacado(Contenido contenido) {
+<span class="fc" id="L82">        contenidoDestacado.agregar(contenido);</span>
+<span class="fc" id="L83">    }</span>
+
+    @Override
+    public HashMap&lt;String, Integer&gt; generarEstadisticas() {
+<span class="nc" id="L87">        HashMap&lt;String, Integer&gt; stats = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L88">        ListaEnlazada&lt;Contenido&gt; todos = arbolContenidos.listarTodos();</span>
+<span class="nc" id="L89">        NodoLista&lt;Contenido&gt; actual = todos.getCabeza();</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        while (actual != null) {</span>
+<span class="nc" id="L91">            String tipo = actual.getDato().getTipo().name();</span>
+<span class="nc" id="L92">            stats.put(tipo, stats.getOrDefault(tipo, 0) + 1);</span>
+<span class="nc" id="L93">            actual = actual.getSiguiente();</span>
+<span class="nc" id="L94">        }</span>
+<span class="nc" id="L95">        return stats;</span>
+    }
+
+    @Override
+    public ListaEnlazada&lt;Contenido&gt; buscarPorTemaAutorTipo(String tema, String autor, String tipo) {
+<span class="nc" id="L100">        ListaEnlazada&lt;Contenido&gt; resultados = new ListaEnlazada&lt;&gt;();</span>
+<span class="nc" id="L101">        ListaEnlazada&lt;Contenido&gt; todos = arbolContenidos.listarTodos();</span>
+<span class="nc" id="L102">        NodoLista&lt;Contenido&gt; actual = todos.getCabeza();</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        while (actual != null) {</span>
+<span class="nc" id="L104">            Contenido c = actual.getDato();</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">            if (c.getTema().equalsIgnoreCase(tema)</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">                    &amp;&amp; c.getAutor().getNombre().equalsIgnoreCase(autor) // corregido aquí</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">                    &amp;&amp; c.getTipo().name().equalsIgnoreCase(tipo)) {</span>
+<span class="nc" id="L108">                resultados.agregar(c);</span>
+            }
+<span class="nc" id="L110">            actual = actual.getSiguiente();</span>
+<span class="nc" id="L111">        }</span>
+<span class="nc" id="L112">        return resultados;</span>
+    }
+
+    @Override
+    public ListaEnlazada&lt;Contenido&gt; getContenidoDestacado() {
+<span class="fc" id="L117">        return contenidoDestacado;</span>
+    }
+
+    @Override
+    public ListaEnlazada&lt;Contenido&gt; obtenerContenidosMasValorados() {
+<span class="fc" id="L122">        ListaEnlazada&lt;Contenido&gt; todos = obtenerTodosLosContenidos(); // Método asumido</span>
+<span class="pc" id="L123">        todos.ordenar((c1, c2) -&gt; Double.compare(c2.promedioValoraciones(), c1.promedioValoraciones()));</span>
+<span class="fc" id="L124">        return todos;</span>
+    }
+
+    /**
+     * Retorna todos los contenidos almacenados en el sistema.
+     *
+     * @return Lista enlazada con todos los contenidos disponibles.
+     */
+    public ListaEnlazada&lt;Contenido&gt; obtenerTodosLosContenidos() {
+<span class="fc" id="L133">        return listaDeContenidos; // Asegúrate de tener esta lista como atributo interno.</span>
+    }
+
+    // Getters y Setters extra si necesitas exponer más control
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -15,6 +15,9 @@ public class GestorContenidos implements IGestorContenidos {
     private final ListaEnlazada<Contenido> contenidoDestacado;
     private static GestorContenidos instancia;
     private ListaEnlazada<Contenido> listaDeContenidos = new ListaEnlazada<>();
+    private String rutaArchivo;
+    private String mimeType;
+    private long tamanioArchivo;
 
 
     public GestorContenidos(ArbolBinarioBusqueda<Contenido> arbolContenidos,
@@ -32,11 +35,14 @@ public class GestorContenidos implements IGestorContenidos {
 
     @Override
     public void agregarContenido(Contenido contenido) {
-        arbolContenidos.insertar(contenido.getTema(), contenido);
+        if (contenido != null) {
+            arbolContenidos.insertar(contenido.getTema(), contenido);
+            listaDeContenidos.agregar(contenido);
+        }
     }
 
     @Override
-    public boolean eliminarContenido(String id) {
+    public boolean eliminarContenido (String id){
         ListaEnlazada<Contenido> todos = arbolContenidos.listarTodos();
         NodoLista<Contenido> actual = todos.getCabeza();
         while (actual != null) {
@@ -82,7 +88,7 @@ public class GestorContenidos implements IGestorContenidos {
         ListaEnlazada<Contenido> todos = arbolContenidos.listarTodos();
         NodoLista<Contenido> actual = todos.getCabeza();
         while (actual != null) {
-            String tipo = actual.getDato().getTipo();
+            String tipo = actual.getDato().getTipo().name();
             stats.put(tipo, stats.getOrDefault(tipo, 0) + 1);
             actual = actual.getSiguiente();
         }
@@ -98,7 +104,7 @@ public class GestorContenidos implements IGestorContenidos {
             Contenido c = actual.getDato();
             if (c.getTema().equalsIgnoreCase(tema)
                     && c.getAutor().getNombre().equalsIgnoreCase(autor) // corregido aquí
-                    && c.getTipo().equalsIgnoreCase(tipo)) {
+                    && c.getTipo().name().equalsIgnoreCase(tipo)) {
                 resultados.agregar(c);
             }
             actual = actual.getSiguiente();

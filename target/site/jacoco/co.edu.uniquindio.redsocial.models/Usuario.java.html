@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Usuario.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models</a> &gt; <span class="el_source">Usuario.java</span></div><h1>Usuario.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models;
+
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+
+/**
+ * Representa un usuario registrado en la red social, incluyendo sus intereses,
+ * historial de contenidos y valoraciones.
+ *
+ * Esta clase puede ser extendida por tipos de usuario como Estudiante.
+ *
+ * @author Daniel Jurado
+ * @author Sebastian Torres
+ * @author Juan Soto
+ * @since 2025-05-13
+ */
+public class Usuario {
+
+    private String id;
+    private String nombre;
+    private String email;
+    private String contraseña;
+    private ListaEnlazada&lt;String&gt; intereses;
+    private ListaEnlazada&lt;Contenido&gt; historialContenidos;
+    private ListaEnlazada&lt;Valoracion&gt; valoraciones;
+
+    /**
+     * Constructor principal del Usuario.
+     *
+     * @param id                  Identificador único.
+     * @param nombre              Nombre del usuario.
+     * @param email               Email único.
+     * @param contraseña          Contraseña para autenticación.
+     * @param intereses           Lista de intereses del usuario.
+     * @param historialContenidos Contenidos visualizados por el usuario.
+     * @param valoraciones        Valoraciones realizadas por el usuario.
+     */
+    public Usuario(String id, String nombre, String email, String contraseña,
+                   ListaEnlazada&lt;String&gt; intereses,
+                   ListaEnlazada&lt;Contenido&gt; historialContenidos,
+<span class="fc" id="L40">                   ListaEnlazada&lt;Valoracion&gt; valoraciones) {</span>
+<span class="fc" id="L41">        this.id = id;</span>
+<span class="fc" id="L42">        this.nombre = nombre;</span>
+<span class="fc" id="L43">        this.email = email;</span>
+<span class="fc" id="L44">        this.contraseña = contraseña;</span>
+<span class="fc" id="L45">        this.intereses = intereses;</span>
+<span class="fc" id="L46">        this.historialContenidos = historialContenidos;</span>
+<span class="fc" id="L47">        this.valoraciones = valoraciones;</span>
+<span class="fc" id="L48">    }</span>
+    /**
+     * Agrega un interés al usuario si no lo tiene ya.
+     *
+     * @param interes El nuevo interés a añadir.
+     */
+    public void agregarInteres(String interes) {
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        for (int i = 0; i &lt; intereses.getTamanio(); i++) {</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">            if (intereses.obtener(i).equalsIgnoreCase(interes)) {</span>
+<span class="nc" id="L57">                return; // Ya existe, no lo agrega</span>
+            }
+        }
+<span class="nc" id="L60">        intereses.agregar(interes);</span>
+<span class="nc" id="L61">    }</span>
+    /**
+     * Permite al estudiante valorar un contenido.
+     * Se registra la valoración tanto en el contenido como en el perfil del estudiante.
+     *
+     * @param contenido  Contenido a valorar.
+     * @param puntuacion Puntuación dada (por ejemplo, de 1 a 5).
+     * @param comentario Comentario opcional del estudiante.
+     */
+    public void valorarContenido(Contenido contenido, int puntuacion, String comentario) {
+        // Crear una nueva valoración
+<span class="nc" id="L72">        Valoracion nuevaValoracion = new Valoracion((Estudiante) this,contenido, puntuacion, comentario);</span>
+
+        // Agregar la valoración al contenido
+<span class="nc" id="L75">        contenido.getValoraciones().agregar(nuevaValoracion);</span>
+
+        // Agregar la valoración al perfil del estudiante
+<span class="nc" id="L78">        this.getValoraciones().agregar(nuevaValoracion);</span>
+<span class="nc" id="L79">    }</span>
+
+
+    /**
+     * Retorna una representación en texto del historial de contenidos vistos por el usuario.
+     *
+     * @return Historial de contenidos como cadena de texto.
+     */
+    public String verHistorial() {
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        if (historialContenidos.isEmpty()) {</span>
+<span class="nc" id="L89">            return &quot;El historial de contenidos está vacío.&quot;;</span>
+        }
+
+<span class="nc" id="L92">        StringBuilder sb = new StringBuilder(&quot;Historial de Contenidos:\n&quot;);</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        for (int i = 0; i &lt; historialContenidos.getTamanio(); i++) {</span>
+<span class="nc" id="L94">            Contenido contenido = historialContenidos.obtener(i);</span>
+<span class="nc" id="L95">            sb.append(&quot;- &quot;).append(contenido.toString()).append(&quot;\n&quot;);</span>
+        }
+
+<span class="nc" id="L98">        return sb.toString();</span>
+    }
+
+    public void recibirMensaje(Mensaje mensaje) {
+        // Por ejemplo, guardar en una lista de bandejas de entrada
+<span class="nc" id="L103">        System.out.println(&quot;Mensaje recibido por &quot; + getNombre() + &quot;: &quot; + mensaje.getTexto());</span>
+<span class="nc" id="L104">    }</span>
+
+
+    // Getters y Setters
+<span class="fc" id="L108">    public String getId() { return id; }</span>
+<span class="nc" id="L109">    public void setId(String id) { this.id = id; }</span>
+
+<span class="fc" id="L111">    public String getNombre() { return nombre; }</span>
+<span class="fc" id="L112">    public void setNombre(String nombre) { this.nombre = nombre; }</span>
+
+<span class="fc" id="L114">    public String getEmail() { return email; }</span>
+<span class="nc" id="L115">    public void setEmail(String email) { this.email = email; }</span>
+
+<span class="nc" id="L117">    public String getContraseña() { return contraseña; }</span>
+<span class="nc" id="L118">    public void setContraseña(String contraseña) { this.contraseña = contraseña; }</span>
+
+<span class="nc" id="L120">    public ListaEnlazada&lt;String&gt; getIntereses() { return intereses; }</span>
+<span class="nc" id="L121">    public void setIntereses(ListaEnlazada&lt;String&gt; intereses) { this.intereses = intereses; }</span>
+
+<span class="fc" id="L123">    public ListaEnlazada&lt;Contenido&gt; getHistorialContenidos() { return historialContenidos; }</span>
+    public void setHistorialContenidos(ListaEnlazada&lt;Contenido&gt; historialContenidos) {
+<span class="nc" id="L125">        this.historialContenidos = historialContenidos;</span>
+<span class="nc" id="L126">    }</span>
+
+<span class="fc" id="L128">    public ListaEnlazada&lt;Valoracion&gt; getValoraciones() { return valoraciones; }</span>
+    public void setValoraciones(ListaEnlazada&lt;Valoracion&gt; valoraciones) {
+<span class="nc" id="L130">        this.valoraciones = valoraciones;</span>
+<span class="nc" id="L131">    }</span>
+
+
+
+    /**
+     * Representación en texto del usuario, sin mostrar la contraseña.
+     */
+    @Override
+    public String toString() {
+<span class="nc" id="L140">        return &quot;Usuario{&quot; +</span>
+                &quot;id='&quot; + id + '\'' +
+                &quot;, nombre='&quot; + nombre + '\'' +
+                &quot;, email='&quot; + email + '\'' +
+                &quot;, intereses=&quot; + intereses +
+                &quot;, historialContenidos=&quot; + historialContenidos +
+                &quot;, valoraciones=&quot; + valoraciones +
+                '}';
+    }
+
+    /**
+     * Compara usuarios por su ID único.
+     */
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L155" title="All 2 branches missed.">        if (this == obj) return true;</span>
+<span class="nc bnc" id="L156" title="All 4 branches missed.">        if (obj == null || getClass() != obj.getClass()) return false;</span>
+<span class="nc" id="L157">        Usuario otro = (Usuario) obj;</span>
+<span class="nc bnc" id="L158" title="All 4 branches missed.">        return id != null &amp;&amp; id.equals(otro.id);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        return id == null ? 0 : id.hashCode();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

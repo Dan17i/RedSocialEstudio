@@ -1,5 +1,7 @@
 package models;
 
+import co.edu.uniquindio.redsocial.ArchivoMultimedia;
+import co.edu.uniquindio.redsocial.models.Enums.TipoContenido;
 import co.edu.uniquindio.redsocial.models.*;
 import co.edu.uniquindio.redsocial.models.services.implement.GestorContenidos;
 import co.edu.uniquindio.redsocial.models.structures.ArbolBinarioBusqueda;
@@ -22,6 +24,7 @@ public class UsuarioTest {
     private ColaPrioridad<SolicitudAyuda> solicitudesAyuda;
     private ListaEnlazada<GrupoEstudio> gruposEstudio;
     private ListaEnlazada<Mensaje> bandejaEntrada;
+    private ArchivoMultimedia archivo;
 
     @BeforeEach
     public void setUp() {
@@ -68,9 +71,10 @@ public class UsuarioTest {
                 "Matemáticas",
                 "sobre Matemáticas",
                 juan,
-                "Teoría",
+                TipoContenido.TEXTO,
                 LocalDateTime.now(),
-                valoracionesContenido
+                valoracionesContenido,
+                archivo
         );
 
         estudiante.valorarContenido(contenido, 5, "Excelente contenido");
@@ -122,9 +126,10 @@ public class UsuarioTest {
                 "Física",
                 "Temas de física",
                 ana,
-                "Video",
+                TipoContenido.VIDEO,
                 LocalDateTime.now(),
-                valoracionesVacias
+                valoracionesVacias,
+                archivo
         );
         ArbolBinarioBusqueda<Contenido> arbolContenidos = new ArbolBinarioBusqueda<>();
         ListaEnlazada<Contenido> contenidoDestacado = new ListaEnlazada<>();

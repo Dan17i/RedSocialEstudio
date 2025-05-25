@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SistemaAutenticacion.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models.services.implement</a> &gt; <span class="el_source">SistemaAutenticacion.java</span></div><h1>SistemaAutenticacion.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models.services.implement;
+
+import co.edu.uniquindio.redsocial.models.Estudiante;
+import co.edu.uniquindio.redsocial.models.Usuario;
+import co.edu.uniquindio.redsocial.models.services.interf.ISistemaAutenticacion;
+import co.edu.uniquindio.redsocial.models.structures.ColaPrioridad;
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+import co.edu.uniquindio.redsocial.models.structures.NodoLista;
+
+import java.util.UUID;
+
+/**
+ * Clase encargada del registro e inicio de sesión de usuarios dentro del sistema.
+ * Administra una lista enlazada de usuarios registrados.
+ *
+ * Esta implementación permite registrar estudiantes y validar credenciales para iniciar sesión.
+ *
+ * @author Daniel Jurado
+ * @author Sebastian Torres
+ * @author Juan Soto
+ * @since 2025-05-13
+ */
+<span class="nc" id="L23">public class SistemaAutenticacion implements ISistemaAutenticacion {</span>
+<span class="nc" id="L24">    private ListaEnlazada&lt;Usuario&gt; usuariosRegistrados = new ListaEnlazada&lt;&gt;();</span>
+
+    /**
+     * Registra un nuevo estudiante en el sistema.
+     *
+     * @param nombre      Nombre completo del estudiante.
+     * @param email       Correo electrónico del estudiante (debe ser único).
+     * @param contraseña  Contraseña del estudiante.
+     * @return El estudiante creado y registrado.
+     * @throws IllegalArgumentException Si el correo ya está registrado.
+     */
+    public Estudiante registrarEstudiante(String nombre, String email, String contraseña) {
+<span class="nc" id="L36">        validarEmailUnico(email);</span>
+
+<span class="nc" id="L38">        Estudiante nuevo = new Estudiante(</span>
+<span class="nc" id="L39">                generarId(),</span>
+                nombre,
+                email,
+                contraseña,
+                new ListaEnlazada&lt;&gt;(),  // intereses
+                new ListaEnlazada&lt;&gt;(),  // historial
+                new ListaEnlazada&lt;&gt;(),  // valoraciones
+                new ColaPrioridad&lt;&gt;(new ListaEnlazada&lt;&gt;()),  // solicitudes
+                new ListaEnlazada&lt;&gt;(),   // grupos
+                new ListaEnlazada&lt;&gt;()
+        );
+
+<span class="nc" id="L51">        usuariosRegistrados.agregar(nuevo);</span>
+<span class="nc" id="L52">        return nuevo;</span>
+    }
+
+    /**
+     * Inicia sesión de un usuario mediante email y contraseña.
+     *
+     * @param email      Correo electrónico del usuario.
+     * @param contraseña Contraseña del usuario.
+     * @return Usuario autenticado si las credenciales coinciden.
+     * @throws SecurityException Si las credenciales son incorrectas.
+     */
+    public Usuario iniciarSesion(String email, String contraseña) {
+<span class="nc" id="L64">        NodoLista&lt;Usuario&gt; actual = usuariosRegistrados.getCabeza();</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        while (actual != null) {</span>
+<span class="nc" id="L66">            Usuario usuario = actual.getDato();</span>
+<span class="nc bnc" id="L67" title="All 4 branches missed.">            if (usuario.getEmail().equals(email) &amp;&amp; usuario.getContraseña().equals(contraseña)) {</span>
+<span class="nc" id="L68">                return usuario;</span>
+            }
+<span class="nc" id="L70">            actual = actual.getSiguiente();</span>
+<span class="nc" id="L71">        }</span>
+<span class="nc" id="L72">        throw new SecurityException(&quot;Credenciales inválidas&quot;);</span>
+    }
+
+    /**
+     * Genera un ID único para cada usuario registrado.
+     *
+     * @return Cadena de texto representando un identificador único.
+     */
+    private String generarId() {
+<span class="nc" id="L81">        return &quot;USR-&quot; + UUID.randomUUID();</span>
+    }
+
+    /**
+     * Verifica que el correo electrónico no esté ya registrado.
+     *
+     * @param email Correo electrónico a validar.
+     * @throws IllegalArgumentException Si el email ya está en uso.
+     */
+    private void validarEmailUnico(String email) {
+<span class="nc" id="L91">        NodoLista&lt;Usuario&gt; actual = usuariosRegistrados.getCabeza();</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        while (actual != null) {</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">            if (actual.getDato().getEmail().equalsIgnoreCase(email)) {</span>
+<span class="nc" id="L94">                throw new IllegalArgumentException(&quot;Email ya registrado&quot;);</span>
+            }
+<span class="nc" id="L96">            actual = actual.getSiguiente();</span>
+        }
+<span class="nc" id="L98">    }</span>
+
+    /**
+     * Verifica si un usuario con el email dado ya está registrado.
+     *
+     * @param email Email del usuario.
+     * @return true si existe, false si no.
+     */
+    public boolean existeUsuario(String email) {
+<span class="nc" id="L107">        NodoLista&lt;Usuario&gt; actual = usuariosRegistrados.getCabeza();</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        while (actual != null) {</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">            if (actual.getDato().getEmail().equalsIgnoreCase(email)) {</span>
+<span class="nc" id="L110">                return true;</span>
+            }
+<span class="nc" id="L112">            actual = actual.getSiguiente();</span>
+        }
+<span class="nc" id="L114">        return false;</span>
+    }
+
+    /**
+     * Elimina un usuario registrado por su email.
+     *
+     * @param email Email del usuario a eliminar.
+     * @return true si se eliminó, false si no se encontró.
+     */
+    public boolean eliminarUsuario(String email) {
+<span class="nc" id="L124">        ListaEnlazada&lt;Usuario&gt; nuevaLista = new ListaEnlazada&lt;&gt;();</span>
+<span class="nc" id="L125">        boolean eliminado = false;</span>
+
+<span class="nc" id="L127">        NodoLista&lt;Usuario&gt; actual = usuariosRegistrados.getCabeza();</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">        while (actual != null) {</span>
+<span class="nc" id="L129">            Usuario usuario = actual.getDato();</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">            if (!usuario.getEmail().equalsIgnoreCase(email)) {</span>
+<span class="nc" id="L131">                nuevaLista.agregar(usuario);</span>
+            } else {
+<span class="nc" id="L133">                eliminado = true;</span>
+            }
+<span class="nc" id="L135">            actual = actual.getSiguiente();</span>
+<span class="nc" id="L136">        }</span>
+
+<span class="nc" id="L138">        usuariosRegistrados = nuevaLista;</span>
+<span class="nc" id="L139">        return eliminado;</span>
+    }
+
+    /**
+     * Obtiene la lista de usuarios registrados (lectura).
+     *
+     * @return Lista enlazada de usuarios.
+     */
+    public ListaEnlazada&lt;Usuario&gt; getUsuariosRegistrados() {
+<span class="nc" id="L148">        return usuariosRegistrados;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,6 +1,7 @@
 package models;
 
 import co.edu.uniquindio.redsocial.models.*;
+import co.edu.uniquindio.redsocial.models.Enums.TipoReporte;
 import co.edu.uniquindio.redsocial.models.services.implement.GestorContenidos;
 import co.edu.uniquindio.redsocial.models.services.implement.GestorRedSocial;
 import co.edu.uniquindio.redsocial.models.services.implement.GestorUsuarios;

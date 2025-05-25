@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NodoArbol.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models.structures</a> &gt; <span class="el_source">NodoArbol.java</span></div><h1>NodoArbol.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models.structures;
+/**
+ * Nodo utilizado en el árbol binario de búsqueda.
+ * Representa un nodo con una clave de tipo &lt;K&gt; y un valor de tipo &lt;V&gt;.
+ * Los nodos se conectan con referencias a sus nodos izquierdo y derecho.
+ *
+ * @param &lt;K&gt; Tipo de clave, debe ser comparable.
+ * @param &lt;V&gt; Tipo de valor.
+ * @author Daniel Jurado
+ * @author Sebastian Torres
+ * @author Juan Soto
+ * @since 2025-05-12
+ */
+public class NodoArbol&lt;K extends Comparable&lt;K&gt;, V&gt; {
+    private K clave;
+    private V valor;
+    private NodoArbol&lt;K, V&gt; izquierdo;
+    private NodoArbol&lt;K, V&gt; derecho;
+
+<span class="fc" id="L20">    public NodoArbol(K clave, V valor) {</span>
+<span class="fc" id="L21">        this.clave = clave;</span>
+<span class="fc" id="L22">        this.valor = valor;</span>
+<span class="fc" id="L23">        this.izquierdo = null;</span>
+<span class="fc" id="L24">        this.derecho = null;</span>
+<span class="fc" id="L25">    }</span>
+
+    // Getters y Setters
+<span class="nc" id="L28">    public K getClave() { return clave; }</span>
+<span class="nc" id="L29">    public void setClave(K clave) { this.clave = clave; }</span>
+
+<span class="nc" id="L31">    public V getValor() { return valor; }</span>
+<span class="nc" id="L32">    public void setValor(V valor) { this.valor = valor; }</span>
+
+<span class="nc" id="L34">    public NodoArbol&lt;K, V&gt; getIzquierdo() { return izquierdo; }</span>
+<span class="nc" id="L35">    public void setIzquierdo(NodoArbol&lt;K, V&gt; izquierdo) { this.izquierdo = izquierdo; }</span>
+
+<span class="nc" id="L37">    public NodoArbol&lt;K, V&gt; getDerecho() { return derecho; }</span>
+<span class="nc" id="L38">    public void setDerecho(NodoArbol&lt;K, V&gt; derecho) { this.derecho = derecho; }</span>
+    /**
+     * Determina si el nodo es una hoja (no tiene hijos).
+     *
+     * @return true si el nodo no tiene hijos, false en caso contrario.
+     */
+    public boolean isLeaf() {
+<span class="nc bnc" id="L45" title="All 4 branches missed.">        return izquierdo == null &amp;&amp; derecho == null;</span>
+    }
+    /**
+     * Verifica si el nodo tiene exactamente un hijo.
+     *
+     * @return true si tiene un solo hijo, false si tiene ambos o ninguno.
+     */
+    public boolean hasOnlyOneChild() {
+<span class="nc bnc" id="L53" title="All 8 branches missed.">        return (izquierdo == null &amp;&amp; derecho != null) || (izquierdo != null &amp;&amp; derecho == null);</span>
+    }
+    /**
+     * Devuelve el único hijo del nodo si tiene uno.
+     *
+     * @return Nodo hijo si tiene solo uno; null si tiene ambos o ninguno.
+     */
+    public NodoArbol&lt;K, V&gt; getOnlyChild() {
+<span class="nc bnc" id="L61" title="All 4 branches missed.">        if (izquierdo != null &amp;&amp; derecho == null) return izquierdo;</span>
+<span class="nc bnc" id="L62" title="All 4 branches missed.">        if (derecho != null &amp;&amp; izquierdo == null) return derecho;</span>
+<span class="nc" id="L63">        return null;</span>
+    }
+    @Override
+    public String toString() {
+<span class="fc" id="L67">        return &quot;NodoArbol{&quot; +</span>
+                &quot;clave=&quot; + clave +
+                &quot;, valor=&quot; + valor +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,5 +1,7 @@
 package models;
 
+import co.edu.uniquindio.redsocial.ArchivoMultimedia;
+import co.edu.uniquindio.redsocial.models.Enums.TipoContenido;
 import co.edu.uniquindio.redsocial.models.*;
 import co.edu.uniquindio.redsocial.models.structures.ColaPrioridad;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
@@ -16,6 +18,7 @@ public class GrupoEstudioTest {
     private Estudiante estudiante1;
     private Estudiante estudiante2;
     private Contenido contenido;
+    private ArchivoMultimedia archivo;
 
     @BeforeEach
     public void setUp() {
@@ -29,7 +32,7 @@ public class GrupoEstudioTest {
                 new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
                 new ColaPrioridad<>(), new ListaEnlazada<>(),new ListaEnlazada<>());
 
-        contenido = new Contenido("c1", "Integrales","sobre integrales", estudiante1, "Texto", LocalDateTime.now(),new ListaEnlazada<>());
+        contenido = new Contenido("c1", "Integrales","sobre integrales", estudiante1, TipoContenido.TEXTO, LocalDateTime.now(),new ListaEnlazada<>(),archivo);
     }
 
 

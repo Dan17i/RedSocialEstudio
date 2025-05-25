@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Mensaje.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models</a> &gt; <span class="el_source">Mensaje.java</span></div><h1>Mensaje.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models;
+
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+import co.edu.uniquindio.redsocial.models.structures.NodoLista;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * Representa un mensaje enviado entre estudiantes o a un grupo de estudiantes.
+ * Incluye manejo de bandeja de entrada y validación robusta del destinatario.
+ * @author Daniel Jurado
+ * @author Sebastian Torres
+ * @author Juan Soto
+ * @since 2025-05-12
+ */
+public class Mensaje {
+
+    private Estudiante remitente;
+    private Object destinatario; // Puede ser un Estudiante o un GrupoEstudio
+    private String texto;
+    private LocalDateTime fecha;
+
+    /**
+     * Constructor para crear un mensaje con los parámetros proporcionados.
+     *
+     * @param remitente El estudiante que envía el mensaje.
+     * @param destinatario El destinatario, que puede ser un Estudiante o un GrupoEstudio.
+     * @param texto El contenido del mensaje.
+     * @param fecha La fecha y hora en que el mensaje fue enviado.
+     */
+<span class="fc" id="L33">    public Mensaje(Estudiante remitente, Object destinatario, String texto, LocalDateTime fecha) {</span>
+<span class="pc bpc" id="L34" title="1 of 8 branches missed.">        if (remitente == null || destinatario == null || texto == null || texto.isEmpty()) {</span>
+<span class="fc" id="L35">            throw new IllegalArgumentException(&quot;Los parámetros no pueden ser nulos o vacíos&quot;);</span>
+        }
+<span class="pc bpc" id="L37" title="1 of 4 branches missed.">        if (!(destinatario instanceof Estudiante || destinatario instanceof GrupoEstudio)) {</span>
+<span class="nc" id="L38">            throw new IllegalArgumentException(&quot;El destinatario debe ser un Estudiante o un GrupoEstudio&quot;);</span>
+        }
+<span class="fc" id="L40">        this.remitente = remitente;</span>
+<span class="fc" id="L41">        this.destinatario = destinatario;</span>
+<span class="fc" id="L42">        this.texto = texto;</span>
+<span class="fc" id="L43">        this.fecha = fecha;</span>
+<span class="fc" id="L44">    }</span>
+
+    /**
+     * Envía el mensaje al destinatario.
+     * Si el destinatario es un estudiante, se añade a su bandeja de entrada.
+     * Si el destinatario es un grupo, se envía a todos los miembros del grupo.
+     */
+    public void enviar() {
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        if (destinatario instanceof Estudiante estudiante) {</span>
+<span class="fc" id="L53">            estudiante.recibirMensaje(this);</span>
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">        } else if (destinatario instanceof GrupoEstudio grupo) {</span>
+<span class="fc" id="L55">            ListaEnlazada&lt;Estudiante&gt; miembros = grupo.getMiembros(); // ← Tipo correcto</span>
+<span class="fc" id="L56">            NodoLista&lt;Estudiante&gt; actual = miembros.getCabeza();</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">            while (actual != null) {</span>
+<span class="fc" id="L58">                actual.getDato().recibirMensaje(this);</span>
+<span class="fc" id="L59">                actual = actual.getSiguiente();</span>
+            }
+        }
+<span class="fc" id="L62">    }</span>
+
+    /**
+     * Devuelve una representación en cadena del mensaje.
+     *
+     * @return Cadena que describe el mensaje.
+     */
+    @Override
+    public String toString() {
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">        String destinatarioStr = destinatario instanceof Estudiante ?</span>
+<span class="fc" id="L72">                ((Estudiante) destinatario).getNombre() :</span>
+<span class="pc" id="L73">                &quot;Grupo&quot;;</span>
+
+<span class="fc" id="L75">        return &quot;De: &quot; + remitente.getNombre() + &quot;\n&quot; +</span>
+                &quot;Para: &quot; + destinatarioStr + &quot;\n&quot; +
+                &quot;Fecha: &quot; + fecha + &quot;\n&quot; +
+                &quot;Mensaje: &quot; + texto;
+    }
+
+    /**
+     * Compara si dos mensajes son iguales por contenido.
+     *
+     * @param obj El objeto a comparar.
+     * @return true si son iguales, false si no.
+     */
+    @Override
+    public boolean equals(Object obj) {
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">        if (this == obj) return true;</span>
+<span class="pc bpc" id="L90" title="2 of 4 branches missed.">        if (obj == null || getClass() != obj.getClass()) return false;</span>
+<span class="fc" id="L91">        Mensaje mensaje = (Mensaje) obj;</span>
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">        return remitente.equals(mensaje.remitente) &amp;&amp;</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">                destinatario.equals(mensaje.destinatario) &amp;&amp;</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">                texto.equals(mensaje.texto) &amp;&amp;</span>
+<span class="pc bpc" id="L95" title="1 of 2 branches missed.">                fecha.equals(mensaje.fecha);</span>
+    }
+
+    /**
+     * Genera el hash del mensaje.
+     *
+     * @return Código hash basado en los campos del mensaje.
+     */
+    @Override
+    public int hashCode() {
+<span class="fc" id="L105">        return Objects.hash(remitente, destinatario, texto, fecha);</span>
+    }
+
+    // Getters y Setters
+<span class="nc" id="L109">    public Estudiante getRemitente() { return remitente; }</span>
+<span class="nc" id="L110">    public void setRemitente(Estudiante remitente) { this.remitente = remitente; }</span>
+
+<span class="nc" id="L112">    public Object getDestinatario() { return destinatario; }</span>
+    public void setDestinatario(Object destinatario) {
+<span class="nc bnc" id="L114" title="All 4 branches missed.">        if (!(destinatario instanceof Estudiante || destinatario instanceof GrupoEstudio)) {</span>
+<span class="nc" id="L115">            throw new IllegalArgumentException(&quot;El destinatario debe ser un Estudiante o un GrupoEstudio&quot;);</span>
+        }
+<span class="nc" id="L117">        this.destinatario = destinatario;</span>
+<span class="nc" id="L118">    }</span>
+
+<span class="fc" id="L120">    public String getTexto() { return texto; }</span>
+    public void setTexto(String texto) {
+<span class="nc bnc" id="L122" title="All 4 branches missed.">        if (texto == null || texto.isEmpty()) {</span>
+<span class="nc" id="L123">            throw new IllegalArgumentException(&quot;El texto no puede ser nulo o vacío&quot;);</span>
+        }
+<span class="nc" id="L125">        this.texto = texto;</span>
+<span class="nc" id="L126">    }</span>
+
+<span class="nc" id="L128">    public LocalDateTime getFecha() { return fecha; }</span>
+<span class="nc" id="L129">    public void setFecha(LocalDateTime fecha) { this.fecha = fecha; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

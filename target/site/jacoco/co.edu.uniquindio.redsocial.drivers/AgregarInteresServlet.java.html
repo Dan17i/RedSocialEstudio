@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AgregarInteresServlet.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.drivers</a> &gt; <span class="el_source">AgregarInteresServlet.java</span></div><h1>AgregarInteresServlet.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.drivers;
+
+import co.edu.uniquindio.redsocial.models.Estudiante;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+import java.io.IOException;
+
+@WebServlet(&quot;/AgregarInteresServlet&quot;)
+<span class="nc" id="L11">public class AgregarInteresServlet extends HttpServlet {</span>
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+<span class="nc" id="L17">        HttpSession session = request.getSession(false);</span>
+<span class="nc bnc" id="L18" title="All 4 branches missed.">        if (session == null || session.getAttribute(&quot;usuarioActual&quot;) == null) {</span>
+<span class="nc" id="L19">            response.sendRedirect(&quot;inicioSesion.jsp&quot;);</span>
+<span class="nc" id="L20">            return;</span>
+        }
+
+<span class="nc" id="L23">        String interes = request.getParameter(&quot;interes&quot;);</span>
+
+<span class="nc bnc" id="L25" title="All 4 branches missed.">        if (interes != null &amp;&amp; !interes.trim().isEmpty()) {</span>
+<span class="nc" id="L26">            Estudiante estudiante = (Estudiante) session.getAttribute(&quot;usuarioActual&quot;);</span>
+
+<span class="nc bnc" id="L28" title="All 2 branches missed.">            if (estudiante.getIntereses() == null) {</span>
+<span class="nc" id="L29">                estudiante.setIntereses(new co.edu.uniquindio.redsocial.models.structures.ListaEnlazada&lt;&gt;());</span>
+            }
+
+            // Verificar si el interés ya está en la lista
+<span class="nc" id="L33">            boolean yaExiste = false;</span>
+<span class="nc bnc" id="L34" title="All 2 branches missed.">            for (int i = 0; i &lt; estudiante.getIntereses().getTamanio(); i++) {</span>
+<span class="nc bnc" id="L35" title="All 2 branches missed.">                if (estudiante.getIntereses().obtener(i).equalsIgnoreCase(interes)) {</span>
+<span class="nc" id="L36">                    yaExiste = true;</span>
+<span class="nc" id="L37">                    break;</span>
+                }
+            }
+
+<span class="nc bnc" id="L41" title="All 2 branches missed.">            if (!yaExiste) {</span>
+<span class="nc" id="L42">                estudiante.getIntereses().agregar(interes);</span>
+            }
+        }
+
+        // Redirige de nuevo a la página de inicio donde está el perfil
+<span class="nc" id="L47">        response.sendRedirect(&quot;inicio.jsp?seccion=perfil&quot;);</span>
+<span class="nc" id="L48">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

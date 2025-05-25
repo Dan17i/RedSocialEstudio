@@ -1,5 +1,7 @@
 package models;
 
+import co.edu.uniquindio.redsocial.ArchivoMultimedia;
+import co.edu.uniquindio.redsocial.models.Enums.TipoContenido;
 import co.edu.uniquindio.redsocial.models.*;
 import co.edu.uniquindio.redsocial.models.structures.ArbolBinarioBusqueda;
 import co.edu.uniquindio.redsocial.models.structures.ColaPrioridad;
@@ -21,6 +23,7 @@ public class EstudianteTest {
 
     private Estudiante estudiante;
     private Contenido contenidoEjemplo;
+    private ArchivoMultimedia archivo;
 
     /**
      * Configuración inicial antes de cada prueba.
@@ -31,20 +34,21 @@ public class EstudianteTest {
         intereses.agregar("Matemáticas");
 
         ListaEnlazada<Contenido> historial = new ListaEnlazada<>();
-        ListaEnlazada<Valoracion> valoraciones = new ListaEnlazada<>();
+        ListaEnlazada<Valoracion> valoracionesEstudiante = new ListaEnlazada<>();
+        ListaEnlazada<Valoracion> valoracionesContenido= new ListaEnlazada<>();
         ColaPrioridad<SolicitudAyuda> solicitudesAyuda = new ColaPrioridad<>();
         ListaEnlazada<GrupoEstudio> grupos = new ListaEnlazada<>();
         ListaEnlazada<Mensaje> mensajes = new ListaEnlazada<>();
 
         estudiante = new Estudiante(
                 "001", "Juan Pérez", "juan@correo.com", "clave123",
-                intereses, historial, valoraciones, solicitudesAyuda, grupos,mensajes);
+                intereses, historial, valoracionesEstudiante, solicitudesAyuda, grupos,mensajes);
 
         Estudiante Juanes = new Estudiante("idJuan", "Juanes", "juanes@email.com", "12345",
                 new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
                 new ColaPrioridad<>(), new ListaEnlazada<>(),new ListaEnlazada<>());
 
-        contenidoEjemplo = new Contenido("001", "Matemáticas", "trata de matematicas", Juanes, "Video", LocalDateTime.now(), new ListaEnlazada<>());
+        contenidoEjemplo = new Contenido("001", "Matemáticas", "trata de matematicas", Juanes, TipoContenido.VIDEO, LocalDateTime.now(), valoracionesContenido, archivo);
     }
 
 
@@ -106,8 +110,8 @@ public class EstudianteTest {
                 new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
                 new ColaPrioridad<>(), new ListaEnlazada<>(), new ListaEnlazada<>());
 
-        Contenido c1 = new Contenido("101", "Matemáticas", "trata sobre matemáticas", juan, "Video", LocalDateTime.now(), valoracionesVacias);
-        Contenido c2 = new Contenido("102", "Historia", "Trata sobre historia", ana, "Artículo", LocalDateTime.now(), valoracionesVacias);
+        Contenido c1 = new Contenido("101", "Matemáticas", "trata sobre matemáticas", juan, TipoContenido.VIDEO, LocalDateTime.now(), valoracionesVacias,archivo);
+        Contenido c2 = new Contenido("102", "Historia", "Trata sobre historia", ana, TipoContenido.TEXTO, LocalDateTime.now(), valoracionesVacias,archivo);
 
         GestorContenidos gestor = GestorContenidos.getInstancia();
 

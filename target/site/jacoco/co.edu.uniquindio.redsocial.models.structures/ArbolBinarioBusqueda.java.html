@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ArbolBinarioBusqueda.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models.structures</a> &gt; <span class="el_source">ArbolBinarioBusqueda.java</span></div><h1>ArbolBinarioBusqueda.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models.structures;
+
+import co.edu.uniquindio.redsocial.models.services.interf.Tematico;
+
+/**
+ * Clase que representa un Árbol Binario de Búsqueda (ABB) genérico,
+ * utilizado para almacenar par clave-valor donde la clave es un String
+ * y el valor implementa la interfaz Tematico.
+ *
+ * @param &lt;T&gt; Tipo de valor almacenado, debe implementar la interfaz Tematico.
+ * @author Daniel Jurado
+ * @author Sebastian Torres
+ * @author Juan Soto
+ */
+public class ArbolBinarioBusqueda&lt;T extends Tematico&gt; {
+
+    private NodoABB&lt;T&gt; raiz;
+
+    /**
+     * Constructor con nodo raíz especificado.
+     *
+     * @param raiz Nodo raíz del árbol.
+     */
+<span class="nc" id="L24">    public ArbolBinarioBusqueda(NodoABB&lt;T&gt; raiz) {</span>
+<span class="nc" id="L25">        this.raiz = raiz;</span>
+<span class="nc" id="L26">    }</span>
+
+    /**
+     * Constructor por defecto que inicializa el árbol vacío.
+     */
+<span class="fc" id="L31">    public ArbolBinarioBusqueda() {</span>
+<span class="fc" id="L32">        this.raiz = null;</span>
+<span class="fc" id="L33">    }</span>
+
+    /**
+     * Inserta un nuevo nodo con la clave y el valor dados en el árbol.
+     * Si la clave ya existe, se actualiza el valor asociado.
+     *
+     * @param clave Clave del nodo a insertar.
+     * @param valor Valor asociado a la clave.
+     */
+    public void insertar(String clave, T valor) {
+<span class="fc" id="L43">        raiz = insertarRecursivo(raiz, clave, valor);</span>
+<span class="fc" id="L44">    }</span>
+
+    private NodoABB&lt;T&gt; insertarRecursivo(NodoABB&lt;T&gt; nodo, String clave, T valor) {
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        if (nodo == null) {</span>
+<span class="fc" id="L48">            return new NodoABB&lt;&gt;(clave, valor);</span>
+        }
+
+<span class="fc" id="L51">        int comparacion = clave.compareTo(nodo.getClave());</span>
+
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        if (comparacion &lt; 0) {</span>
+<span class="fc" id="L54">            nodo.setIzquierda(insertarRecursivo(nodo.getIzquierda(), clave, valor));</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        } else if (comparacion &gt; 0) {</span>
+<span class="nc" id="L56">            nodo.setDerecha(insertarRecursivo(nodo.getDerecha(), clave, valor));</span>
+        } else {
+<span class="nc" id="L58">            nodo.setValor(valor); // Actualiza el valor si la clave ya existe</span>
+        }
+
+<span class="fc" id="L61">        return nodo;</span>
+    }
+
+    /**
+     * Busca el valor asociado a una clave en el árbol.
+     *
+     * @param clave Clave a buscar.
+     * @return Valor asociado a la clave o null si no se encuentra.
+     */
+    public T buscar(String clave) {
+<span class="nc" id="L71">        return buscarRecursivo(raiz, clave);</span>
+    }
+
+    private T buscarRecursivo(NodoABB&lt;T&gt; nodo, String clave) {
+<span class="nc bnc" id="L75" title="All 2 branches missed.">        if (nodo == null) {</span>
+<span class="nc" id="L76">            return null;</span>
+        }
+
+<span class="nc" id="L79">        int comparacion = clave.compareTo(nodo.getClave());</span>
+
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        if (comparacion &lt; 0) {</span>
+<span class="nc" id="L82">            return buscarRecursivo(nodo.getIzquierda(), clave);</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        } else if (comparacion &gt; 0) {</span>
+<span class="nc" id="L84">            return buscarRecursivo(nodo.getDerecha(), clave);</span>
+        } else {
+<span class="nc" id="L86">            return nodo.getValor();</span>
+        }
+    }
+
+    /**
+     * Retorna una lista con todos los valores almacenados en el árbol
+     * ordenados ascendentemente según su clave.
+     *
+     * @return ListaEnlazada de valores en orden ascendente.
+     */
+    public ListaEnlazada&lt;T&gt; listarTodos() {
+<span class="nc" id="L97">        ListaEnlazada&lt;T&gt; lista = new ListaEnlazada&lt;&gt;();</span>
+<span class="nc" id="L98">        listarEnOrden(raiz, lista);</span>
+<span class="nc" id="L99">        return lista;</span>
+    }
+
+    private void listarEnOrden(NodoABB&lt;T&gt; nodo, ListaEnlazada&lt;T&gt; lista) {
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        if (nodo != null) {</span>
+<span class="nc" id="L104">            listarEnOrden(nodo.getIzquierda(), lista);</span>
+<span class="nc" id="L105">            lista.agregar(nodo.getValor());</span>
+<span class="nc" id="L106">            listarEnOrden(nodo.getDerecha(), lista);</span>
+        }
+<span class="nc" id="L108">    }</span>
+
+    /**
+     * Lista todos los contenidos cuyo tema coincide con el tema dado.
+     *
+     * @param tema Tema a buscar.
+     * @return Lista de contenidos que coinciden con el tema especificado.
+     */
+    public ListaEnlazada&lt;T&gt; listarContenidosPorTema(String tema) {
+<span class="nc" id="L117">        ListaEnlazada&lt;T&gt; resultados = new ListaEnlazada&lt;&gt;();</span>
+<span class="nc" id="L118">        listarPorTemaRecursivo(raiz, tema, resultados);</span>
+<span class="nc" id="L119">        return resultados;</span>
+    }
+
+    private void listarPorTemaRecursivo(NodoABB&lt;T&gt; nodo, String tema, ListaEnlazada&lt;T&gt; resultados) {
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        if (nodo != null) {</span>
+<span class="nc" id="L124">            listarPorTemaRecursivo(nodo.getIzquierda(), tema, resultados);</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">            if (tema.equals(nodo.getValor().getTema())) {</span>
+<span class="nc" id="L126">                resultados.agregar(nodo.getValor());</span>
+            }
+<span class="nc" id="L128">            listarPorTemaRecursivo(nodo.getDerecha(), tema, resultados);</span>
+        }
+<span class="nc" id="L130">    }</span>
+
+    /**
+     * Elimina un nodo con la clave especificada del árbol.
+     *
+     * @param clave Clave del nodo a eliminar.
+     */
+    public void eliminar(String clave) {
+<span class="nc" id="L138">        raiz = eliminarRecursivo(raiz, clave);</span>
+<span class="nc" id="L139">    }</span>
+
+    private NodoABB&lt;T&gt; eliminarRecursivo(NodoABB&lt;T&gt; nodo, String clave) {
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        if (nodo == null) {</span>
+<span class="nc" id="L143">            return null;</span>
+        }
+
+<span class="nc" id="L146">        int comparacion = clave.compareTo(nodo.getClave());</span>
+
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        if (comparacion &lt; 0) {</span>
+<span class="nc" id="L149">            nodo.setIzquierda(eliminarRecursivo(nodo.getIzquierda(), clave));</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        } else if (comparacion &gt; 0) {</span>
+<span class="nc" id="L151">            nodo.setDerecha(eliminarRecursivo(nodo.getDerecha(), clave));</span>
+        } else {
+<span class="nc bnc" id="L153" title="All 2 branches missed.">            if (nodo.getIzquierda() == null) {</span>
+<span class="nc" id="L154">                return nodo.getDerecha();</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">            } else if (nodo.getDerecha() == null) {</span>
+<span class="nc" id="L156">                return nodo.getIzquierda();</span>
+            }
+
+<span class="nc" id="L159">            NodoABB&lt;T&gt; sucesor = encontrarMinimo(nodo.getDerecha());</span>
+<span class="nc" id="L160">            nodo.setClave(sucesor.getClave());</span>
+<span class="nc" id="L161">            nodo.setValor(sucesor.getValor());</span>
+<span class="nc" id="L162">            nodo.setDerecha(eliminarRecursivo(nodo.getDerecha(), sucesor.getClave()));</span>
+        }
+
+<span class="nc" id="L165">        return nodo;</span>
+    }
+
+    private NodoABB&lt;T&gt; encontrarMinimo(NodoABB&lt;T&gt; nodo) {
+<span class="nc bnc" id="L169" title="All 2 branches missed.">        while (nodo.getIzquierda() != null) {</span>
+<span class="nc" id="L170">            nodo = nodo.getIzquierda();</span>
+        }
+<span class="nc" id="L172">        return nodo;</span>
+    }
+
+    /**
+     * Obtiene la raíz del árbol.
+     *
+     * @return Nodo raíz.
+     */
+    public NodoABB&lt;T&gt; getRaiz() {
+<span class="nc" id="L181">        return raiz;</span>
+    }
+
+    /**
+     * Establece la raíz del árbol.
+     *
+     * @param raiz Nodo a establecer como raíz.
+     */
+    public void setRaiz(NodoABB&lt;T&gt; raiz) {
+<span class="nc" id="L190">        this.raiz = raiz;</span>
+<span class="nc" id="L191">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

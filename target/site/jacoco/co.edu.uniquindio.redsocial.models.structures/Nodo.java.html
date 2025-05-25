@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Nodo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models.structures</a> &gt; <span class="el_source">Nodo.java</span></div><h1>Nodo.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models.structures;
+/**
+ * Clase que representa un nodo genérico en una lista enlazada.
+ * Un nodo contiene un dato de tipo genérico y una referencia al siguiente nodo en la lista.
+ *
+ * @author Daniel Jurado
+ * @author Sebastian Torres
+ * @author Juan Soto
+ * @since 2025-05-12
+ * @param &lt;T&gt; El tipo de dato que almacena el nodo. Este tipo es genérico, lo que significa que
+ *            puede ser cualquier tipo de objeto.
+ *
+ **/
+public class Nodo&lt;T&gt; {
+
+    // Atributos
+    private T dato;              // Dato almacenado en el nodo
+    private Nodo&lt;T&gt; siguiente;    // Referencia al siguiente nodo en la lista
+    /**
+     * Constructor que inicializa un nodo con el dato proporcionado y la referencia siguiente a null.
+     *
+     * @param dato El dato a almacenar en el nodo.
+     */
+<span class="nc" id="L24">    public Nodo(T dato) {</span>
+<span class="nc" id="L25">        this.dato = dato;</span>
+<span class="nc" id="L26">        this.siguiente = null;</span>
+<span class="nc" id="L27">    }</span>
+    /**
+     * Obtiene el dato almacenado en el nodo.
+     *
+     * @return El dato almacenado en el nodo.
+     */
+    public T getDato() {
+<span class="nc" id="L34">        return dato;</span>
+    }
+    /**
+     * Establece un nuevo dato para el nodo.
+     *
+     * @param dato El nuevo dato a almacenar en el nodo.
+     */
+    public void setDato(T dato) {
+<span class="nc" id="L42">        this.dato = dato;</span>
+<span class="nc" id="L43">    }</span>
+    /**
+     * Obtiene la referencia al siguiente nodo en la lista.
+     *
+     * @return El siguiente nodo en la lista, o null si este nodo es el último.
+     */
+    public Nodo&lt;T&gt; getSiguiente() {
+<span class="nc" id="L50">        return siguiente;</span>
+    }
+    /**
+     * Establece el siguiente nodo en la lista.
+     *
+     * @param siguiente El siguiente nodo en la lista.
+     */
+    public void setSiguiente(Nodo&lt;T&gt; siguiente) {
+<span class="nc" id="L58">        this.siguiente = siguiente;</span>
+<span class="nc" id="L59">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L63">        return dato.toString();</span>
+    }
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

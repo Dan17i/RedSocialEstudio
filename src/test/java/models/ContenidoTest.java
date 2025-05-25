@@ -1,5 +1,7 @@
 package models;
 
+import co.edu.uniquindio.redsocial.ArchivoMultimedia;
+import co.edu.uniquindio.redsocial.models.Enums.TipoContenido;
 import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.Valoracion;
 import co.edu.uniquindio.redsocial.models.structures.ColaPrioridad;
@@ -15,16 +17,48 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ContenidoTest {
 
     private Contenido contenido;
+    private Estudiante autor;
+    private ArchivoMultimedia archivo;
     private ListaEnlazada<Valoracion> valoraciones;
 
     @BeforeEach
     public void setUp() {
-        valoraciones = new ListaEnlazada<>();
-        Estudiante Juan = new Estudiante("idJuan", "Juan", "juan@email.com", "12345",
+
+
+                valoraciones = new ListaEnlazada<>();
+                archivo= new ArchivoMultimedia("video_prueba.mp4","/multimedia/video_prueba.mp4","video/mp4", 1024);
+                autor = new Estudiante("idJuan", "Juan", "juan@email.com", "12345",
                 new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
                 new ColaPrioridad<>(), new ListaEnlazada<>(),new ListaEnlazada<>());
+                contenido= new Contenido("001",
+                        "Matemáticas",
+                        "Explicación múltiple",
+                        autor,
+                        TipoContenido.VIDEO,
+                        LocalDateTime.now(),
+                        valoraciones,
+                        archivo);
+    }
 
-        contenido = new Contenido("001", "Matemáticas", "sobre Matematicas",Juan, "Video", LocalDateTime.now(), new ListaEnlazada<>());
+    @Test
+    public void testCrearContenido() {
+        contenido = new Contenido(
+                "001",
+                "Matemáticas",
+                "sobre Matematicas",
+                autor,
+                TipoContenido.VIDEO,
+                LocalDateTime.now(),
+                valoraciones,
+                archivo);
+
+        assertEquals("001", contenido.getId());
+        assertEquals("Matemáticas", contenido.getTema());
+        assertEquals("sobre Matematicas", contenido.getDescripcion());
+        assertEquals(autor, contenido.getAutor());
+        assertEquals(TipoContenido.VIDEO, contenido.getTipo());
+        assertEquals(valoraciones, contenido.getValoraciones());
+        assertEquals(archivo, contenido.getArchivoMultimedia());
     }
 
     @Test
@@ -55,9 +89,10 @@ public class ContenidoTest {
                 "Matemáticas",                   // tema
                 "Explicación de integrales",     // descripción
                 estudiante,                      // autor
-                "Video",                        // tipo
-                LocalDateTime.now(),             // fecha de creación
-                new ListaEnlazada<>()            // valoraciones vacías inicialmente
+                TipoContenido.VIDEO, // tipo
+                LocalDateTime.now(), // fecha de creación
+                valoraciones,// valoraciones vacías inicialmente
+                archivo
         );
 
         // Agregar valoración al contenido (incluyendo el contenido en el constructor)

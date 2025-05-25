@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NodoGrafo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models.structures</a> &gt; <span class="el_source">NodoGrafo.java</span></div><h1>NodoGrafo.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models.structures;
+
+import java.util.HashMap;
+import java.util.Map;
+/**
+ * Clase que representa un nodo dentro de un grafo (dirigido o no dirigido).
+ * Cada nodo tiene un dato genérico y un mapa de adyacencias, donde se almacenan
+ * los nodos vecinos junto con el peso de la arista que los conecta.
+ *
+ * @param &lt;T&gt; Tipo de dato que almacena el nodo.
+ * @author Daniel Jurado
+ * @author Sebastian Torres
+ * @author Juan Soto
+ * @since 2025-05-12
+ */
+public class NodoGrafo&lt;T&gt; {
+
+    private T dato;  // Valor asociado al nodo
+    private Map&lt;NodoGrafo&lt;T&gt;, Double&gt; adyacentes;  // Mapa de nodos adyacentes y sus pesos
+
+    /**
+     * Constructor que crea un nodo con el dato especificado.
+     *
+     * @param dato Valor o entidad que representa este nodo.
+     */
+<span class="nc" id="L26">    public NodoGrafo(T dato) {</span>
+<span class="nc" id="L27">        this.dato = dato;</span>
+<span class="nc" id="L28">        this.adyacentes = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L29">    }</span>
+
+    /**
+     * Agrega una adyacencia desde este nodo hacia otro nodo con un peso determinado.
+     *
+     * @param nodo Nodo adyacente.
+     * @param peso Peso de la arista entre los nodos.
+     */
+    public void agregarAdyacente(NodoGrafo&lt;T&gt; nodo, Double peso) {
+<span class="nc" id="L38">        adyacentes.put(nodo, peso);</span>
+<span class="nc" id="L39">    }</span>
+
+    /**
+     * Elimina la conexión entre este nodo y el nodo especificado.
+     *
+     * @param nodo Nodo adyacente a eliminar.
+     */
+    public boolean eliminarAdyacente(NodoGrafo&lt;T&gt; nodo) {
+        // remove() devuelve el peso (Double) si existía, o null si no
+<span class="nc bnc" id="L48" title="All 2 branches missed.">        return adyacentes.remove(nodo) != null;</span>
+    }
+
+    /**
+     * Actualiza el peso de la arista hacia un nodo adyacente.
+     * Si no existe la conexión, se agregará.
+     *
+     * @param nodo Nodo adyacente.
+     * @param peso Nuevo peso de la arista.
+     */
+    public void actualizarPeso(NodoGrafo&lt;T&gt; nodo, double peso) {
+<span class="nc" id="L59">        adyacentes.put(nodo, peso);</span>
+<span class="nc" id="L60">    }</span>
+
+    /**
+     * Obtiene el peso de la conexión hacia un nodo adyacente.
+     *
+     * @param nodo Nodo adyacente.
+     * @return Peso de la arista o -1 si no existe conexión.
+     */
+    public double getPeso(NodoGrafo&lt;T&gt; nodo) {
+<span class="nc" id="L69">        return adyacentes.getOrDefault(nodo, -1.0);</span>
+    }
+
+    /**
+     * Verifica si el nodo especificado es adyacente a este nodo.
+     *
+     * @param nodo Nodo a verificar.
+     * @return true si es adyacente, false en caso contrario.
+     */
+    public boolean esAdyacente(NodoGrafo&lt;T&gt; nodo) {
+<span class="nc" id="L79">        return adyacentes.containsKey(nodo);</span>
+    }
+
+    /**
+     * Devuelve una representación en cadena del nodo y sus adyacentes.
+     *
+     * @return Cadena con el dato y los vecinos con sus pesos.
+     */
+    @Override
+    public String toString() {
+<span class="nc" id="L89">        StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L90">        sb.append(&quot;Nodo: &quot;).append(dato).append(&quot;\nAdyacentes: &quot;);</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        for (Map.Entry&lt;NodoGrafo&lt;T&gt;, Double&gt; entry : adyacentes.entrySet()) {</span>
+<span class="nc" id="L92">            sb.append(entry.getKey().dato)</span>
+<span class="nc" id="L93">                    .append(&quot; (Peso: &quot;).append(entry.getValue()).append(&quot;), &quot;);</span>
+<span class="nc" id="L94">        }</span>
+<span class="nc" id="L95">        return sb.toString();</span>
+    }
+    /**
+     * Compara este nodo con otro objeto para verificar si son equivalentes.
+     * Dos nodos son iguales si contienen el mismo dato.
+     *
+     * @param obj El objeto a comparar.
+     * @return true si ambos objetos representan el mismo nodo; false en caso contrario.
+     */
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L106" title="All 2 branches missed.">        if (this == obj) return true;</span>
+<span class="nc bnc" id="L107" title="All 4 branches missed.">        if (obj == null || getClass() != obj.getClass()) return false;</span>
+<span class="nc" id="L108">        NodoGrafo&lt;?&gt; otro = (NodoGrafo&lt;?&gt;) obj;</span>
+<span class="nc" id="L109">        return dato.equals(otro.dato);</span>
+    }
+    /**
+     * Genera un código hash para este nodo basado en su dato.
+     *
+     * @return El código hash del dato contenido en el nodo.
+     */
+    @Override
+    public int hashCode() {
+<span class="nc" id="L118">        return dato.hashCode();</span>
+    }
+
+    // Getters y Setters
+
+    public T getDato() {
+<span class="nc" id="L124">        return dato;</span>
+    }
+
+    public void setDato(T dato) {
+<span class="nc" id="L128">        this.dato = dato;</span>
+<span class="nc" id="L129">    }</span>
+
+    public Map&lt;NodoGrafo&lt;T&gt;, Double&gt; getAdyacentes() {
+<span class="nc" id="L132">        return adyacentes;</span>
+    }
+
+    public void setAdyacentes(Map&lt;NodoGrafo&lt;T&gt;, Double&gt; adyacentes) {
+<span class="nc" id="L136">        this.adyacentes = adyacentes;</span>
+<span class="nc" id="L137">    }</span>
+
+    /**
+     * Devuelve el peso de la arista entre este nodo y el nodo dado,
+     * o -1 si no existe conexión.
+     */
+    public double getPesoArista(NodoGrafo&lt;T&gt; nodo) {
+        // redirige a tu método getPeso existente
+<span class="nc" id="L145">        return getPeso(nodo);</span>
+    }
+
+    /**
+     * Calcula el grado (ponderado) de este nodo,
+     * es decir, la suma de los pesos de todas sus aristas salientes.
+     */
+    public double getGrado() {
+<span class="nc" id="L153">        double suma = 0.0;</span>
+<span class="nc bnc" id="L154" title="All 2 branches missed.">        for (Double peso : adyacentes.values()) {</span>
+<span class="nc" id="L155">            suma += peso;</span>
+<span class="nc" id="L156">        }</span>
+<span class="nc" id="L157">        return suma;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GestorGrupos.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models.services.implement</a> &gt; <span class="el_source">GestorGrupos.java</span></div><h1>GestorGrupos.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models.services.implement;
+
+import co.edu.uniquindio.redsocial.models.Estudiante;
+import co.edu.uniquindio.redsocial.models.GrupoEstudio;
+import co.edu.uniquindio.redsocial.models.services.interf.IGestorGrupos;
+import co.edu.uniquindio.redsocial.models.structures.GrafoImpl;
+import co.edu.uniquindio.redsocial.models.structures.GrafoNoDirigido;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * Implementación concreta de {@link IGestorGrupos} para crear y gestionar
+ * grupos de estudio a partir de un grafo de estudiantes basado en afinidades.
+ *
+ * @param &lt;T&gt; Tipo de estudiante que conforma los grupos.
+ * @author
+ * Daniel Jurado, Sebastián Torres, Juan Soto
+ * @since 2025-05-25
+ */
+<span class="nc" id="L22">public class GestorGrupos&lt;T extends Estudiante&gt; implements IGestorGrupos&lt;T&gt; {</span>
+
+    /**
+     * GrafoImpl que representa las relaciones entre estudiantes para detectar afinidades.
+     */
+    private GrafoImpl&lt;T&gt; grafoEstudiantes;
+
+    /**
+     * Lista de grupos de estudio creados por el gestor.
+     */
+    private List&lt;GrupoEstudio&gt; gruposEstudio;
+
+    /**
+     * Establece el grafo de estudiantes que será utilizado para detectar comunidades
+     * y crear grupos de estudio.
+     *
+     * @param grafoimpl Grafo que representa las relaciones entre estudiantes.
+     * @throws IllegalArgumentException si el grafo es nulo.
+     */
+    @Override
+    public void setGrafo(GrafoImpl&lt;T&gt; grafoimpl) {
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        if (grafoimpl == null) {</span>
+<span class="nc" id="L44">            throw new IllegalArgumentException(&quot;El grafo no puede ser nulo&quot;);</span>
+        }
+<span class="nc" id="L46">        this.grafoEstudiantes = new GrafoImpl&lt;&gt;();</span>
+<span class="nc" id="L47">    }</span>
+
+    /**
+     * Obtiene el grafo de estudiantes utilizado actualmente por el gestor.
+     *
+     * @return GrafoImpl de estudiantes.
+     */
+    @Override
+    public GrafoImpl&lt;T&gt; getGrafo() {
+<span class="nc" id="L56">        return grafoEstudiantes;</span>
+    }
+
+    /**
+     * Crea grupos de estudio detectando comunidades en el grafo de estudiantes.
+     * Cada comunidad detectada genera un grupo de estudio con el tema especificado.
+     *
+     * @param temaPorDefecto Tema que se asignará a todos los grupos creados.
+     * @return Lista de grupos de estudio creados.
+     * @throws IllegalStateException    si el grafo no ha sido establecido o no es un grafo no dirigido.
+     * @throws IllegalArgumentException si el temaPorDefecto es nulo o vacío.
+     */
+    @Override
+    public List&lt;GrupoEstudio&gt; crearGruposPorAfinidadConObjetos(String temaPorDefecto) {
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        if (grafoEstudiantes == null) {</span>
+<span class="nc" id="L71">            throw new IllegalStateException(&quot;El grafo no ha sido establecido&quot;);</span>
+        }
+<span class="nc bnc" id="L73" title="All 4 branches missed.">        if (temaPorDefecto == null || temaPorDefecto.isBlank()) {</span>
+<span class="nc" id="L74">            throw new IllegalArgumentException(&quot;El tema no puede ser nulo ni vacío&quot;);</span>
+        }
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        if (!(grafoEstudiantes instanceof GrafoNoDirigido)) {</span>
+<span class="nc" id="L77">            throw new IllegalStateException(&quot;El grafo debe ser no dirigido para detectar comunidades&quot;);</span>
+        }
+
+<span class="nc" id="L80">        GrafoNoDirigido&lt;T&gt; grafoNoDirigido = (GrafoNoDirigido&lt;T&gt;) grafoEstudiantes;</span>
+
+<span class="nc" id="L82">        List&lt;List&lt;T&gt;&gt; comunidades = grafoNoDirigido.detectarComunidades();</span>
+
+<span class="nc" id="L84">        gruposEstudio = new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        for (List&lt;T&gt; comunidad : comunidades) {</span>
+<span class="nc" id="L87">            String idGrupo = UUID.randomUUID().toString();</span>
+<span class="nc" id="L88">            GrupoEstudio grupo = new GrupoEstudio(idGrupo, temaPorDefecto);</span>
+
+<span class="nc bnc" id="L90" title="All 2 branches missed.">            for (T estudiante : comunidad) {</span>
+<span class="nc" id="L91">                grupo.agregarMiembro(estudiante);</span>
+<span class="nc" id="L92">            }</span>
+<span class="nc" id="L93">            gruposEstudio.add(grupo);</span>
+<span class="nc" id="L94">        }</span>
+
+<span class="nc" id="L96">        return gruposEstudio;</span>
+    }
+
+    /**
+     * Obtiene la lista de grupos de estudio gestionados actualmente.
+     *
+     * @return Lista de grupos de estudio; si no se han creado grupos, retorna una lista vacía.
+     */
+    @Override
+    public List&lt;GrupoEstudio&gt; getGruposEstudio() {
+<span class="nc bnc" id="L106" title="All 2 branches missed.">        if (gruposEstudio == null) {</span>
+<span class="nc" id="L107">            return new ArrayList&lt;&gt;();</span>
+        }
+<span class="nc" id="L109">        return gruposEstudio;</span>
+    }
+}
+
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

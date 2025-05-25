@@ -2,6 +2,8 @@ package models;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import co.edu.uniquindio.redsocial.ArchivoMultimedia;
+import co.edu.uniquindio.redsocial.models.Enums.TipoContenido;
 import co.edu.uniquindio.redsocial.models.*;
 
 import co.edu.uniquindio.redsocial.models.structures.ColaPrioridad;
@@ -16,6 +18,7 @@ public class ValoracionTest {
     private Estudiante estudiante;
     private Contenido contenido;
     private Valoracion valoracion;
+    private ArchivoMultimedia archivo;
 
     /**
      * Método ejecutado antes de cada prueba.
@@ -55,9 +58,10 @@ public class ValoracionTest {
                 "Matemáticas",
                 "Introducción a integrales",
                 estudiante,               // autor
-                "Video",
+                TipoContenido.VIDEO,
                 LocalDateTime.now(),      // fecha de creación actual
-                valoracionesContenido
+                valoracionesContenido,
+                archivo
         );
 
         // Crear la valoración con estudiante, contenido, puntuación y comentario

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SolicitudAyuda.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models</a> &gt; <span class="el_source">SolicitudAyuda.java</span></div><h1>SolicitudAyuda.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.UUID;
+
+/**
+ * Representa una solicitud de ayuda realizada por un estudiante dentro
+ * de la red social educativa. Cada solicitud tiene un tema, nivel de urgencia,
+ * descripción del problema, fecha y hora de creación, un estado de seguimiento,
+ * y está asociada a un estudiante solicitante.
+ *
+ * &lt;p&gt;
+ * Esta clase actúa como un modelo de datos y no implementa lógica de negocio
+ * como asignaciones o notificaciones. Dicha lógica debería ser gestionada
+ * por una clase externa como un gestor o controlador de solicitudes.
+ * &lt;/p&gt;
+ *
+ * @author Daniel Jurado
+ * @author Sebastian Torres
+ * @author Juan Soto
+ * @since 2025-05-13
+ *
+ */
+public class SolicitudAyuda implements Comparable&lt;SolicitudAyuda&gt; {
+
+    private final String id;
+    private final String tema;
+    private final int urgencia;
+    private final LocalDateTime fechaSolicitud;
+    private final Estudiante estudiante;
+    private final String descripcion;
+    private EstadoSolicitud estado;
+
+    /**
+     * Enum que representa los estados posibles de una solicitud.
+     */
+<span class="fc" id="L38">    public enum EstadoSolicitud {</span>
+<span class="fc" id="L39">        PENDIENTE, EN_PROGRESO, RESUELTA</span>
+    }
+
+    /**
+     * Crea una nueva solicitud de ayuda con la fecha actual.
+     *
+     * @param tema        Tema específico de la solicitud.
+     * @param urgencia    Nivel de urgencia (1 a 10).
+     * @param estudiante  Estudiante que realiza la solicitud.
+     * @param descripcion Descripción detallada del problema.
+     * @throws IllegalArgumentException si algún parámetro es inválido.
+     */
+    public SolicitudAyuda(String tema, int urgencia, Estudiante estudiante, String descripcion) {
+<span class="fc" id="L52">        this(tema, urgencia, estudiante, descripcion, LocalDateTime.now());</span>
+<span class="fc" id="L53">    }</span>
+
+    /**
+     * Crea una nueva solicitud de ayuda con una fecha personalizada.
+     * Útil para pruebas unitarias o importaciones externas.
+     *
+     * @param tema            Tema específico de la solicitud.
+     * @param urgencia        Nivel de urgencia (1 a 10).
+     * @param estudiante      Estudiante que realiza la solicitud.
+     * @param descripcion     Descripción detallada del problema.
+     * @param fechaSolicitud  Fecha y hora de creación de la solicitud.
+     * @throws IllegalArgumentException si algún parámetro es inválido.
+     */
+<span class="fc" id="L66">    public SolicitudAyuda(String tema, int urgencia, Estudiante estudiante, String descripcion, LocalDateTime fechaSolicitud) {</span>
+<span class="fc bfc" id="L67" title="All 4 branches covered.">        if (tema == null || tema.isBlank()) {</span>
+<span class="fc" id="L68">            throw new IllegalArgumentException(&quot;El tema no puede ser nulo o vacío&quot;);</span>
+        }
+<span class="fc bfc" id="L70" title="All 4 branches covered.">        if (urgencia &lt; 1 || urgencia &gt; 10) {</span>
+<span class="fc" id="L71">            throw new IllegalArgumentException(&quot;La urgencia debe estar entre 1 y 10&quot;);</span>
+        }
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        if (estudiante == null) {</span>
+<span class="fc" id="L74">            throw new IllegalArgumentException(&quot;El estudiante no puede ser nulo&quot;);</span>
+        }
+<span class="fc bfc" id="L76" title="All 4 branches covered.">        if (descripcion == null || descripcion.isBlank()) {</span>
+<span class="fc" id="L77">            throw new IllegalArgumentException(&quot;La descripción no puede ser nula o vacía&quot;);</span>
+        }
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">        if (fechaSolicitud == null) {</span>
+<span class="nc" id="L80">            throw new IllegalArgumentException(&quot;La fecha de solicitud no puede ser nula&quot;);</span>
+        }
+
+<span class="fc" id="L83">        this.id = UUID.randomUUID().toString();</span>
+<span class="fc" id="L84">        this.tema = tema;</span>
+<span class="fc" id="L85">        this.urgencia = urgencia;</span>
+<span class="fc" id="L86">        this.estudiante = estudiante;</span>
+<span class="fc" id="L87">        this.descripcion = descripcion;</span>
+<span class="fc" id="L88">        this.fechaSolicitud = fechaSolicitud;</span>
+<span class="fc" id="L89">        this.estado = EstadoSolicitud.PENDIENTE;</span>
+<span class="fc" id="L90">    }</span>
+
+    public String getId() {
+<span class="fc" id="L93">        return id;</span>
+    }
+
+    public String getTema() {
+<span class="fc" id="L97">        return tema;</span>
+    }
+
+    public int getUrgencia() {
+<span class="fc" id="L101">        return urgencia;</span>
+    }
+
+    public Estudiante getEstudiante() {
+<span class="fc" id="L105">        return estudiante;</span>
+    }
+
+    public String getDescripcion() {
+<span class="fc" id="L109">        return descripcion;</span>
+    }
+
+    public LocalDateTime getFechaSolicitud() {
+<span class="fc" id="L113">        return fechaSolicitud;</span>
+    }
+
+    public EstadoSolicitud getEstado() {
+<span class="fc" id="L117">        return estado;</span>
+    }
+
+    /**
+     * Cambia el estado de la solicitud.
+     *
+     * @param estado Nuevo estado a asignar.
+     * @throws IllegalArgumentException si el estado es nulo.
+     */
+    public void setEstado(EstadoSolicitud estado) {
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        if (estado == null) {</span>
+<span class="fc" id="L128">            throw new IllegalArgumentException(&quot;El estado no puede ser nulo&quot;);</span>
+        }
+<span class="fc" id="L130">        this.estado = estado;</span>
+<span class="fc" id="L131">    }</span>
+
+    /**
+     * Compara esta solicitud con otra según el nivel de urgencia
+     * (orden descendente: mayor urgencia primero).
+     *
+     * @param otra Otra solicitud a comparar.
+     * @return Valor negativo si esta tiene más urgencia, positivo si menos, cero si igual.
+     */
+    @Override
+    public int compareTo(SolicitudAyuda otra) {
+<span class="fc" id="L142">        return Integer.compare(otra.urgencia, this.urgencia);</span>
+    }
+
+    /**
+     * Representación legible de la solicitud.
+     *
+     * @return Cadena con los campos clave de la solicitud.
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L152">        return String.format(</span>
+                &quot;SolicitudAyuda{id='%s', tema='%s', urgencia=%d, estudiante='%s', estado=%s, fecha=%s, descripcion='%s'}&quot;,
+<span class="fc" id="L154">                id, tema, urgencia, estudiante.getNombre(), estado, fechaSolicitud, descripcion</span>
+        );
+    }
+
+    @Override
+    public boolean equals(Object o) {
+<span class="fc bfc" id="L160" title="All 2 branches covered.">        if (this == o) return true;</span>
+<span class="pc bpc" id="L161" title="1 of 2 branches missed.">        if (!(o instanceof SolicitudAyuda)) return false;</span>
+<span class="fc" id="L162">        SolicitudAyuda that = (SolicitudAyuda) o;</span>
+<span class="fc" id="L163">        return Objects.equals(id, that.id);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="fc" id="L168">        return Objects.hash(id);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

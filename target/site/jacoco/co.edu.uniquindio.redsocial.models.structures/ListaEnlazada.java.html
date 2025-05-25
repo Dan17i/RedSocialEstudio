@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ListaEnlazada.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models.structures</a> &gt; <span class="el_source">ListaEnlazada.java</span></div><h1>ListaEnlazada.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models.structures;
+
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+/**
+ * Clase que representa una lista enlazada simple genérica.
+ * Permite operaciones como agregar, eliminar, buscar, obtener sublistas, clonar e iterar elementos.
+ *
+ * @param &lt;T&gt; Tipo de dato que contendrá la lista enlazada
+ * @author Daniel
+ * @author Sebastian
+ * @author Juan
+ * @since 2025-04-02
+ */
+public class ListaEnlazada&lt;T&gt; implements Iterable&lt;T&gt; {
+
+    private NodoLista&lt;T&gt; cabeza;
+    private int tamanio;
+
+    /**
+     * Constructor que inicializa una lista vacía.
+     */
+<span class="fc" id="L25">    public ListaEnlazada() {</span>
+<span class="fc" id="L26">        this.cabeza = null;</span>
+<span class="fc" id="L27">        this.tamanio = 0;</span>
+<span class="fc" id="L28">    }</span>
+
+    /**
+     * Constructor que permite inicializar con una cabeza y tamaño específicos.
+     * @param cabeza Nodo inicial de la lista
+     * @param tamanio Número de elementos de la lista
+     */
+<span class="nc" id="L35">    public ListaEnlazada(NodoLista&lt;T&gt; cabeza, int tamanio) {</span>
+<span class="nc" id="L36">        this.cabeza = cabeza;</span>
+<span class="nc" id="L37">        this.tamanio = tamanio;</span>
+<span class="nc" id="L38">    }</span>
+
+    /**
+     * Retorna el índice de un elemento si está presente.
+     *
+     * @param elemento el elemento a buscar
+     * @return índice del elemento o -1 si no está
+     */
+    public int obtenerIndice(T elemento) {
+<span class="nc" id="L47">        NodoLista&lt;T&gt; actual = cabeza;</span>
+<span class="nc" id="L48">        int indice = 0;</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        while (actual != null) {</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">            if (actual.getDato().equals(elemento)) {</span>
+<span class="nc" id="L51">                return indice;</span>
+            }
+<span class="nc" id="L53">            actual = actual.getSiguiente();</span>
+<span class="nc" id="L54">            indice++;</span>
+        }
+<span class="nc" id="L56">        return -1;</span>
+    }
+
+    /**
+     * Reemplaza el dato en el índice especificado.
+     *
+     * @param indice posición a reemplazar
+     * @param nuevoDato nuevo valor a establecer
+     */
+    public void set(int indice, T nuevoDato) {
+<span class="nc" id="L66">        validarIndice(indice);</span>
+<span class="nc" id="L67">        NodoLista&lt;T&gt; actual = obtenerNodo(indice);</span>
+<span class="nc" id="L68">        actual.setDato(nuevoDato);</span>
+<span class="nc" id="L69">    }</span>
+
+    /**
+     * Reemplaza el elemento en la posición indicada con un nuevo dato.
+     * Este método es equivalente al método set().
+     *
+     * @param index posición del nodo a actualizar.
+     * @param dato nuevo dato para asignar.
+     * @throws IndexOutOfBoundsException si el índice está fuera de rango.
+     */
+    public void put(int index, T dato) {
+<span class="nc" id="L80">        set(index, dato);</span>
+<span class="nc" id="L81">    }</span>
+
+    /**
+     * Agrega un nuevo elemento al final de la lista.
+     *
+     * @param elemento dato a agregar
+     */
+    public void agregar(T elemento) {
+<span class="fc" id="L89">        NodoLista&lt;T&gt; nuevo = new NodoLista&lt;&gt;(elemento);</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        if (cabeza == null) {</span>
+<span class="fc" id="L91">            cabeza = nuevo;</span>
+        } else {
+<span class="fc" id="L93">            NodoLista&lt;T&gt; actual = cabeza;</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">            while (actual.getSiguiente() != null) {</span>
+<span class="fc" id="L95">                actual = actual.getSiguiente();</span>
+            }
+<span class="fc" id="L97">            actual.setSiguiente(nuevo);</span>
+        }
+<span class="fc" id="L99">        tamanio++;</span>
+<span class="fc" id="L100">    }</span>
+
+    /**
+     * Agrega un nuevo elemento al inicio de la lista enlazada.
+     *
+     * @param elemento el dato a insertar al inicio.
+     */
+    public void agregarInicio(T elemento) {
+<span class="nc" id="L108">        NodoLista&lt;T&gt; nuevo = new NodoLista&lt;&gt;(elemento);</span>
+<span class="nc" id="L109">        nuevo.setSiguiente(cabeza);</span>
+<span class="nc" id="L110">        cabeza = nuevo;</span>
+<span class="nc" id="L111">        tamanio++;</span>
+<span class="nc" id="L112">    }</span>
+
+    /**
+     * Elimina el nodo en la posición especificada.
+     *
+     * @param posicion índice del nodo a eliminar
+     */
+    public void eliminar(int posicion) {
+<span class="nc" id="L120">        validarIndice(posicion);</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">        if (posicion == 0) {</span>
+<span class="nc" id="L122">            cabeza = cabeza.getSiguiente();</span>
+        } else {
+<span class="nc" id="L124">            NodoLista&lt;T&gt; anterior = obtenerNodo(posicion - 1);</span>
+<span class="nc" id="L125">            anterior.setSiguiente(anterior.getSiguiente().getSiguiente());</span>
+        }
+<span class="nc" id="L127">        tamanio--;</span>
+<span class="nc" id="L128">    }</span>
+
+    /**
+     * Elimina la primera ocurrencia de un nodo que contenga el valor especificado.
+     *
+     * @param dato El dato a eliminar de la lista.
+     * @return true si se eliminó correctamente; false si el dato no se encontró.
+     */
+    public boolean eliminar(T dato) {
+<span class="nc bnc" id="L137" title="All 2 branches missed.">        if (cabeza == null) return false;</span>
+
+<span class="nc bnc" id="L139" title="All 2 branches missed.">        if (cabeza.getDato().equals(dato)) {</span>
+<span class="nc" id="L140">            cabeza = cabeza.getSiguiente();</span>
+<span class="nc" id="L141">            tamanio--;</span>
+<span class="nc" id="L142">            return true;</span>
+        }
+
+<span class="nc" id="L145">        NodoLista&lt;T&gt; actual = cabeza;</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">        while (actual.getSiguiente() != null) {</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">            if (actual.getSiguiente().getDato().equals(dato)) {</span>
+<span class="nc" id="L148">                actual.setSiguiente(actual.getSiguiente().getSiguiente());</span>
+<span class="nc" id="L149">                tamanio--;</span>
+<span class="nc" id="L150">                return true;</span>
+            }
+<span class="nc" id="L152">            actual = actual.getSiguiente();</span>
+        }
+<span class="nc" id="L154">        return false;</span>
+    }
+
+    /**
+     * Elimina el nodo en la posición especificada y retorna su dato.
+     *
+     * @param posicion índice del nodo a eliminar
+     * @return Dato del nodo eliminado
+     */
+    public T eliminarEn(int posicion) {
+<span class="nc" id="L164">        validarIndice(posicion);</span>
+        T dato;
+
+<span class="nc bnc" id="L167" title="All 2 branches missed.">        if (posicion == 0) {</span>
+<span class="nc" id="L168">            dato = cabeza.getDato();</span>
+<span class="nc" id="L169">            cabeza = cabeza.getSiguiente();</span>
+        } else {
+<span class="nc" id="L171">            NodoLista&lt;T&gt; anterior = obtenerNodo(posicion - 1);</span>
+<span class="nc" id="L172">            NodoLista&lt;T&gt; nodoAEliminar = anterior.getSiguiente();</span>
+<span class="nc" id="L173">            dato = nodoAEliminar.getDato();</span>
+<span class="nc" id="L174">            anterior.setSiguiente(nodoAEliminar.getSiguiente());</span>
+        }
+
+<span class="nc" id="L177">        tamanio--;</span>
+<span class="nc" id="L178">        return dato;</span>
+    }
+
+    /**
+     * Verifica si un elemento está en la lista.
+     *
+     * @param elemento elemento a buscar
+     * @return true si está, false si no
+     */
+    public boolean buscar(T elemento) {
+<span class="fc" id="L188">        return contiene(elemento);</span>
+    }
+
+    /**
+     * Retorna el dato en una posición específica.
+     *
+     * @param posicion índice del dato
+     * @return el dato
+     * @throws IndexOutOfBoundsException si el índice no es válido
+     */
+    public T obtener(int posicion) {
+<span class="fc" id="L199">        validarIndice(posicion);</span>
+<span class="fc" id="L200">        return obtenerNodo(posicion).getDato();</span>
+    }
+
+    /**
+     * Verifica si la lista contiene un elemento.
+     *
+     * @param elemento el elemento a buscar
+     * @return true si lo contiene
+     */
+    public boolean contiene(T elemento) {
+<span class="fc" id="L210">        NodoLista&lt;T&gt; actual = cabeza;</span>
+<span class="fc bfc" id="L211" title="All 2 branches covered.">        while (actual != null) {</span>
+<span class="fc bfc" id="L212" title="All 2 branches covered.">            if (actual.getDato().equals(elemento)) {</span>
+<span class="fc" id="L213">                return true;</span>
+            }
+<span class="fc" id="L215">            actual = actual.getSiguiente();</span>
+        }
+<span class="fc" id="L217">        return false;</span>
+    }
+
+    /**
+     * Retorna el nodo en una posición específica.
+     *
+     * @param index índice del nodo
+     * @return nodo correspondiente
+     * @throws IndexOutOfBoundsException si el índice es inválido
+     */
+    public NodoLista&lt;T&gt; obtenerNodo(int index) {
+<span class="fc" id="L228">        validarIndice(index);</span>
+<span class="fc" id="L229">        NodoLista&lt;T&gt; actual = cabeza;</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">        for (int i = 0; i &lt; index; i++) {</span>
+<span class="fc" id="L231">            actual = actual.getSiguiente();</span>
+        }
+<span class="fc" id="L233">        return actual;</span>
+    }
+
+    /**
+     * Inserta un dato en una posición específica de la lista.
+     *
+     * @param index posición de inserción
+     * @param dato elemento a insertar
+     * @throws IndexOutOfBoundsException si el índice es inválido
+     */
+    public void insertarEn(int index, T dato) {
+<span class="nc bnc" id="L244" title="All 4 branches missed.">        if (index &lt; 0 || index &gt; tamanio) {</span>
+<span class="nc" id="L245">            throw new IndexOutOfBoundsException(&quot;Índice fuera de rango&quot;);</span>
+        }
+
+<span class="nc" id="L248">        NodoLista&lt;T&gt; nuevoNodo = new NodoLista&lt;&gt;(dato);</span>
+
+<span class="nc bnc" id="L250" title="All 2 branches missed.">        if (index == 0) {</span>
+<span class="nc" id="L251">            nuevoNodo.setSiguiente(cabeza);</span>
+<span class="nc" id="L252">            cabeza = nuevoNodo;</span>
+        } else {
+<span class="nc" id="L254">            NodoLista&lt;T&gt; anterior = obtenerNodo(index - 1);</span>
+<span class="nc" id="L255">            nuevoNodo.setSiguiente(anterior.getSiguiente());</span>
+<span class="nc" id="L256">            anterior.setSiguiente(nuevoNodo);</span>
+        }
+
+<span class="nc" id="L259">        tamanio++;</span>
+<span class="nc" id="L260">    }</span>
+
+    /**
+     * Valida que el índice esté en el rango de la lista.
+     *
+     * @param indice índice a validar
+     * @throws IndexOutOfBoundsException si el índice es inválido
+     */
+    private void validarIndice(int indice) {
+<span class="pc bpc" id="L269" title="2 of 4 branches missed.">        if (indice &lt; 0 || indice &gt;= tamanio) {</span>
+<span class="nc" id="L270">            throw new IndexOutOfBoundsException(&quot;Índice fuera de rango: &quot; + indice);</span>
+        }
+<span class="fc" id="L272">    }</span>
+
+    /**
+     * Invierte el orden de los elementos en la lista.
+     */
+    public void invertir() {
+<span class="fc" id="L278">        NodoLista&lt;T&gt; anterior = null;</span>
+<span class="fc" id="L279">        NodoLista&lt;T&gt; actual = cabeza;</span>
+        NodoLista&lt;T&gt; siguiente;
+
+<span class="fc bfc" id="L282" title="All 2 branches covered.">        while (actual != null) {</span>
+<span class="fc" id="L283">            siguiente = actual.getSiguiente();</span>
+<span class="fc" id="L284">            actual.setSiguiente(anterior);</span>
+<span class="fc" id="L285">            anterior = actual;</span>
+<span class="fc" id="L286">            actual = siguiente;</span>
+        }
+
+<span class="fc" id="L289">        cabeza = anterior;</span>
+<span class="fc" id="L290">    }</span>
+
+    /**
+     * Crea una copia profunda de la lista.
+     *
+     * @return Lista clonada
+     */
+    public ListaEnlazada&lt;T&gt; clonar() {
+<span class="fc" id="L298">        ListaEnlazada&lt;T&gt; clon = new ListaEnlazada&lt;&gt;();</span>
+<span class="fc" id="L299">        NodoLista&lt;T&gt; actual = cabeza;</span>
+
+<span class="fc bfc" id="L301" title="All 2 branches covered.">        while (actual != null) {</span>
+<span class="fc" id="L302">            clon.agregar(actual.getDato());</span>
+<span class="fc" id="L303">            actual = actual.getSiguiente();</span>
+        }
+
+<span class="fc" id="L306">        return clon;</span>
+    }
+
+    /**
+     * Retorna una sublista desde el índice 'desde' (inclusive) hasta 'hasta' (exclusivo).
+     *
+     * @param desde Índice de inicio
+     * @param hasta Índice de fin (no incluido)
+     * @return Sublista con los elementos deseados
+     * @throws IndexOutOfBoundsException si los índices no son válidos
+     */
+    public ListaEnlazada&lt;T&gt; sublista(int desde, int hasta) {
+<span class="pc bpc" id="L318" title="3 of 6 branches missed.">        if (desde &lt; 0 || hasta &gt;= tamanio || desde &gt; hasta) {</span>
+<span class="nc" id="L319">            throw new IndexOutOfBoundsException(&quot;Rango inválido: desde=&quot; + desde + &quot;, hasta=&quot; + hasta);</span>
+        }
+
+<span class="fc" id="L322">        ListaEnlazada&lt;T&gt; sublista = new ListaEnlazada&lt;&gt;();</span>
+<span class="fc" id="L323">        NodoLista&lt;T&gt; actual = cabeza;</span>
+<span class="fc" id="L324">        int indice = 0;</span>
+
+<span class="pc bpc" id="L326" title="1 of 2 branches missed.">        while (indice &lt; desde) {</span>
+<span class="nc" id="L327">            actual = actual.getSiguiente();</span>
+<span class="nc" id="L328">            indice++;</span>
+        }
+
+<span class="pc bpc" id="L331" title="1 of 4 branches missed.">        while (indice &lt;= hasta &amp;&amp; actual != null) {</span>
+<span class="fc" id="L332">            sublista.agregar(actual.getDato());</span>
+<span class="fc" id="L333">            actual = actual.getSiguiente();</span>
+<span class="fc" id="L334">            indice++;</span>
+        }
+
+<span class="fc" id="L337">        return sublista;</span>
+    }
+
+    /**
+     * Ordena la lista enlazada utilizando el algoritmo de burbuja.
+     * El orden se define por el comparador proporcionado.
+     *
+     * @param comparador El comparador que define el orden de los elementos.
+     */
+    public void ordenar(Comparator&lt;T&gt; comparador) {
+<span class="pc bpc" id="L347" title="3 of 4 branches missed.">        if (isEmpty() || cabeza.getSiguiente() == null) {</span>
+<span class="fc" id="L348">            return; // No hay nada que ordenar</span>
+        }
+
+        boolean cambiado;
+        do {
+<span class="nc" id="L353">            cambiado = false;</span>
+<span class="nc" id="L354">            NodoLista&lt;T&gt; actual = cabeza;</span>
+<span class="nc" id="L355">            NodoLista&lt;T&gt; siguiente = cabeza.getSiguiente();</span>
+
+<span class="nc bnc" id="L357" title="All 2 branches missed.">            while (siguiente != null) {</span>
+<span class="nc bnc" id="L358" title="All 2 branches missed.">                if (comparador.compare(actual.getDato(), siguiente.getDato()) &gt; 0) {</span>
+                    // Intercambiar los elementos
+<span class="nc" id="L360">                    T temp = actual.getDato();</span>
+<span class="nc" id="L361">                    actual.setDato(siguiente.getDato());</span>
+<span class="nc" id="L362">                    siguiente.setDato(temp);</span>
+<span class="nc" id="L363">                    cambiado = true;</span>
+                }
+<span class="nc" id="L365">                actual = siguiente;</span>
+<span class="nc" id="L366">                siguiente = siguiente.getSiguiente();</span>
+            }
+<span class="nc bnc" id="L368" title="All 2 branches missed.">        } while (cambiado);</span>
+<span class="nc" id="L369">    }</span>
+
+
+    /**
+     * Retorna un iterador para recorrer secuencialmente los elementos de la lista.
+     *
+     * @return Iterador que implementa {@link Iterator}
+     */
+    @Override
+    public Iterator&lt;T&gt; iterator() {
+<span class="nc" id="L379">        return new ListaIterator();</span>
+    }
+
+    /**
+     * Clase privada que implementa un iterador interno para la lista enlazada.
+     */
+<span class="nc" id="L385">    private class ListaIterator implements Iterator&lt;T&gt; {</span>
+
+<span class="nc" id="L387">        private NodoLista&lt;T&gt; actual = cabeza;</span>
+
+        @Override
+        public boolean hasNext() {
+<span class="nc bnc" id="L391" title="All 2 branches missed.">            return actual != null;</span>
+        }
+
+        @Override
+        public T next() {
+<span class="nc bnc" id="L396" title="All 2 branches missed.">            if (!hasNext()) {</span>
+<span class="nc" id="L397">                throw new NoSuchElementException(&quot;No hay más elementos en la lista&quot;);</span>
+            }
+<span class="nc" id="L399">            T dato = actual.getDato();</span>
+<span class="nc" id="L400">            actual = actual.getSiguiente();</span>
+<span class="nc" id="L401">            return dato;</span>
+        }
+    }
+
+    // Getters y Setters
+
+    public NodoLista&lt;T&gt; getCabeza() {
+<span class="fc" id="L408">        return cabeza;</span>
+    }
+
+    public void setCabeza(NodoLista&lt;T&gt; cabeza) {
+<span class="nc" id="L412">        this.cabeza = cabeza;</span>
+<span class="nc" id="L413">    }</span>
+
+    public int getTamanio() {
+<span class="fc" id="L416">        return tamanio;</span>
+    }
+
+    public void setTamanio(int tamanio) {
+<span class="nc" id="L420">        this.tamanio = tamanio;</span>
+<span class="nc" id="L421">    }</span>
+
+    /**
+     * Verifica si la lista está vacía.
+     *
+     * @return true si no hay elementos
+     */
+    public boolean isEmpty() {
+<span class="fc bfc" id="L429" title="All 2 branches covered.">        return cabeza == null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

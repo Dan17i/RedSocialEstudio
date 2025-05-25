@@ -1,4 +1,6 @@
 package models;
+import co.edu.uniquindio.redsocial.ArchivoMultimedia;
+import co.edu.uniquindio.redsocial.TipoContenido;
 import co.edu.uniquindio.redsocial.models.Contenido;
 import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.RegistroVisualizacion;
@@ -17,6 +19,7 @@ public class RegistroVisualizacionTest {
     private Estudiante usuario;  // Cambié el tipo aquí para evitar castings innecesarios
     private Contenido contenido;
     private LocalDateTime fechaVisualizacion;
+    private ArchivoMultimedia archivo;
 
     /**
      * Configura el entorno antes de cada prueba.
@@ -56,9 +59,10 @@ public class RegistroVisualizacionTest {
                 "Título de prueba",
                 "Descripción de prueba",
                 usuario,           // usuario ya es Estudiante, no se necesita cast
-                "tipoPrueba",
+                TipoContenido.TEXTO,
                 LocalDateTime.now(),
-                valoracionesContenido
+                valoracionesContenido,
+                archivo
         );
 
         // Definir fecha de visualización

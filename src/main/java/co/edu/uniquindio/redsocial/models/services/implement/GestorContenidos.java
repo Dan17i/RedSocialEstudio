@@ -104,7 +104,7 @@ public class GestorContenidos implements IGestorContenidos {
             Contenido c = actual.getDato();
             if (c.getTema().equalsIgnoreCase(tema)
                     && c.getAutor().getNombre().equalsIgnoreCase(autor) // corregido aquí
-                    && c.getTipo().equalsIgnoreCase(tipo)) {
+                    && c.getTipo().name().equalsIgnoreCase(tipo)) {
                 resultados.agregar(c);
             }
             actual = actual.getSiguiente();

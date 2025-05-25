@@ -38,4 +38,6 @@ public interface IGestorArchivos {
      * @return tamaño del archivo en bytes.
      */
     long obtenerTamanio(String rutaRelativa);
+
+    String obtenerExtension(String nombreArchivo);
 }

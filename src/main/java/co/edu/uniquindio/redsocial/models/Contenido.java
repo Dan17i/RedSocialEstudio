@@ -6,6 +6,7 @@ import co.edu.uniquindio.redsocial.models.services.interf.Tematico;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import co.edu.uniquindio.redsocial.models.structures.NodoLista;
 
+import java.io.File;
 import java.time.LocalDateTime;
 
 /**
@@ -68,7 +69,7 @@ public class Contenido implements Tematico {
         if (autor == null) {
             throw new IllegalArgumentException("El autor no puede ser nulo");
         }
-        if (tipo == null || tipo.isBlank()) {
+        if (tipo == null || tipo.name().isBlank()) {
             throw new IllegalArgumentException("El tipo no puede ser nulo ni vacío");
         }
         if (fechaCreacion == null) {
@@ -162,7 +163,7 @@ public class Contenido implements Tematico {
     public String getTipoMime(){
         if(tipo==null)
             return "application/octet-stream";
-        switch(tipo.toLowerCase()){
+        switch(tipo.name().toLowerCase()){
             case "imagen": return "image/jpeg";
             case "video": return "video/mp4";
             case "audio": return "audio/mpeg";

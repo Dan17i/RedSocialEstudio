@@ -1,5 +1,6 @@
 package co.edu.uniquindio.redsocial.models;
 
+import co.edu.uniquindio.redsocial.models.Enums.TipoReporte;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

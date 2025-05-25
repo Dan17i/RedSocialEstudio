@@ -1,7 +1,7 @@
 package models;
 
 import co.edu.uniquindio.redsocial.ArchivoMultimedia;
-import co.edu.uniquindio.redsocial.TipoContenido;
+import co.edu.uniquindio.redsocial.models.Enums.TipoContenido;
 import co.edu.uniquindio.redsocial.models.*;
 import co.edu.uniquindio.redsocial.models.services.implement.GestorContenidos;
 import co.edu.uniquindio.redsocial.models.structures.ArbolBinarioBusqueda;

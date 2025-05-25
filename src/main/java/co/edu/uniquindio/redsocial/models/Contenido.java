@@ -1,7 +1,7 @@
 package co.edu.uniquindio.redsocial.models;
 
 import co.edu.uniquindio.redsocial.ArchivoMultimedia;
-import co.edu.uniquindio.redsocial.TipoContenido;
+import co.edu.uniquindio.redsocial.models.Enums.TipoContenido;
 import co.edu.uniquindio.redsocial.models.services.interf.Tematico;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import co.edu.uniquindio.redsocial.models.structures.NodoLista;

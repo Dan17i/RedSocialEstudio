@@ -1,4 +1,4 @@
-package co.edu.uniquindio.redsocial.models;
+package co.edu.uniquindio.redsocial.models.Enums;
 
 /**
  * Tipos válidos de reporte para evitar errores por cadenas mal escritas.

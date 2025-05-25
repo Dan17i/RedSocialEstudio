@@ -1,7 +1,7 @@
 package models;
 
 import co.edu.uniquindio.redsocial.ArchivoMultimedia;
-import co.edu.uniquindio.redsocial.TipoContenido;
+import co.edu.uniquindio.redsocial.models.Enums.TipoContenido;
 import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.Valoracion;
 import co.edu.uniquindio.redsocial.models.structures.ColaPrioridad;
@@ -44,10 +44,11 @@ public class ContenidoTest {
                 archivo);
 
         assertEquals("001", contenido.getId());
-        assertEquals("Titulo de prueba", contenido.getTema());
-        assertEquals("Descripción de prueba", contenido.getDescripcion());
+        assertEquals("Matematicas", contenido.getTema());
+        assertEquals("sobre Matematicas", contenido.getDescripcion());
         assertEquals(autor, contenido.getAutor());
         assertEquals(TipoContenido.VIDEO, contenido.getTipo());
+        assertEquals(LocalDateTime.now(), contenido.getFechaCreacion());
         assertEquals(valoraciones, contenido.getValoraciones());
         assertEquals(archivo, contenido.getArchivoMultimedia());
     }

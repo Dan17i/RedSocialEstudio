@@ -1,7 +1,7 @@
 package models;
 
 import co.edu.uniquindio.redsocial.ArchivoMultimedia;
-import co.edu.uniquindio.redsocial.TipoContenido;
+import co.edu.uniquindio.redsocial.models.Enums.TipoContenido;
 import co.edu.uniquindio.redsocial.models.Contenido;
 import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.HistorialDeContenido;
@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 

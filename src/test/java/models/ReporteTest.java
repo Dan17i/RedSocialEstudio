@@ -2,7 +2,7 @@ package models;
 
 
 import co.edu.uniquindio.redsocial.models.Reporte;
-import co.edu.uniquindio.redsocial.models.TipoReporte;
+import co.edu.uniquindio.redsocial.models.Enums.TipoReporte;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import co.edu.uniquindio.redsocial.models.structures.NodoArbol;
 import org.junit.jupiter.api.BeforeEach;

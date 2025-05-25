@@ -1,6 +1,6 @@
 package models;
 import co.edu.uniquindio.redsocial.ArchivoMultimedia;
-import co.edu.uniquindio.redsocial.TipoContenido;
+import co.edu.uniquindio.redsocial.models.Enums.TipoContenido;
 import co.edu.uniquindio.redsocial.models.Contenido;
 import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.RegistroVisualizacion;

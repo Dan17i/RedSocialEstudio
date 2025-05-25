@@ -2,6 +2,8 @@
 <%@ page import="co.edu.uniquindio.redsocial.models.Estudiante" %>
 <%@ page import="co.edu.uniquindio.redsocial.models.Contenido" %>
 <%@ page import="co.edu.uniquindio.redsocial.models.structures.ListaEnlazada" %>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 
@@ -38,7 +40,14 @@
                         <%
                             for (int i = 0; i < intereses.getTamanio(); i++) {
                         %>
-                        <li class="list-group-item"><%= intereses.obtener(i) %></li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <%= intereses.obtener(i) %>
+                            <form action="EliminarInteresServlet" method="post" style="margin: 0;">
+                                <input type="hidden" name="interes" value="<%= intereses.obtener(i) %>">
+                                <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                            </form>
+                        </li>
+
                         <%
                             }
                         %>
@@ -50,7 +59,42 @@
                     <%
                         }
                     %>
+
                 </div>
+                <!-- Botón para abrir el modal -->
+                <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#modalIntereses">
+                    Añadir intereses
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="modalIntereses" tabindex="-1" aria-labelledby="modalInteresesLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form action="AgregarInteresServlet" method="post">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalInteresesLabel">Selecciona un interés</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <select name="interes" class="form-select" required>
+                                        <option value="">-- Selecciona un interés --</option>
+                                        <option value="Tecnología">Tecnología</option>
+                                        <option value="Deportes">Deportes</option>
+                                        <option value="Ciencia">Ciencia</option>
+                                        <option value="Arte">Arte</option>
+                                        <option value="Música">Música</option>
+                                        <!-- Puedes agregar más -->
+                                    </select>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-success">Agregar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
         </div>
     </div>
@@ -97,3 +141,4 @@
 <%
     }
 %>
+

@@ -1,10 +1,14 @@
 package co.edu.uniquindio.redsocial.models.services.implement;
 
 import co.edu.uniquindio.redsocial.models.Estudiante;
-import co.edu.uniquindio.redsocial.models.structures.Grafo;
+import co.edu.uniquindio.redsocial.models.structures.GrafoImpl;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import co.edu.uniquindio.redsocial.models.structures.NodoGrafo;
 import co.edu.uniquindio.redsocial.models.services.interf.IRedAfinidad;
+
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Clase que representa una red de afinidad entre estudiantes,
  * utilizando un grafo para establecer relaciones y sugerencias
@@ -12,31 +16,48 @@ import co.edu.uniquindio.redsocial.models.services.interf.IRedAfinidad;
  *
  * Esta clase se encarga de analizar las relaciones y atributos de
  * los estudiantes para sugerir conexiones relevantes dentro de la red.
+ * Utiliza el patrón Singleton.
  *
  * @author Daniel Jurado
  * @author Sebastian Torres
  * @author Juan Soto
  * @since 2025-05-12
  */
-public class RedAfinidad implements  IRedAfinidad{
-    private final Grafo<Estudiante> grafoEstudiantes;
+
+public class RedAfinidad implements IRedAfinidad {
+    private final GrafoImpl<Estudiante> grafoEstudiantes;
     private static RedAfinidad instancia;
+
     /**
-     * Constructor que inicializa la red con un grafo de estudiantes.
+     * Constructor privado para garantizar el patrón Singleton.
      *
      * @param grafoEstudiantes grafo que contiene los estudiantes y sus relaciones.
      */
-    public RedAfinidad(Grafo<Estudiante> grafoEstudiantes) {
+    private RedAfinidad(GrafoImpl<Estudiante> grafoEstudiantes) {
         this.grafoEstudiantes = grafoEstudiantes;
     }
 
+    /**
+     * Devuelve la instancia única de RedAfinidad (patrón Singleton).
+     *
+     * @return instancia única de RedAfinidad.
+     */
     public static RedAfinidad getInstancia() {
-        if (instancia==null){
-            instancia = new RedAfinidad(new Grafo<>());
-
+        if (instancia == null) {
+            instancia = new RedAfinidad(new GrafoImpl<>());
         }
         return instancia;
     }
+
+    /**
+     * Agrega un estudiante a la red de afinidad.
+     *
+     * @param estudiante el estudiante a agregar.
+     */
+    public void agregarEstudiante(Estudiante estudiante) {
+        grafoEstudiantes.agregarNodo(estudiante);
+    }
+
     /**
      * Sugiere compañeros afines a un estudiante en base al número de intereses en común.
      *
@@ -46,25 +67,22 @@ public class RedAfinidad implements  IRedAfinidad{
     public ListaEnlazada<Estudiante> sugerirCompaneros(Estudiante estudiante) {
         ListaEnlazada<Estudiante> sugerencias = new ListaEnlazada<>();
 
+        if (estudiante == null || estudiante.getIntereses() == null) {
+            return sugerencias;
+        }
+
         NodoGrafo<Estudiante> nodoEstudiante = grafoEstudiantes.buscarNodo(estudiante);
         if (nodoEstudiante == null) {
             return sugerencias; // El estudiante no está en el grafo
         }
 
         ListaEnlazada<NodoGrafo<Estudiante>> todos = grafoEstudiantes.getNodos();
-        ListaEnlazada<String> interesesUsuario = estudiante.getIntereses();
 
         for (int i = 0; i < todos.getTamanio(); i++) {
             Estudiante candidato = todos.obtener(i).getDato();
 
-            if (!candidato.equals(estudiante)) {
-                ListaEnlazada<String> interesesCandidato = candidato.getIntereses();
-                int afinidad = contarCoincidencias(interesesUsuario, interesesCandidato);
-
-                // Por ahora, sugerimos si tienen al menos 2 intereses en común
-                if (afinidad >= 2) {
-                    sugerencias.agregar(candidato);
-                }
+            if (!candidato.equals(estudiante) && tieneAfinidad(estudiante, candidato, 2)) {
+                sugerencias.agregar(candidato);
             }
         }
 
@@ -72,28 +90,41 @@ public class RedAfinidad implements  IRedAfinidad{
     }
 
     /**
-     * Cuenta cuántos elementos tiene en común entre dos listas de intereses.
+     * Determina si dos estudiantes tienen una cantidad mínima de intereses en común.
+     *
+     * @param e1      primer estudiante
+     * @param e2      segundo estudiante
+     * @param umbral  mínimo de intereses en común requeridos
+     * @return true si cumplen el umbral de afinidad, false en caso contrario
+     */
+    private boolean tieneAfinidad(Estudiante e1, Estudiante e2, int umbral) {
+        return contarCoincidencias(e1.getIntereses(), e2.getIntereses()) >= umbral;
+    }
+
+    /**
+     * Cuenta cuántos elementos tienen en común entre dos listas de intereses.
+     * Utiliza un Set para mayor eficiencia.
      *
      * @param lista1 primera lista
      * @param lista2 segunda lista
      * @return número de coincidencias
      */
     private int contarCoincidencias(ListaEnlazada<String> lista1, ListaEnlazada<String> lista2) {
-        int contador = 0;
+        Set<String> conjunto = new HashSet<>();
         for (int i = 0; i < lista1.getTamanio(); i++) {
-            String interes = lista1.obtener(i);
-            for (int j = 0; j < lista2.getTamanio(); j++) {
-                if (interes.equalsIgnoreCase(lista2.obtener(j))) {
-                    contador++;
-                    break;
-                }
+            conjunto.add(lista1.obtener(i).toLowerCase());
+        }
+
+        int contador = 0;
+        for (int i = 0; i < lista2.getTamanio(); i++) {
+            if (conjunto.contains(lista2.obtener(i).toLowerCase())) {
+                contador++;
             }
         }
+
         return contador;
-
-
-
     }
 }
+
 
 

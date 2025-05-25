@@ -16,4 +16,5 @@ public interface IGestorContenidos {
     ListaEnlazada<Contenido> buscarPorTemaAutorTipo(String tema, String autor, String tipo);
     ListaEnlazada<Contenido> obtenerContenidosMasValorados();
     ListaEnlazada<Contenido> getContenidoDestacado();
+
 }

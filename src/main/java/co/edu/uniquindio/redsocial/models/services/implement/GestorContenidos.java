@@ -15,6 +15,9 @@ public class GestorContenidos implements IGestorContenidos {
     private final ListaEnlazada<Contenido> contenidoDestacado;
     private static GestorContenidos instancia;
     private ListaEnlazada<Contenido> listaDeContenidos = new ListaEnlazada<>();
+    private String rutaArchivo;
+    private String mimeType;
+    private long tamanioArchivo;
 
 
     public GestorContenidos(ArbolBinarioBusqueda<Contenido> arbolContenidos,
@@ -31,12 +34,14 @@ public class GestorContenidos implements IGestorContenidos {
     }
 
     @Override
-    public void agregarContenido(Contenido contenido) {
-        arbolContenidos.insertar(contenido.getTema(), contenido);
+    public void agregarContenido(Contenido contenido){
+       if (contenido != null) {
+            arbolContenidos.insertar(contenido.getTema(), contenido);
+            listaDeContenidos.agregar(contenido);
     }
 
     @Override
-    public boolean eliminarContenido(String id) {
+    public boolean eliminarContenido(String id){
         ListaEnlazada<Contenido> todos = arbolContenidos.listarTodos();
         NodoLista<Contenido> actual = todos.getCabeza();
         while (actual != null) {

@@ -1,5 +1,7 @@
 package co.edu.uniquindio.redsocial.models;
 
+import co.edu.uniquindio.redsocial.ArchivoMultimedia;
+import co.edu.uniquindio.redsocial.TipoContenido;
 import co.edu.uniquindio.redsocial.models.services.interf.Tematico;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import co.edu.uniquindio.redsocial.models.structures.NodoLista;
@@ -30,13 +32,19 @@ public class Contenido implements Tematico {
     private final Estudiante autor;
 
     /** Tipo de contenido (ej: Texto, Video, Imagen, etc.). */
-    private final String tipo;
+    private final TipoContenido tipo;
 
     /** Fecha de creación del contenido. */
     private final LocalDateTime fechaCreacion;
 
     /** Lista de valoraciones que ha recibido el contenido. */
     private final ListaEnlazada<Valoracion> valoraciones;
+
+    /** archivos multimedia para ser obtenidos   */
+    private ArchivoMultimedia archivomultimedia;
+
+    private String rutaArchivo;
+
 
     /**
      * Constructor para crear un contenido con los datos esenciales.
@@ -50,7 +58,7 @@ public class Contenido implements Tematico {
      * @param valoraciones Lista de valoraciones asociadas. No debe ser nula (puede estar vacía).
      * @throws IllegalArgumentException Si alguno de los parámetros obligatorios es inválido.
      */
-    public Contenido(String id, String tema, String descripcion, Estudiante autor, String tipo, LocalDateTime fechaCreacion, ListaEnlazada<Valoracion> valoraciones) {
+    public Contenido(String id, String tema, String descripcion, Estudiante autor, TipoContenido tipo, LocalDateTime fechaCreacion, ListaEnlazada<Valoracion> valoraciones, ArchivoMultimedia archivomultimedia) {
         if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("El id no puede ser nulo ni vacío");
         }
@@ -122,7 +130,7 @@ public class Contenido implements Tematico {
     }
 
     /** @return Tipo de contenido (ej: Texto, Video, etc.). */
-    public String getTipo() {
+    public TipoContenido getTipo() {
         return tipo;
     }
 
@@ -134,6 +142,34 @@ public class Contenido implements Tematico {
     /** @return Lista de valoraciones del contenido. */
     public ListaEnlazada<Valoracion> getValoraciones() {
         return valoraciones;
+    }
+
+    /** @return Archivos multimedia de contenido*/
+    public ArchivoMultimedia getArchivoMultimedia(){return archivomultimedia;}
+
+    public void setArchivomultimedia(ArchivoMultimedia archivomultimedia) {
+        this.archivomultimedia = archivomultimedia;
+    }
+
+    public String getRutaArchivo() {
+        return rutaArchivo;
+    }
+
+    public void setRutaArchivo(String rutaArchivo) {
+        this.rutaArchivo = rutaArchivo;
+    }
+
+    public String getTipoMime(){
+        if(tipo==null)
+            return "application/octet-stream";
+        switch(tipo.toLowerCase()){
+            case "imagen": return "image/jpeg";
+            case "video": return "video/mp4";
+            case "audio": return "audio/mpeg";
+            case "pdf": return "application/pdf";
+            case "texto": return "text/plain";
+            default: return "application/octet-stream";
+        }
     }
 
     /**
@@ -163,7 +199,12 @@ public class Contenido implements Tematico {
         return suma / contador;
     }
 
-
+   public boolean esValido(){
+        if (rutaArchivo == null || rutaArchivo.isEmpty() || tipo==null)
+            return false;
+        File archivo= new File(rutaArchivo);
+        return  archivo.exists();
+   }
     /**
      * Representación textual del contenido.
      *

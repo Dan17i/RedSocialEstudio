@@ -1,6 +1,13 @@
 package models;
 
 import co.edu.uniquindio.redsocial.models.*;
+import co.edu.uniquindio.redsocial.models.services.implement.GestorContenidos;
+import co.edu.uniquindio.redsocial.models.services.implement.GestorRedSocial;
+import co.edu.uniquindio.redsocial.models.services.implement.GestorUsuarios;
+
+import co.edu.uniquindio.redsocial.models.services.interf.IGestorRedSocial;
+import co.edu.uniquindio.redsocial.models.services.interf.IGestorUsuarios;
+import co.edu.uniquindio.redsocial.models.structures.ArbolBinarioBusqueda;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +29,10 @@ public class ModeradorTest {
     private ListaEnlazada<Contenido> historial;
     private ListaEnlazada<Valoracion> valoraciones;
     private ListaEnlazada<String> areas;
+    private IGestorUsuarios gestorUsuarios;
+    private GestorContenidos gestorContenidos;
+    private IGestorRedSocial gestorRedSocial;
+
 
     /**
      * Inicializa un objeto {@code Moderador} con datos de prueba antes de cada test.
@@ -35,9 +46,20 @@ public class ModeradorTest {
         areas.agregar("Educación");
         areas.agregar("Tecnología");
 
-        moderador = new Moderador("1", "Carlos", "carlos@correo.com", "clave123",
-                intereses, historial, valoraciones, true, areas);
+        gestorUsuarios = new GestorUsuarios();
+        ArbolBinarioBusqueda<Contenido> arbolContenidos = new ArbolBinarioBusqueda<>();
+        ListaEnlazada<Contenido> contenidoDestacado = new ListaEnlazada<>();
+        gestorContenidos = new GestorContenidos(arbolContenidos,contenidoDestacado);
+        gestorRedSocial = new GestorRedSocial();
+
+        moderador = new Moderador(
+                "1", "Carlos", "carlos@correo.com", "clave123",
+                intereses, historial, valoraciones, true, areas,
+                gestorUsuarios, gestorContenidos, gestorRedSocial
+        );
     }
+
+
 
     /**
      * Verifica que el constructor y los getters funcionen correctamente.

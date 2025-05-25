@@ -9,42 +9,27 @@ import java.util.UUID;
  * de la red social educativa. Cada solicitud tiene un tema, nivel de urgencia,
  * descripción del problema, fecha y hora de creación, un estado de seguimiento,
  * y está asociada a un estudiante solicitante.
+ *
+ * <p>
+ * Esta clase actúa como un modelo de datos y no implementa lógica de negocio
+ * como asignaciones o notificaciones. Dicha lógica debería ser gestionada
+ * por una clase externa como un gestor o controlador de solicitudes.
+ * </p>
+ *
+ * @author Daniel Jurado
+ * @author Sebastian Torres
+ * @author Juan Soto
+ * @since 2025-05-13
+ *
  */
 public class SolicitudAyuda implements Comparable<SolicitudAyuda> {
 
-    /**
-     * Identificador único de la solicitud.
-     */
     private final String id;
-
-    /**
-     * Tema sobre el cual se solicita la ayuda.
-     */
     private final String tema;
-
-    /**
-     * Nivel de urgencia de la solicitud (1 a 10).
-     */
     private final int urgencia;
-
-    /**
-     * Fecha y hora en la que se creó la solicitud.
-     */
     private final LocalDateTime fechaSolicitud;
-
-    /**
-     * Estudiante que realiza la solicitud de ayuda.
-     */
     private final Estudiante estudiante;
-
-    /**
-     * Descripción detallada del problema o consulta.
-     */
     private final String descripcion;
-
-    /**
-     * Estado actual de la solicitud.
-     */
     private EstadoSolicitud estado;
 
     /**
@@ -55,16 +40,31 @@ public class SolicitudAyuda implements Comparable<SolicitudAyuda> {
     }
 
     /**
-     * Crea una nueva solicitud de ayuda.
+     * Crea una nueva solicitud de ayuda con la fecha actual.
      *
-     * @param tema       Tema específico de la solicitud.
-     * @param urgencia   Nivel de urgencia (1 a 10).
-     * @param estudiante Estudiante que realiza la solicitud.
+     * @param tema        Tema específico de la solicitud.
+     * @param urgencia    Nivel de urgencia (1 a 10).
+     * @param estudiante  Estudiante que realiza la solicitud.
      * @param descripcion Descripción detallada del problema.
      * @throws IllegalArgumentException si algún parámetro es inválido.
      */
     public SolicitudAyuda(String tema, int urgencia, Estudiante estudiante, String descripcion) {
-        if (tema == null || tema.isEmpty()) {
+        this(tema, urgencia, estudiante, descripcion, LocalDateTime.now());
+    }
+
+    /**
+     * Crea una nueva solicitud de ayuda con una fecha personalizada.
+     * Útil para pruebas unitarias o importaciones externas.
+     *
+     * @param tema            Tema específico de la solicitud.
+     * @param urgencia        Nivel de urgencia (1 a 10).
+     * @param estudiante      Estudiante que realiza la solicitud.
+     * @param descripcion     Descripción detallada del problema.
+     * @param fechaSolicitud  Fecha y hora de creación de la solicitud.
+     * @throws IllegalArgumentException si algún parámetro es inválido.
+     */
+    public SolicitudAyuda(String tema, int urgencia, Estudiante estudiante, String descripcion, LocalDateTime fechaSolicitud) {
+        if (tema == null || tema.isBlank()) {
             throw new IllegalArgumentException("El tema no puede ser nulo o vacío");
         }
         if (urgencia < 1 || urgencia > 10) {
@@ -73,8 +73,11 @@ public class SolicitudAyuda implements Comparable<SolicitudAyuda> {
         if (estudiante == null) {
             throw new IllegalArgumentException("El estudiante no puede ser nulo");
         }
-        if (descripcion == null || descripcion.isEmpty()) {
+        if (descripcion == null || descripcion.isBlank()) {
             throw new IllegalArgumentException("La descripción no puede ser nula o vacía");
+        }
+        if (fechaSolicitud == null) {
+            throw new IllegalArgumentException("La fecha de solicitud no puede ser nula");
         }
 
         this.id = UUID.randomUUID().toString();
@@ -82,69 +85,34 @@ public class SolicitudAyuda implements Comparable<SolicitudAyuda> {
         this.urgencia = urgencia;
         this.estudiante = estudiante;
         this.descripcion = descripcion;
-        this.fechaSolicitud = LocalDateTime.now();
+        this.fechaSolicitud = fechaSolicitud;
         this.estado = EstadoSolicitud.PENDIENTE;
     }
 
-    /**
-     * Obtiene el identificador único de la solicitud.
-     *
-     * @return ID único generado automáticamente.
-     */
     public String getId() {
         return id;
     }
 
-    /**
-     * Obtiene el tema de la solicitud.
-     *
-     * @return Tema del problema.
-     */
     public String getTema() {
         return tema;
     }
 
-    /**
-     * Obtiene el nivel de urgencia.
-     *
-     * @return Urgencia (1-10).
-     */
     public int getUrgencia() {
         return urgencia;
     }
 
-    /**
-     * Obtiene el estudiante que hizo la solicitud.
-     *
-     * @return Estudiante asociado.
-     */
     public Estudiante getEstudiante() {
         return estudiante;
     }
 
-    /**
-     * Obtiene la descripción detallada del problema.
-     *
-     * @return Descripción del problema.
-     */
     public String getDescripcion() {
         return descripcion;
     }
 
-    /**
-     * Obtiene la fecha y hora en que se creó la solicitud.
-     *
-     * @return Fecha y hora de creación.
-     */
     public LocalDateTime getFechaSolicitud() {
         return fechaSolicitud;
     }
 
-    /**
-     * Obtiene el estado actual de la solicitud.
-     *
-     * @return Estado de la solicitud (PENDIENTE, EN_PROGRESO, RESUELTA).
-     */
     public EstadoSolicitud getEstado() {
         return estado;
     }
@@ -152,7 +120,7 @@ public class SolicitudAyuda implements Comparable<SolicitudAyuda> {
     /**
      * Cambia el estado de la solicitud.
      *
-     * @param estado Nuevo estado que se desea asignar.
+     * @param estado Nuevo estado a asignar.
      * @throws IllegalArgumentException si el estado es nulo.
      */
     public void setEstado(EstadoSolicitud estado) {
@@ -163,8 +131,8 @@ public class SolicitudAyuda implements Comparable<SolicitudAyuda> {
     }
 
     /**
-     * Compara esta solicitud con otra según el nivel de urgencia,
-     * en orden descendente (mayor urgencia tiene prioridad).
+     * Compara esta solicitud con otra según el nivel de urgencia
+     * (orden descendente: mayor urgencia primero).
      *
      * @param otra Otra solicitud a comparar.
      * @return Valor negativo si esta tiene más urgencia, positivo si menos, cero si igual.
@@ -175,9 +143,9 @@ public class SolicitudAyuda implements Comparable<SolicitudAyuda> {
     }
 
     /**
-     * Devuelve una representación en forma de cadena de la solicitud.
+     * Representación legible de la solicitud.
      *
-     * @return Cadena con todos los campos relevantes.
+     * @return Cadena con los campos clave de la solicitud.
      */
     @Override
     public String toString() {
@@ -187,12 +155,6 @@ public class SolicitudAyuda implements Comparable<SolicitudAyuda> {
         );
     }
 
-    /**
-     * Verifica si esta solicitud es igual a otra basada en el ID único.
-     *
-     * @param o Objeto a comparar.
-     * @return true si tienen el mismo ID, false en caso contrario.
-     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -201,11 +163,6 @@ public class SolicitudAyuda implements Comparable<SolicitudAyuda> {
         return Objects.equals(id, that.id);
     }
 
-    /**
-     * Calcula el código hash basado en el ID.
-     *
-     * @return Código hash del objeto.
-     */
     @Override
     public int hashCode() {
         return Objects.hash(id);

@@ -40,15 +40,16 @@ public class LoginServlet extends HttpServlet {
             if (MODERADOR_EMAIL.equalsIgnoreCase(email) && MODERADOR_PASS.equals(password)) {
                 // Creamos un Usuario para moderador
                 Estudiante moderador = new Estudiante(
-                        "MOD-0001",                       // id (puedes asignar un id fijo)
+                        "MOD-0001",                    // id (puedes asignar un id fijo)
                         "Moderador Principal",            // nombre
-                        "moderador@redsocial.com",   // email
-                        "moderador123",                        // contraseña
-                        new ListaEnlazada<>(),           // intereses (vacío)
-                        new ListaEnlazada<>(),           // historial (vacío)
-                        new ListaEnlazada<>(),           // valoraciones (vacío)
-                        null,                           // cola de solicitudes (según constructor Estudiante)
-                        new ListaEnlazada<>()            // grupos (vacío)
+                        "moderador@redsocial.com",        // email
+                        "moderador123",                   // contraseña
+                        new ListaEnlazada<>(),            // intereses (vacío)
+                        new ListaEnlazada<>(),            // historial (vacío)
+                        new ListaEnlazada<>(),            // valoraciones (vacío)
+                        null,                             // cola de solicitudes (según constructor Estudiante)
+                        new ListaEnlazada<>(),            // grupos (vacío)
+                        new ListaEnlazada<>()
                 );
 
                 // Guardamos en sesión

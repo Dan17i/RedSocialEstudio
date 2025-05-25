@@ -1,5 +1,6 @@
 package co.edu.uniquindio.redsocial.models.structures;
 
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -335,6 +336,38 @@ public class ListaEnlazada<T> implements Iterable<T> {
 
         return sublista;
     }
+
+    /**
+     * Ordena la lista enlazada utilizando el algoritmo de burbuja.
+     * El orden se define por el comparador proporcionado.
+     *
+     * @param comparador El comparador que define el orden de los elementos.
+     */
+    public void ordenar(Comparator<T> comparador) {
+        if (isEmpty() || cabeza.getSiguiente() == null) {
+            return; // No hay nada que ordenar
+        }
+
+        boolean cambiado;
+        do {
+            cambiado = false;
+            NodoLista<T> actual = cabeza;
+            NodoLista<T> siguiente = cabeza.getSiguiente();
+
+            while (siguiente != null) {
+                if (comparador.compare(actual.getDato(), siguiente.getDato()) > 0) {
+                    // Intercambiar los elementos
+                    T temp = actual.getDato();
+                    actual.setDato(siguiente.getDato());
+                    siguiente.setDato(temp);
+                    cambiado = true;
+                }
+                actual = siguiente;
+                siguiente = siguiente.getSiguiente();
+            }
+        } while (cambiado);
+    }
+
 
     /**
      * Retorna un iterador para recorrer secuencialmente los elementos de la lista.

@@ -22,7 +22,7 @@ public class ContenidoTest {
         valoraciones = new ListaEnlazada<>();
         Estudiante Juan = new Estudiante("idJuan", "Juan", "juan@email.com", "12345",
                 new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
-        new ColaPrioridad<>(), new ListaEnlazada<>());
+                new ColaPrioridad<>(), new ListaEnlazada<>(),new ListaEnlazada<>());
 
         contenido = new Contenido("001", "Matemáticas", "sobre Matematicas",Juan, "Video", LocalDateTime.now(), new ListaEnlazada<>());
     }
@@ -45,7 +45,8 @@ public class ContenidoTest {
                 new ListaEnlazada<>(),             // historial de contenidos
                 new ListaEnlazada<>(),             // valoraciones
                 new ColaPrioridad<>(),             // solicitudes de ayuda
-                new ListaEnlazada<>()              // grupos de estudio
+                new ListaEnlazada<>(),              // grupos de estudio
+                new ListaEnlazada<>()
         );
 
         // Crear un contenido de prueba
@@ -72,11 +73,11 @@ public class ContenidoTest {
     @Test
     public void testContenidoConMultiplesValoraciones() {
         Estudiante estudiante1 = new Estudiante("e1", "Usuario1", "usuario1@correo.com", "1234",
-                new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(), new ColaPrioridad<>(), new ListaEnlazada<>());
+                new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(), new ColaPrioridad<>(), new ListaEnlazada<>(),new ListaEnlazada<>());
         Estudiante estudiante2 = new Estudiante("e2", "Usuario2", "usuario2@correo.com", "1234",
-                new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(), new ColaPrioridad<>(), new ListaEnlazada<>());
+                new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(), new ColaPrioridad<>(), new ListaEnlazada<>(), new ListaEnlazada<>());
         Estudiante estudiante3 = new Estudiante("e3", "Usuario3", "usuario3@correo.com", "1234",
-                new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(), new ColaPrioridad<>(), new ListaEnlazada<>());
+                new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(), new ColaPrioridad<>(), new ListaEnlazada<>(), new ListaEnlazada<>());
 
         valoraciones.agregar(new Valoracion(estudiante1, contenido, 4, "Buena"));
         valoraciones.agregar(new Valoracion(estudiante2, contenido, 5, "Excelente"));
@@ -88,15 +89,6 @@ public class ContenidoTest {
     }
 
 
-    @Test
-    public void testGettersYSetters() {
-        contenido.setTema("Historia");
-        contenido.setTipo("Artículo");
 
-        //assertEquals("002", contenido.getId());
-        assertEquals("Historia", contenido.getTema());
-       // assertEquals("María López", contenido.getAutor());
-        assertEquals("Artículo", contenido.getTipo());
-    }
 }
 

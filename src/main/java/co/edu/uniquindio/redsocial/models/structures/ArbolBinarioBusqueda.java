@@ -5,29 +5,36 @@ import co.edu.uniquindio.redsocial.models.services.interf.Tematico;
 /**
  * Clase que representa un Árbol Binario de Búsqueda (ABB) genérico,
  * utilizado para almacenar par clave-valor donde la clave es un String
- * y el valor es de tipo genérico Contenido.
+ * y el valor implementa la interfaz Tematico.
  *
- * @param <T> Tipo de valor.
+ * @param <T> Tipo de valor almacenado, debe implementar la interfaz Tematico.
  * @author Daniel Jurado
  * @author Sebastian Torres
  * @author Juan Soto
- * @param <T> El tipo de los valores almacenados en el árbol.
  */
 public class ArbolBinarioBusqueda<T extends Tematico> {
 
     private NodoABB<T> raiz;
 
+    /**
+     * Constructor con nodo raíz especificado.
+     *
+     * @param raiz Nodo raíz del árbol.
+     */
     public ArbolBinarioBusqueda(NodoABB<T> raiz) {
         this.raiz = raiz;
     }
 
+    /**
+     * Constructor por defecto que inicializa el árbol vacío.
+     */
     public ArbolBinarioBusqueda() {
         this.raiz = null;
     }
 
     /**
-     * Inserta un nuevo nodo en el árbol con la clave y el valor dados.
-     * Si la clave ya existe, se actualiza el valor.
+     * Inserta un nuevo nodo con la clave y el valor dados en el árbol.
+     * Si la clave ya existe, se actualiza el valor asociado.
      *
      * @param clave Clave del nodo a insertar.
      * @param valor Valor asociado a la clave.
@@ -38,7 +45,7 @@ public class ArbolBinarioBusqueda<T extends Tematico> {
 
     private NodoABB<T> insertarRecursivo(NodoABB<T> nodo, String clave, T valor) {
         if (nodo == null) {
-            return new NodoABB<>(clave, valor); // Crear nuevo nodo si llegamos a una hoja nula
+            return new NodoABB<>(clave, valor);
         }
 
         int comparacion = clave.compareTo(nodo.getClave());
@@ -48,19 +55,17 @@ public class ArbolBinarioBusqueda<T extends Tematico> {
         } else if (comparacion > 0) {
             nodo.setDerecha(insertarRecursivo(nodo.getDerecha(), clave, valor));
         } else {
-            // Si la clave ya existe, se actualiza el valor (opcional)
-            nodo.setValor(valor);
+            nodo.setValor(valor); // Actualiza el valor si la clave ya existe
         }
 
         return nodo;
     }
 
     /**
-     * Busca el valor asociado a la clave dada.
-     * Si la clave existe, retorna el valor; de lo contrario, retorna null.
+     * Busca el valor asociado a una clave en el árbol.
      *
      * @param clave Clave a buscar.
-     * @return Valor asociado a la clave, o null si no se encuentra.
+     * @return Valor asociado a la clave o null si no se encuentra.
      */
     public T buscar(String clave) {
         return buscarRecursivo(raiz, clave);
@@ -78,14 +83,15 @@ public class ArbolBinarioBusqueda<T extends Tematico> {
         } else if (comparacion > 0) {
             return buscarRecursivo(nodo.getDerecha(), clave);
         } else {
-            return nodo.getValor(); // Clave encontrada, retornar el valor
+            return nodo.getValor();
         }
     }
 
     /**
-     * Listar todos los valores del árbol en orden ascendente de claves.
+     * Retorna una lista con todos los valores almacenados en el árbol
+     * ordenados ascendentemente según su clave.
      *
-     * @return Lista de valores almacenados en el árbol.
+     * @return ListaEnlazada de valores en orden ascendente.
      */
     public ListaEnlazada<T> listarTodos() {
         ListaEnlazada<T> lista = new ListaEnlazada<>();
@@ -102,41 +108,29 @@ public class ArbolBinarioBusqueda<T extends Tematico> {
     }
 
     /**
-     * Busca todos los contenidos que tienen el tema especificado y los devuelve en una lista enlazada.
-     * Este método recurre al método `listarPorTemaRecursivo` para recorrer el árbol binario
-     * y agregar los contenidos cuyo tema coincida con el proporcionado.
+     * Lista todos los contenidos cuyo tema coincide con el tema dado.
      *
-     * @param tema El tema a buscar en los contenidos.
-     * @return Lista enlazada de contenidos que coinciden con el tema dado. Si no se encuentran
-     *         contenidos con ese tema, se devuelve una lista vacía.
+     * @param tema Tema a buscar.
+     * @return Lista de contenidos que coinciden con el tema especificado.
      */
     public ListaEnlazada<T> listarContenidosPorTema(String tema) {
         ListaEnlazada<T> resultados = new ListaEnlazada<>();
-        listarPorTemaRecursivo(raiz, tema, resultados);  // Llama al método recursivo
+        listarPorTemaRecursivo(raiz, tema, resultados);
         return resultados;
     }
 
-    /**
-     * Método recursivo que recorre el árbol binario de búsqueda en orden, y agrega los contenidos
-     * cuyo tema coincide con el tema proporcionado en la lista de resultados.
-     *
-     * @param nodo El nodo actual del árbol a procesar.
-     * @param tema El tema a buscar en los contenidos.
-     * @param resultados La lista donde se agregan los contenidos cuyo tema coincide con el dado.
-     */
     private void listarPorTemaRecursivo(NodoABB<T> nodo, String tema, ListaEnlazada<T> resultados) {
         if (nodo != null) {
-            if (nodo.getValor().getTema().equals(tema)) {
+            listarPorTemaRecursivo(nodo.getIzquierda(), tema, resultados);
+            if (tema.equals(nodo.getValor().getTema())) {
                 resultados.agregar(nodo.getValor());
             }
-            listarPorTemaRecursivo(nodo.getIzquierda(), tema, resultados);
             listarPorTemaRecursivo(nodo.getDerecha(), tema, resultados);
         }
     }
 
-
     /**
-     * Elimina un nodo con la clave dada del árbol.
+     * Elimina un nodo con la clave especificada del árbol.
      *
      * @param clave Clave del nodo a eliminar.
      */
@@ -156,14 +150,12 @@ public class ArbolBinarioBusqueda<T extends Tematico> {
         } else if (comparacion > 0) {
             nodo.setDerecha(eliminarRecursivo(nodo.getDerecha(), clave));
         } else {
-            // Nodo encontrado
             if (nodo.getIzquierda() == null) {
                 return nodo.getDerecha();
             } else if (nodo.getDerecha() == null) {
                 return nodo.getIzquierda();
             }
 
-            // Nodo con dos hijos
             NodoABB<T> sucesor = encontrarMinimo(nodo.getDerecha());
             nodo.setClave(sucesor.getClave());
             nodo.setValor(sucesor.getValor());
@@ -180,10 +172,20 @@ public class ArbolBinarioBusqueda<T extends Tematico> {
         return nodo;
     }
 
+    /**
+     * Obtiene la raíz del árbol.
+     *
+     * @return Nodo raíz.
+     */
     public NodoABB<T> getRaiz() {
         return raiz;
     }
 
+    /**
+     * Establece la raíz del árbol.
+     *
+     * @param raiz Nodo a establecer como raíz.
+     */
     public void setRaiz(NodoABB<T> raiz) {
         this.raiz = raiz;
     }

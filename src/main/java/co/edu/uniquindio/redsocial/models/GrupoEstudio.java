@@ -2,9 +2,12 @@ package co.edu.uniquindio.redsocial.models;
 
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Representa un grupo de estudio conformado por varios estudiantes y un tema específico.
- * Los grupos permiten agregar miembros, publicar contenidos y consultar subconjuntos de miembros.
+ * Los grupos permiten agregar o eliminar miembros, publicar contenidos y consultar subconjuntos de miembros.
  * La clase mantiene la integridad interna mediante encapsulamiento y control de acceso.
  *
  * @author
@@ -25,13 +28,16 @@ public class GrupoEstudio {
     /** Lista interna de publicaciones del grupo. */
     private final ListaEnlazada<Contenido> publicaciones;
 
+    private List<Mensaje> mensajesGrupo = new ArrayList<>();
+
+
     /**
      * Constructor que inicializa el grupo de estudio con un identificador y tema.
      * La lista de miembros y publicaciones se inicializa vacía.
      *
      * @param id Identificador único del grupo. No debe ser nulo ni vacío.
      * @param tema Tema principal del grupo. No debe ser nulo ni vacío.
-     * @throws IllegalArgumentException si él, id o el tema son inválidos.
+     * @throws IllegalArgumentException si el id o el tema son inválidos.
      */
     public GrupoEstudio(String id, String tema) {
         if (id == null || id.isBlank()) {
@@ -48,7 +54,9 @@ public class GrupoEstudio {
 
     /**
      * Agrega un estudiante al grupo si no está presente aún.
-     * También actualiza el estudiante para que registre su pertenencia a este grupo.
+     * También actualiza al estudiante para que registre su pertenencia a este grupo.
+     *
+     * Esta operación genera una dependencia bidireccional controlada entre el grupo y el estudiante.
      *
      * @param estudiante Estudiante a agregar. No debe ser nulo.
      * @throws IllegalArgumentException si el estudiante es nulo.
@@ -67,9 +75,27 @@ public class GrupoEstudio {
         }
     }
 
+    /**
+     * Elimina un estudiante del grupo, si está presente.
+     * También elimina este grupo de la lista de grupos del estudiante.
+     *
+     * @param estudiante Estudiante a eliminar. No debe ser nulo.
+     * @throws IllegalArgumentException si el estudiante es nulo.
+     */
+    public void eliminarMiembro(Estudiante estudiante) {
+        if (estudiante == null) {
+            throw new IllegalArgumentException("El estudiante no puede ser nulo");
+        }
+
+        if (miembros.eliminar(estudiante)) {
+            estudiante.getGruposEstudio().eliminar(this);
+        }
+    }
 
     /**
      * Obtiene un subconjunto de miembros del grupo, desde el índice {@code desde} hasta {@code hasta}, ambos inclusivos.
+     *
+     * Nota: Esta operación tiene complejidad O(n) debido al recorrido de la lista enlazada.
      *
      * @param desde Índice inicial del subgrupo (inclusive).
      * @param hasta Índice final del subgrupo (inclusive).
@@ -96,14 +122,11 @@ public class GrupoEstudio {
         publicaciones.agregar(contenido);
     }
 
-    // Solo para uso interno del modelo, no exponer fuera del paquete
-    ListaEnlazada<Estudiante> getMiembrosInterno() {
-        return miembros;
-    }
-
-
     /**
      * Obtiene una copia superficial de las publicaciones actuales del grupo.
+     *
+     * Nota: Esta operación tiene complejidad O(n) y puede impactar el rendimiento
+     * si se invoca con alta frecuencia en listas grandes.
      *
      * @return Lista de publicaciones del grupo.
      */
@@ -111,6 +134,22 @@ public class GrupoEstudio {
         ListaEnlazada<Contenido> copia = new ListaEnlazada<>();
         for (int i = 0; i < publicaciones.getTamanio(); i++) {
             copia.agregar(publicaciones.obtener(i));
+        }
+        return copia;
+    }
+
+    /**
+     * Devuelve una copia superficial de la lista de miembros del grupo,
+     * protegiendo la lista interna de modificaciones externas.
+     *
+     * Nota: Esta operación tiene complejidad O(n).
+     *
+     * @return Lista de estudiantes miembros del grupo.
+     */
+    public ListaEnlazada<Estudiante> getMiembros() {
+        ListaEnlazada<Estudiante> copia = new ListaEnlazada<>();
+        for (int i = 0; i < miembros.getTamanio(); i++) {
+            copia.agregar(miembros.obtener(i));
         }
         return copia;
     }
@@ -147,17 +186,20 @@ public class GrupoEstudio {
     }
 
     /**
-     * Devuelve una copia superficial de la lista de miembros del grupo,
-     * protegiendo la lista interna de modificaciones externas.
+     * Solo para uso interno del modelo, no exponer fuera del paquete.
+     * Devuelve la referencia directa a la lista interna de miembros del grupo.
      *
-     * @return Lista de estudiantes miembros del grupo.
+     * Usar con extrema precaución para no comprometer el encapsulamiento.
+     *
+     * @return Lista enlazada interna de miembros.
      */
-    public ListaEnlazada<Estudiante> getMiembros() {
-        ListaEnlazada<Estudiante> copia = new ListaEnlazada<>();
-        for (int i = 0; i < miembros.getTamanio(); i++) {
-            copia.agregar(miembros.obtener(i));
-        }
-        return copia;
+    ListaEnlazada<Estudiante> getMiembrosInterno() {
+        return miembros;
+    }
+
+    public void recibirMensaje(Mensaje mensaje) {
+        mensajesGrupo.add(mensaje);
+        System.out.println("Mensaje recibido por grupo: " + mensaje.getTexto());
     }
 
     /**
@@ -170,3 +212,4 @@ public class GrupoEstudio {
         return "GrupoEstudio{id='" + id + "', tema='" + tema + "', miembros=" + miembros.getTamanio() + "}";
     }
 }
+

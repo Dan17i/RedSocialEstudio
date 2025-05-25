@@ -44,6 +44,7 @@ public class MensajeTest {
                 new ListaEnlazada<>(),
                 new ListaEnlazada<>(),
                 new ColaPrioridad<>(),
+                new ListaEnlazada<>(),
                 new ListaEnlazada<>()
         );
 
@@ -53,6 +54,7 @@ public class MensajeTest {
                 new ListaEnlazada<>(),
                 new ListaEnlazada<>(),
                 new ColaPrioridad<>(),
+                new ListaEnlazada<>(),
                 new ListaEnlazada<>()
         );
 
@@ -64,6 +66,7 @@ public class MensajeTest {
                 new ListaEnlazada<>(),
                 new ListaEnlazada<>(),
                 new ColaPrioridad<>(),
+                new ListaEnlazada<>(),
                 new ListaEnlazada<>()
         ));
 
@@ -73,6 +76,7 @@ public class MensajeTest {
                 new ListaEnlazada<>(),
                 new ListaEnlazada<>(),
                 new ColaPrioridad<>(),
+                new ListaEnlazada<>(),
                 new ListaEnlazada<>()
         ));
 

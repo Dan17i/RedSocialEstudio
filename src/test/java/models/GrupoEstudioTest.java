@@ -23,11 +23,11 @@ public class GrupoEstudioTest {
 
         estudiante1 = new Estudiante("e1", "Juan", "juan@correo.com", "1234",
                 new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
-                new ColaPrioridad<>(), new ListaEnlazada<>());
+                new ColaPrioridad<>(), new ListaEnlazada<>(), new ListaEnlazada<>());
 
         estudiante2 = new Estudiante("e2", "Ana", "ana@correo.com", "1234",
                 new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
-                new ColaPrioridad<>(), new ListaEnlazada<>());
+                new ColaPrioridad<>(), new ListaEnlazada<>(),new ListaEnlazada<>());
 
         contenido = new Contenido("c1", "Integrales","sobre integrales", estudiante1, "Texto", LocalDateTime.now(),new ListaEnlazada<>());
     }

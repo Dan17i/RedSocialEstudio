@@ -14,6 +14,8 @@ public class GestorContenidos implements IGestorContenidos {
     private final ArbolBinarioBusqueda<Contenido> arbolContenidos;
     private final ListaEnlazada<Contenido> contenidoDestacado;
     private static GestorContenidos instancia;
+    private ListaEnlazada<Contenido> listaDeContenidos = new ListaEnlazada<>();
+
 
     public GestorContenidos(ArbolBinarioBusqueda<Contenido> arbolContenidos,
                             ListaEnlazada<Contenido> contenidoDestacado) {
@@ -107,6 +109,22 @@ public class GestorContenidos implements IGestorContenidos {
     @Override
     public ListaEnlazada<Contenido> getContenidoDestacado() {
         return contenidoDestacado;
+    }
+
+    @Override
+    public ListaEnlazada<Contenido> obtenerContenidosMasValorados() {
+        ListaEnlazada<Contenido> todos = obtenerTodosLosContenidos(); // Método asumido
+        todos.ordenar((c1, c2) -> Double.compare(c2.promedioValoraciones(), c1.promedioValoraciones()));
+        return todos;
+    }
+
+    /**
+     * Retorna todos los contenidos almacenados en el sistema.
+     *
+     * @return Lista enlazada con todos los contenidos disponibles.
+     */
+    public ListaEnlazada<Contenido> obtenerTodosLosContenidos() {
+        return listaDeContenidos; // Asegúrate de tener esta lista como atributo interno.
     }
 
     // Getters y Setters extra si necesitas exponer más control

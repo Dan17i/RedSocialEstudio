@@ -36,7 +36,7 @@ public class HistorialDeContenidoTest {
     public void setUp() {
         autor = new Estudiante("e1", "Juan", "juan@correo.com", "1234",
                 new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
-                new ColaPrioridad<>(), new ListaEnlazada<>());
+                new ColaPrioridad<>(), new ListaEnlazada<>(), new ListaEnlazada<>());
 
 // Supongamos que 'autor' ya está definido antes
         contenido1 = new Contenido(

@@ -1,11 +1,15 @@
 package co.edu.uniquindio.redsocial.models;
 
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * Clase genérica que representa un reporte generado por el sistema.
@@ -88,9 +92,9 @@ public class Reporte<T> {
     /**
      * Exporta el contenido a archivo.
      *
-     * @param formato     "TXT", "CSV", o "JSON".
+     * @param formato     Formato del archivo: "TXT", "CSV", o "JSON".
      * @param rutaArchivo Ruta donde se guardará el archivo.
-     * @throws IOException sí hay errores de escritura.
+     * @throws IOException Si hay errores de escritura.
      */
     public void exportar(String formato, String rutaArchivo) throws IOException {
         if (formato == null || rutaArchivo == null)
@@ -99,6 +103,7 @@ public class Reporte<T> {
         switch (formato.toUpperCase()) {
             case "TXT" -> exportarTxt(rutaArchivo);
             case "CSV" -> exportarCsv(rutaArchivo);
+            case "JSON" -> exportarJson(rutaArchivo);
             default -> throw new IllegalArgumentException("Formato no soportado: " + formato);
         }
     }
@@ -117,6 +122,37 @@ public class Reporte<T> {
                 writer.write(String.format("\"%s\",\"%s\",\"%s\",\"%s\"\n",
                         id, tipo, fechaGeneracion, dato.toString().replace("\"", "\"\"")));
             }
+        }
+    }
+    /**
+     * Exporta el reporte actual al formato JSON, escribiéndolo en un archivo en disco.
+     * El contenido incluye todos los atributos del objeto Reporte serializados de forma legible.
+     * Utiliza la biblioteca Gson para la conversión a JSON.
+     *
+     * <p>Ejemplo de contenido generado:</p>
+     * <pre>
+     * {
+     *   "id": "GEN-ESTUDIANTES_CONECTADOS",
+     *   "tipo": "ESTUDIANTES_CONECTADOS",
+     *   "fechaGeneracion": "2025-05-25T14:30:00",
+     *   "datos": [
+     *     {"nombre": "Juan", "valor": 5},
+     *     {"nombre": "Ana", "valor": 4}
+     *   ]
+     * }
+     * </pre>
+     *
+     * @param rutaArchivo Ruta completa donde se guardará el archivo JSON.
+     * @throws IOException Si ocurre un error de escritura en el archivo.
+     * @throws IllegalArgumentException Si la ruta del archivo es nula o vacía.
+     *
+     * @see com.google.gson.Gson
+     * @see com.google.gson.GsonBuilder
+     */
+    private void exportarJson(String rutaArchivo) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(rutaArchivo))) {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            writer.write(gson.toJson(this));
         }
     }
 
@@ -143,4 +179,17 @@ public class Reporte<T> {
     public LocalDateTime getFechaGeneracion() { return fechaGeneracion; }
 
     public ListaEnlazada<T> getDatos() { return datos; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Reporte<?> reporte = (Reporte<?>) o;
+        return Objects.equals(id, reporte.id) && tipo == reporte.tipo && Objects.equals(fechaGeneracion, reporte.fechaGeneracion);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, tipo, fechaGeneracion);
+    }
 }

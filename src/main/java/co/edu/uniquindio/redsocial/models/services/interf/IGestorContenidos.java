@@ -14,6 +14,6 @@ public interface IGestorContenidos {
     void marcarComoDestacado(Contenido contenido);
     HashMap<String, Integer> generarEstadisticas();
     ListaEnlazada<Contenido> buscarPorTemaAutorTipo(String tema, String autor, String tipo);
-
+    ListaEnlazada<Contenido> obtenerContenidosMasValorados();
     ListaEnlazada<Contenido> getContenidoDestacado();
 }

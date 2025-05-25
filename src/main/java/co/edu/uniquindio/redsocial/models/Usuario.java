@@ -98,6 +98,11 @@ public class Usuario {
         return sb.toString();
     }
 
+    public void recibirMensaje(Mensaje mensaje) {
+        // Por ejemplo, guardar en una lista de bandejas de entrada
+        System.out.println("Mensaje recibido por " + getNombre() + ": " + mensaje.getTexto());
+    }
+
 
     // Getters y Setters
     public String getId() { return id; }

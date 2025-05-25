@@ -30,6 +30,7 @@ public class ValoracionTest {
         ListaEnlazada<Valoracion> valoracionesEstudiante = new ListaEnlazada<>();
         ColaPrioridad<SolicitudAyuda> solicitudesAyuda = new ColaPrioridad<>();
         ListaEnlazada<GrupoEstudio> gruposEstudio = new ListaEnlazada<>();
+        ListaEnlazada<Mensaje> mensajes = new ListaEnlazada<>();
 
         // Crear el estudiante con todos sus parámetros
         estudiante = new Estudiante(
@@ -41,7 +42,8 @@ public class ValoracionTest {
                 historialContenidos,
                 valoracionesEstudiante,
                 solicitudesAyuda,
-                gruposEstudio
+                gruposEstudio,
+                mensajes
         );
 
         // Crear lista vacía de valoraciones para el contenido

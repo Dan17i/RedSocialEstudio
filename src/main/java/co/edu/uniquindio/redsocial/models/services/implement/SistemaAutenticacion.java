@@ -44,7 +44,8 @@ public class SistemaAutenticacion implements ISistemaAutenticacion {
                 new ListaEnlazada<>(),  // historial
                 new ListaEnlazada<>(),  // valoraciones
                 new ColaPrioridad<>(new ListaEnlazada<>()),  // solicitudes
-                new ListaEnlazada<>()   // grupos
+                new ListaEnlazada<>(),   // grupos
+                new ListaEnlazada<>()
         );
 
         usuariosRegistrados.agregar(nuevo);

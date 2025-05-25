@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 /**
  * Representa un contenido publicado por un estudiante dentro de la red social.
  * Un contenido tiene un identificador único, tema, autor, tipo y una lista de valoraciones.
- * Esta clase proporciona métodos de acceso y modificación para sus atributos.
+ * Esta clase proporciona métodos de acceso para sus atributos y evita modificaciones posteriores.
  *
  * @author
  * Daniel Jurado, Sebastián Torres, Juan Soto
@@ -21,16 +21,16 @@ public class Contenido implements Tematico {
     private final String id;
 
     /** Tema o título del contenido. */
-    private String tema;
+    private final String tema;
 
     /** Descripción del contenido. */
-    private String descripcion;
+    private final String descripcion;
 
     /** Estudiante que publicó el contenido. */
     private final Estudiante autor;
 
     /** Tipo de contenido (ej: Texto, Video, Imagen, etc.). */
-    private String tipo;
+    private final String tipo;
 
     /** Fecha de creación del contenido. */
     private final LocalDateTime fechaCreacion;
@@ -81,12 +81,9 @@ public class Contenido implements Tematico {
 
     /**
      * Calcula el promedio de las valoraciones del contenido.
+     * Recorre la lista enlazada de valoraciones, suma los puntajes y devuelve el promedio.
      *
-     * Este método recorre la lista enlazada de valoraciones asociadas al contenido,
-     * suma los puntajes de cada valoración y devuelve el promedio.
-     * Si no hay valoraciones o la lista es nula, devuelve 0.0f.
-     *
-     * @return El promedio de los puntajes de las valoraciones como un valor float.
+     * @return El promedio de los puntajes de las valoraciones como un valor float. Devuelve 0.0f si no hay valoraciones.
      */
     public float calcularValoracionPromedio() {
         if (valoraciones == null || valoraciones.getTamanio() == 0) {
@@ -114,30 +111,9 @@ public class Contenido implements Tematico {
         return tema;
     }
 
-    /**
-     * Modifica el tema o título del contenido.
-     *
-     * @param tema Nuevo tema. No debe ser nulo ni vacío.
-     */
-    public void setTema(String tema) {
-        if (tema == null || tema.isBlank()) {
-            throw new IllegalArgumentException("El tema no puede ser nulo ni vacío");
-        }
-        this.tema = tema;
-    }
-
     /** @return Descripción del contenido. */
     public String getDescripcion() {
         return descripcion;
-    }
-
-    /**
-     * Modifica la descripción del contenido.
-     *
-     * @param descripcion Nueva descripción. Puede ser vacía.
-     */
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
     }
 
     /** @return Estudiante autor del contenido. */
@@ -148,18 +124,6 @@ public class Contenido implements Tematico {
     /** @return Tipo de contenido (ej: Texto, Video, etc.). */
     public String getTipo() {
         return tipo;
-    }
-
-    /**
-     * Modifica el tipo del contenido.
-     *
-     * @param tipo Nuevo tipo. No debe ser nulo ni vacío.
-     */
-    public void setTipo(String tipo) {
-        if (tipo == null || tipo.isBlank()) {
-            throw new IllegalArgumentException("El tipo no puede ser nulo ni vacío");
-        }
-        this.tipo = tipo;
     }
 
     /** @return Fecha de creación del contenido. */
@@ -183,6 +147,22 @@ public class Contenido implements Tematico {
         }
         valoraciones.agregar(valoracion);
     }
+    /**
+     * Calcula el promedio de las valoraciones recibidas por este contenido.
+     *
+     * @return El promedio de valoraciones, o 0 si no hay valoraciones.
+     */
+    public double promedioValoraciones() {
+        if (valoraciones.isEmpty()) return 0.0;
+        double suma = 0.0;
+        int contador = 0;
+        for (Valoracion v : valoraciones) {
+            suma += v.getPuntuacion(); // Asumiendo que este método existe
+            contador++;
+        }
+        return suma / contador;
+    }
+
 
     /**
      * Representación textual del contenido.

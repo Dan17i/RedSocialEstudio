@@ -6,45 +6,36 @@ import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import co.edu.uniquindio.redsocial.models.structures.NodoLista;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 /**
- * Representa a un estudiante dentro de la red social educativa.
- * Extiende de {@link Usuario} y proporciona operaciones para:
- * <ul>
- *   <li>Valorar contenidos.</li>
- *   <li>Publicar contenidos.</li>
- *   <li>Buscar contenidos globalmente.</li>
- *   <li>Enviar mensajes a otros estudiantes.</li>
- *   <li>Gestionar solicitudes de ayuda mediante una cola de prioridad.</li>
- *   <li>Unirse a grupos de estudio con coherencia bidireccional.</li>
- * </ul>
- *
- * <p>Las estructuras internas se inicializan por defecto si se reciben nulas en el constructor,
- * garantizando el correcto funcionamiento de todos los métodos.</p>
- *
- * @author Daniel
- * @author Sebastian
- * @author Juan
- * @since 2025-04-02
+ * Clase que representa a un estudiante dentro de la red social educativa.
+ * Hereda de {@link Usuario} y permite funcionalidades como valorar contenidos, unirse a grupos de estudio,
+ * enviar mensajes, buscar contenidos y gestionar solicitudes de ayuda.
+ * @author Daniel Jurado
+ * @author Sebastian Torres
+ * @author Juan Soto
+ * @since 2025-05-12
  */
 public class Estudiante extends Usuario {
 
     private ColaPrioridad<SolicitudAyuda> solicitudesAyuda;
     private ListaEnlazada<GrupoEstudio> gruposEstudio;
+    private ListaEnlazada<Mensaje> bandejaEntrada;
 
     /**
-     * Construye un estudiante con sus datos y colecciones asociadas.
+     * Constructor principal para inicializar un estudiante con todos sus atributos.
      *
-     * @param id                 Identificador único.
-     * @param nombre             Nombre completo.
-     * @param email              Correo válido.
-     * @param contrasenia        Contraseña.
-     * @param intereses          Lista de intereses (nullable).
-     * @param historialContenidos Historial de contenidos (nullable).
-     * @param valoraciones       Valoraciones realizadas (nullable).
-     * @param solicitudesAyuda   Cola de solicitudes (nullable).
-     * @param gruposEstudio      Grupos de estudio (nullable).
+     * @param id                 Identificador único del estudiante.
+     * @param nombre             Nombre del estudiante.
+     * @param email              Correo electrónico del estudiante.
+     * @param contrasenia        Contraseña de acceso.
+     * @param intereses          Lista de intereses del estudiante.
+     * @param historialContenidos Historial de contenidos vistos o publicados.
+     * @param valoraciones       Lista de valoraciones realizadas por el estudiante.
+     * @param solicitudesAyuda   Cola de solicitudes de ayuda priorizadas.
+     * @param gruposEstudio      Lista de grupos de estudio en los que participa.
      */
     public Estudiante(
             String id,
@@ -55,99 +46,94 @@ public class Estudiante extends Usuario {
             ListaEnlazada<Contenido> historialContenidos,
             ListaEnlazada<Valoracion> valoraciones,
             ColaPrioridad<SolicitudAyuda> solicitudesAyuda,
-            ListaEnlazada<GrupoEstudio> gruposEstudio
+            ListaEnlazada<GrupoEstudio> gruposEstudio,
+            ListaEnlazada<Mensaje> bandejaEntrada
     ) {
         super(id, nombre, email, contrasenia, intereses, historialContenidos, valoraciones);
         this.solicitudesAyuda = (solicitudesAyuda != null) ? solicitudesAyuda : new ColaPrioridad<>();
-        this.gruposEstudio    = (gruposEstudio    != null) ? gruposEstudio    : new ListaEnlazada<>();
+        this.gruposEstudio = (gruposEstudio != null) ? gruposEstudio : new ListaEnlazada<>();
+        this.bandejaEntrada = (bandejaEntrada != null) ? bandejaEntrada : new ListaEnlazada<>();
     }
 
     /**
-     * Registra una valoración sobre un contenido.
+     * Permite al estudiante valorar un contenido.
      *
-     * @param contenido Contenido a valorar; no null.
-     * @param puntuacion Valor entre 1 y 5.
-     * @param comentario Comentario opcional.
-     * @throws IllegalArgumentException en caso de parámetros inválidos.
+     * @param contenido  Contenido a valorar.
+     * @param puntuacion Puntuación entre 1 y 5.
+     * @param comentario Comentario adicional sobre el contenido.
+     * @throws IllegalArgumentException si el contenido es nulo o la puntuación está fuera de rango.
      */
     public void valorarContenido(Contenido contenido, int puntuacion, String comentario) {
-        if (contenido == null) {
-            throw new IllegalArgumentException("El contenido no puede ser null");
-        }
-        if (puntuacion < 1 || puntuacion > 5) {
-            throw new IllegalArgumentException("La puntuación debe estar entre 1 y 5");
-        }
+        if (contenido == null) throw new IllegalArgumentException("El contenido no puede ser null");
+        if (puntuacion < 1 || puntuacion > 5) throw new IllegalArgumentException("La puntuación debe estar entre 1 y 5");
+
         Valoracion v = new Valoracion(this, contenido, puntuacion, comentario);
         contenido.getValoraciones().agregar(v);
         getValoraciones().agregar(v);
     }
 
-
     /**
-     * Publica un contenido en la plataforma y lo añade al historial.
+     * Publica un contenido en el sistema mediante el gestor de contenidos.
      *
-     * @param contenido Contenido a publicar; no null.
-     * @throws IllegalArgumentException si contenido es null.
+     * @param contenido Contenido a publicar.
+     * @param gestor    Gestor de contenidos que lo administra.
+     * @throws IllegalArgumentException si el contenido o el gestor son nulos.
      */
-    public void publicarContenido(Contenido contenido) {
-        if (contenido == null) {
-            throw new IllegalArgumentException("El contenido no puede ser null");
-        }
-        GestorContenidos.getInstancia().agregarContenido(contenido);
+    public void publicarContenido(Contenido contenido, GestorContenidos gestor) {
+        if (contenido == null) throw new IllegalArgumentException("El contenido no puede ser null");
+        if (gestor == null) throw new IllegalArgumentException("El gestor no puede ser null");
+
+        gestor.agregarContenido(contenido);
         getHistorialContenidos().agregar(contenido);
     }
 
     /**
-     * Busca contenidos en toda la plataforma según filtros opcionales.
-     * Si un filtro es null o vacío, se ignora.
+     * Busca contenidos destacados según filtros opcionales.
      *
-     * @param tema  Filtro de tema (nullable).
-     * @param autor Filtro de autor (nullable).
-     * @param tipo  Filtro de tipo (nullable).
-     * @return Lista de contenidos que coinciden.
+     * @param tema   Tema del contenido (puede ser null o vacío para ignorar).
+     * @param autor  Nombre del autor (puede ser null o vacío para ignorar).
+     * @param tipo   Tipo del contenido (puede ser null o vacío para ignorar).
+     * @param gestor Gestor de contenidos desde donde buscar.
+     * @return Lista de contenidos que cumplen los filtros.
+     * @throws IllegalArgumentException si el gestor es nulo.
      */
-    public ListaEnlazada<Contenido> buscarContenido(String tema, String autor, String tipo) {
-        GestorContenidos gestor = GestorContenidos.getInstancia();
-        boolean fTema  = tema  != null && !tema.isEmpty();
-        boolean fAutor = autor != null && !autor.isEmpty();
-        boolean fTipo  = tipo  != null && !tipo.isEmpty();
+    public ListaEnlazada<Contenido> buscarContenido(String tema, String autor, String tipo, GestorContenidos gestor) {
+        if (gestor == null) throw new IllegalArgumentException("El gestor no puede ser null");
 
-        if (fTema && fAutor && fTipo) {
-            return gestor.buscarPorTemaAutorTipo(tema, autor, tipo);
-        }
-        if (fTema && !fAutor && !fTipo) {
-            return gestor.buscarPorTema(tema);
-        }
-        if (!fTema && fAutor && !fTipo) {
-            return gestor.buscarPorAutor(autor);
-        }
-        // Otros casos: filtrar manualmente sobre todos los contenidos destacados
-        ListaEnlazada<Contenido> todos = gestor.getContenidoDestacado();
-        ListaEnlazada<Contenido> res = new ListaEnlazada<>();
-        NodoLista<Contenido> curr = todos.getCabeza();
-        while (curr != null) {
-            Contenido c = curr.getDato();
-            boolean mTema  = !fTema  || c.getTema().equalsIgnoreCase(tema);
-            boolean mAutor = !fAutor || c.getAutor().getNombre().equalsIgnoreCase(autor);
-            boolean mTipo  = !fTipo  || c.getTipo().equalsIgnoreCase(tipo);
-            if (mTema && mAutor && mTipo) {
-                res.agregar(c);
+        boolean filtrarTema = tema != null && !tema.isEmpty();
+        boolean filtrarAutor = autor != null && !autor.isEmpty();
+        boolean filtrarTipo = tipo != null && !tipo.isEmpty();
+
+        ListaEnlazada<Contenido> resultados = new ListaEnlazada<>();
+        NodoLista<Contenido> actual = gestor.getContenidoDestacado().getCabeza();
+
+        while (actual != null) {
+            Contenido c = actual.getDato();
+            boolean coincideTema = !filtrarTema || c.getTema().equalsIgnoreCase(tema);
+            boolean coincideAutor = !filtrarAutor || c.getAutor().getNombre().equalsIgnoreCase(autor);
+            boolean coincideTipo = !filtrarTipo || c.getTipo().equalsIgnoreCase(tipo);
+
+            if (coincideTema && coincideAutor && coincideTipo) {
+                resultados.agregar(c);
             }
-            curr = curr.getSiguiente();
+
+            actual = actual.getSiguiente();
         }
-        return res;
+
+        return resultados;
     }
+
     /**
-     * Busca contenidos en el historial del estudiante según los filtros dados.
+     * Busca contenidos en el historial personal usando filtros opcionales.
      *
-     * @param tema  Tema del contenido (puede ser null o vacío para ignorar).
-     * @param autor Nombre del autor del contenido (puede ser null o vacío para ignorar).
-     * @param tipo  Tipo del contenido (puede ser null o vacío para ignorar).
-     * @return Una lista de contenidos que coincidan con los filtros.
+     * @param tema  Tema del contenido.
+     * @param autor Nombre del autor.
+     * @param tipo  Tipo de contenido.
+     * @return Lista de contenidos filtrados encontrados en el historial.
      */
     public ListaEnlazada<Contenido> buscarEnHistorial(String tema, String autor, String tipo) {
         ListaEnlazada<Contenido> resultados = new ListaEnlazada<>();
-        NodoLista<Contenido> actual = getHistorialContenidos().getCabeza(); // Acceso por getter
+        NodoLista<Contenido> actual = getHistorialContenidos().getCabeza();
 
         while (actual != null) {
             Contenido c = actual.getDato();
@@ -168,73 +154,77 @@ public class Estudiante extends Usuario {
     /**
      * Envía un mensaje a otro estudiante.
      *
-     * @param destino Destinatario; no null.
-     * @param texto   Mensaje; no null/no vacío.
-     * @throws IllegalArgumentException si parámetros inválidos.
+     * @param destino Estudiante receptor.
+     * @param texto   Contenido del mensaje.
+     * @throws IllegalArgumentException si el destino es nulo o el texto está vacío.
      */
     public void enviarMensaje(Estudiante destino, String texto) {
-        if (destino == null) {
-            throw new IllegalArgumentException("El destinatario no puede ser null");
-        }
-        if (texto == null || texto.isEmpty()) {
-            throw new IllegalArgumentException("El mensaje no puede estar vacío");
-        }
+        if (destino == null) throw new IllegalArgumentException("El destinatario no puede ser null");
+        if (texto == null || texto.isEmpty()) throw new IllegalArgumentException("El mensaje no puede estar vacío");
+
         Mensaje msg = new Mensaje(this, destino, texto, LocalDateTime.now());
         msg.enviar();
     }
 
     /**
-     * Solicita ayuda en un tema, encolando según urgencia.
+     * Añade una nueva solicitud de ayuda a la cola de prioridades.
      *
-     * @param solicitud Instancia de {@link SolicitudAyuda}; no null.
-     * @throws IllegalArgumentException si solicitud es null.
+     * @param solicitud Solicitud a registrar.
+     * @throws IllegalArgumentException si la solicitud es nula.
      */
     public void solicitarAyuda(SolicitudAyuda solicitud) {
-        if (solicitud == null) {
-            throw new IllegalArgumentException("Solicitud no puede ser null");
-        }
+        if (solicitud == null) throw new IllegalArgumentException("Solicitud no puede ser null");
         solicitudesAyuda.encolar(solicitud, solicitud.getUrgencia());
     }
 
     /**
-     * Procesa la siguiente solicitud más urgente.
+     * Procesa y retorna la siguiente solicitud de ayuda con mayor prioridad.
      *
-     * @return solicitud de ayuda o null si no hay.
+     * @return Solicitud procesada o null si no hay solicitudes.
      */
     public SolicitudAyuda procesarSiguienteSolicitud() {
         return solicitudesAyuda.desencolar();
     }
+
+    @Override
+    public void recibirMensaje(Mensaje mensaje) {
+        if (mensaje != null) {
+            bandejaEntrada.agregar(mensaje);
+            System.out.println("Mensaje recibido por " + getNombre() + ": " + mensaje.getTexto());
+        }
+    }
     /**
-     * Se une a un grupo de estudio. Si el grupo no está en su lista, lo agrega.
-     * Además, si el estudiante no está en el grupo, lo agrega también.
+     * Añade al estudiante a un grupo de estudio, si aún no pertenece a él.
      *
-     * @param grupo grupo al que desea unirse.
+     * @param grupo Grupo de estudio al que se desea unir.
+     * @throws IllegalArgumentException si el grupo es nulo.
      */
     public void unirseAGrupo(GrupoEstudio grupo) {
-        if (grupo == null) {
-            throw new IllegalArgumentException("El grupo no puede ser null");
-        }
+        if (grupo == null) throw new IllegalArgumentException("El grupo no puede ser null");
 
         if (!gruposEstudio.buscar(grupo)) {
             gruposEstudio.agregar(grupo);
         }
 
         if (!grupo.getMiembrosInterno().buscar(this)) {
-            grupo.getMiembrosInterno().agregar(this); // Ahora sí modifica la lista real
+            grupo.getMiembrosInterno().agregar(this);
         }
     }
 
-
-
-    // =====================================
-    // Getters y setters de colecciones
-    // =====================================
-
+    /**
+     * Obtiene la lista de grupos de estudio a los que pertenece el estudiante.
+     *
+     * @return Lista de grupos de estudio.
+     */
     public ListaEnlazada<GrupoEstudio> getGruposEstudio() {
         return gruposEstudio;
     }
 
-
+    /**
+     * Obtiene la cola de solicitudes de ayuda del estudiante.
+     *
+     * @return Cola de solicitudes priorizadas.
+     */
     public ColaPrioridad<SolicitudAyuda> getSolicitudesAyuda() {
         return solicitudesAyuda;
     }
@@ -252,3 +242,4 @@ public class Estudiante extends Usuario {
         return Objects.hash(getId());
     }
 }
+

@@ -24,6 +24,11 @@
         </dependency>
         <!-- Servlet API Jakarta EE 9 para Tomcat 9 -->
 
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
 
         <!-- JSP API Jakarta EE 9 -->
         <dependency>

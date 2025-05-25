@@ -78,11 +78,11 @@
                                 <div class="modal-body">
                                     <select name="interes" class="form-select" required>
                                         <option value="">-- Selecciona un interés --</option>
-                                        <option value="Tecnología">Tecnología</option>
+                                        <option value="Tecnologia">Tecnología</option>
                                         <option value="Deportes">Deportes</option>
                                         <option value="Ciencia">Ciencia</option>
                                         <option value="Arte">Arte</option>
-                                        <option value="Música">Música</option>
+                                        <option value="Musica">Música</option>
                                         <!-- Puedes agregar más -->
                                     </select>
                                 </div>

@@ -43,7 +43,8 @@ public class RegistroVisualizacionTest {
                 historialContenidos,
                 valoracionesUsuario,
                 new ColaPrioridad<>(), // solicitudesAyuda vacía
-                new ListaEnlazada<>()  // gruposEstudio vacía
+                new ListaEnlazada<>(),  // gruposEstudio vacía
+                new ListaEnlazada<>()
         );
 
         // Crear valoraciones para el contenido

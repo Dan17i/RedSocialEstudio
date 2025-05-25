@@ -27,6 +27,7 @@ public class SolicitudAyudaTest {
         ListaEnlazada<Valoracion> valoraciones = new ListaEnlazada<>();
         ColaPrioridad<SolicitudAyuda> solicitudesAyuda = new ColaPrioridad<>();
         ListaEnlazada<GrupoEstudio> gruposEstudio = new ListaEnlazada<>();
+        ListaEnlazada<Mensaje> mensajes = new ListaEnlazada<>();
 
         estudiante = new Estudiante(
                 "12345",
@@ -37,7 +38,8 @@ public class SolicitudAyudaTest {
                 historialContenidos,
                 valoraciones,
                 solicitudesAyuda,
-                gruposEstudio
+                gruposEstudio,
+                mensajes
         );
 
         solicitud = new SolicitudAyuda("Matemáticas", 7, estudiante, "Necesito ayuda con integrales.");

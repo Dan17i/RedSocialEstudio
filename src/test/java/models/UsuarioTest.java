@@ -1,10 +1,8 @@
 package models;
 
-import co.edu.uniquindio.redsocial.models.Contenido;
-import co.edu.uniquindio.redsocial.models.GrupoEstudio;
-import co.edu.uniquindio.redsocial.models.SolicitudAyuda;
-import co.edu.uniquindio.redsocial.models.Valoracion;
-import co.edu.uniquindio.redsocial.models.Estudiante;
+import co.edu.uniquindio.redsocial.models.*;
+import co.edu.uniquindio.redsocial.models.services.implement.GestorContenidos;
+import co.edu.uniquindio.redsocial.models.structures.ArbolBinarioBusqueda;
 import co.edu.uniquindio.redsocial.models.structures.ColaPrioridad;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
@@ -23,6 +21,7 @@ public class UsuarioTest {
     private ListaEnlazada<Valoracion> valoraciones;
     private ColaPrioridad<SolicitudAyuda> solicitudesAyuda;
     private ListaEnlazada<GrupoEstudio> gruposEstudio;
+    private ListaEnlazada<Mensaje> bandejaEntrada;
 
     @BeforeEach
     public void setUp() {
@@ -31,6 +30,7 @@ public class UsuarioTest {
         valoraciones = new ListaEnlazada<>();
         solicitudesAyuda = new ColaPrioridad<>();
         gruposEstudio = new ListaEnlazada<>();
+        bandejaEntrada = new ListaEnlazada<>();
 
         estudiante = new Estudiante(
                 "001",
@@ -41,7 +41,9 @@ public class UsuarioTest {
                 historialContenidos,
                 valoraciones,
                 solicitudesAyuda,
-                gruposEstudio
+                gruposEstudio,
+                bandejaEntrada
+
         );
     }
 
@@ -57,6 +59,7 @@ public class UsuarioTest {
                 new ListaEnlazada<>(),
                 new ListaEnlazada<>(),
                 new ColaPrioridad<>(),
+                new ListaEnlazada<>(),
                 new ListaEnlazada<>()
         );
 
@@ -108,6 +111,7 @@ public class UsuarioTest {
                 new ListaEnlazada<>(),
                 new ListaEnlazada<>(),
                 new ColaPrioridad<>(),
+                new ListaEnlazada<>(),
                 new ListaEnlazada<>()
         );
 
@@ -122,8 +126,10 @@ public class UsuarioTest {
                 LocalDateTime.now(),
                 valoracionesVacias
         );
-
-        estudiante.publicarContenido(contenido);
+        ArbolBinarioBusqueda<Contenido> arbolContenidos = new ArbolBinarioBusqueda<>();
+        ListaEnlazada<Contenido> contenidoDestacado = new ListaEnlazada<>();
+        GestorContenidos gestorContenidos = new GestorContenidos(arbolContenidos, contenidoDestacado);
+        estudiante.publicarContenido(contenido,gestorContenidos);
 
         assertEquals(1, estudiante.getHistorialContenidos().getTamanio());
         assertEquals(contenido, estudiante.getHistorialContenidos().obtener(0));

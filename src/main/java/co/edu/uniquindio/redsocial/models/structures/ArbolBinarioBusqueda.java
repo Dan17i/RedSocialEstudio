@@ -4,7 +4,7 @@ import co.edu.uniquindio.redsocial.models.services.interf.Tematico;
 
 /**
  * Clase que representa un Árbol Binario de Búsqueda (ABB) genérico,
- * utilizado para almacenar pares clave-valor donde la clave es un String
+ * utilizado para almacenar par clave-valor donde la clave es un String
  * y el valor es de tipo genérico Contenido.
  *
  * @param <T> Tipo de valor.

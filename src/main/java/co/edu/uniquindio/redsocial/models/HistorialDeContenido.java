@@ -112,14 +112,15 @@ public class HistorialDeContenido {
     }
 
     /**
-     * Obtiene una sublista de contenidos desde una posición hasta otra.
-     * <p>
-     * Este método permite obtener un subconjunto de los contenidos registrados en el historial,
-     * basado en el rango de índices proporcionado.
+     * Obtiene una lista enlazada con los contenidos más recientes almacenados.
      *
-     * @param desde Índice de inicio (inclusive)
-     * @param hasta Índice de fin (inclusive)
-     * @return Una lista de {@link Contenido} que representa los contenidos en el rango especificado
+     * Este método retorna los últimos {@code cantidad} contenidos agregados, o
+     * todos los contenidos si la cantidad solicitada es mayor que el total disponible.
+     * La lista se construye en orden cronológico desde el contenido más antiguo de los recientes
+     * hasta el más nuevo.
+     *
+     * @param cantidad el número máximo de contenidos recientes a obtener.
+     * @return una {@link ListaEnlazada} que contiene los contenidos recientes.
      */
     public ListaEnlazada<Contenido> obtenerContenidosRecientes(int cantidad) {
         ListaEnlazada<Contenido> recientes = new ListaEnlazada<>();

@@ -90,7 +90,7 @@ public class Reporte<T> {
      *
      * @param formato     "TXT", "CSV", o "JSON".
      * @param rutaArchivo Ruta donde se guardará el archivo.
-     * @throws IOException si hay errores de escritura.
+     * @throws IOException sí hay errores de escritura.
      */
     public void exportar(String formato, String rutaArchivo) throws IOException {
         if (formato == null || rutaArchivo == null)

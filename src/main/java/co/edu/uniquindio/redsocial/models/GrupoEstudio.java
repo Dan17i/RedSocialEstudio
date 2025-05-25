@@ -31,7 +31,7 @@ public class GrupoEstudio {
      *
      * @param id Identificador único del grupo. No debe ser nulo ni vacío.
      * @param tema Tema principal del grupo. No debe ser nulo ni vacío.
-     * @throws IllegalArgumentException si el id o el tema son inválidos.
+     * @throws IllegalArgumentException si él, id o el tema son inválidos.
      */
     public GrupoEstudio(String id, String tema) {
         if (id == null || id.isBlank()) {
@@ -163,7 +163,7 @@ public class GrupoEstudio {
     /**
      * Representación textual del grupo de estudio.
      *
-     * @return Cadena con el id, tema y cantidad de miembros.
+     * @return Cadena con él, id, tema y cantidad de miembros.
      */
     @Override
     public String toString() {

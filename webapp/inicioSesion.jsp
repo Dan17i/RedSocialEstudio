@@ -37,6 +37,11 @@
               <input type="password" class="form-control" id="contrasena" name="contrasena" required />
             </div>
 
+            <% String error = (String) request.getAttribute("error"); %>
+            <% if (error != null) { %>
+            <div class="alert alert-danger mt-2"><%= error %></div>
+            <% } %>
+
             <div class="d-grid">
               <button type="submit" class="btn btn-primary row justify-content-center">Ingresar</button>
             </div>

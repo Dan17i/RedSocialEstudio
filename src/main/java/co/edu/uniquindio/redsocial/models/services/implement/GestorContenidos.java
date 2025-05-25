@@ -88,7 +88,7 @@ public class GestorContenidos implements IGestorContenidos {
         ListaEnlazada<Contenido> todos = arbolContenidos.listarTodos();
         NodoLista<Contenido> actual = todos.getCabeza();
         while (actual != null) {
-            String tipo = actual.getDato().getTipo();
+            String tipo = actual.getDato().getTipo().name();
             stats.put(tipo, stats.getOrDefault(tipo, 0) + 1);
             actual = actual.getSiguiente();
         }

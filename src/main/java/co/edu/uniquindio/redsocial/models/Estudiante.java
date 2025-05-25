@@ -111,7 +111,7 @@ public class Estudiante extends Usuario {
             Contenido c = actual.getDato();
             boolean coincideTema = !filtrarTema || c.getTema().equalsIgnoreCase(tema);
             boolean coincideAutor = !filtrarAutor || c.getAutor().getNombre().equalsIgnoreCase(autor);
-            boolean coincideTipo = !filtrarTipo || c.getTipo().equalsIgnoreCase(tipo);
+            boolean coincideTipo = !filtrarTipo || c.getTipo().name().equalsIgnoreCase(tipo);
 
             if (coincideTema && coincideAutor && coincideTipo) {
                 resultados.agregar(c);
@@ -139,7 +139,7 @@ public class Estudiante extends Usuario {
             Contenido c = actual.getDato();
             boolean coincideTema = (tema == null || tema.isEmpty()) || c.getTema().equalsIgnoreCase(tema);
             boolean coincideAutor = (autor == null || autor.isEmpty()) || c.getAutor().getNombre().equalsIgnoreCase(autor);
-            boolean coincideTipo = (tipo == null || tipo.isEmpty()) || c.getTipo().equalsIgnoreCase(tipo);
+            boolean coincideTipo = (tipo == null || tipo.isEmpty()) || c.getTipo().name().equalsIgnoreCase(tipo);
 
             if (coincideTema && coincideAutor && coincideTipo) {
                 resultados.agregar(c);

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DashboardServlet.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.drivers</a> &gt; <span class="el_source">DashboardServlet.java</span></div><h1>DashboardServlet.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.drivers;
+
+import co.edu.uniquindio.redsocial.models.Estudiante;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+@WebServlet(name = &quot;DashboardServlet&quot;, urlPatterns = {&quot;/DashboardServlet&quot;})
+<span class="nc" id="L14">public class DashboardServlet extends HttpServlet {</span>
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        // Obtener la sesión actual sin crear una nueva si no existe
+<span class="nc" id="L21">        HttpSession session = request.getSession(false);</span>
+
+        // Verificar que exista una sesión y un usuario logueado
+<span class="nc" id="L24">        Estudiante estudiante = null;</span>
+<span class="nc bnc" id="L25" title="All 2 branches missed.">        if (session != null) {</span>
+<span class="nc" id="L26">            estudiante = (Estudiante) session.getAttribute(&quot;usuarioActual&quot;);</span>
+        }
+
+<span class="nc bnc" id="L29" title="All 2 branches missed.">        if (estudiante == null) {</span>
+            // Si no hay usuario logueado, redirigir al login
+<span class="nc" id="L31">            response.sendRedirect(&quot;inicioSesion.jsp&quot;);</span>
+<span class="nc" id="L32">            return;</span>
+        }
+
+        // Obtener el nombre del estudiante
+<span class="nc" id="L36">        String nombreUsuario = estudiante.getNombre();</span>
+
+        // Pasar el nombre a la vista (JSP)
+<span class="nc" id="L39">        request.setAttribute(&quot;nombreUsuario&quot;, nombreUsuario);</span>
+
+        // Redirigir a la vista principal
+<span class="nc" id="L42">        request.getRequestDispatcher(&quot;/inicio.jsp&quot;).forward(request, response);</span>
+<span class="nc" id="L43">    }</span>
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+<span class="nc" id="L48">        doGet(request, response);</span>
+<span class="nc" id="L49">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

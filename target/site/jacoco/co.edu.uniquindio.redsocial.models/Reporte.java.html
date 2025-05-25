@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Reporte.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models</a> &gt; <span class="el_source">Reporte.java</span></div><h1>Reporte.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models;
+
+import co.edu.uniquindio.redsocial.models.Enums.TipoReporte;
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+/**
+ * Clase genérica que representa un reporte generado por el sistema.
+ * Soporta múltiples tipos de datos, formatos de exportación y validación completa.
+ *
+ * @param &lt;T&gt; Tipo de los datos almacenados en el reporte.
+ *
+ * Ejemplos de uso:
+ * - Reporte&lt;Par&lt;String, Integer&gt;&gt; para contenidos más valorados
+ * - Reporte&lt;Par&lt;String, Integer&gt;&gt; para estudiantes con más conexiones
+ * - Reporte&lt;String&gt; para logs simples
+ *
+ * @author Daniel Jurado
+ * @author Sebastian Torres
+ * @author Juan Soto
+ * @since 2025-05-13
+ */
+public class Reporte&lt;T&gt; {
+
+    private String id;
+    private TipoReporte tipo;
+    private final LocalDateTime fechaGeneracion;
+    private final ListaEnlazada&lt;T&gt; datos;
+
+    /**
+     * Constructor principal del reporte.
+     *
+     * @param id              Identificador único del reporte.
+     * @param tipo            Tipo de reporte (ver enum TipoReporte).
+     * @param fechaGeneracion Fecha y hora en que se generó el reporte.
+     * @param datos           Datos incluidos en el reporte.
+     */
+<span class="fc" id="L46">    public Reporte(String id, TipoReporte tipo, LocalDateTime fechaGeneracion, ListaEnlazada&lt;T&gt; datos) {</span>
+<span class="fc" id="L47">        setId(id);</span>
+<span class="fc" id="L48">        setTipo(tipo);</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        if (fechaGeneracion == null)</span>
+<span class="fc" id="L50">            throw new IllegalArgumentException(&quot;La fecha de generación no puede ser nula&quot;);</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        if (datos == null)</span>
+<span class="fc" id="L52">            throw new IllegalArgumentException(&quot;La lista de datos no puede ser nula&quot;);</span>
+
+<span class="fc" id="L54">        this.fechaGeneracion = fechaGeneracion;</span>
+<span class="fc" id="L55">        this.datos = datos;</span>
+<span class="fc" id="L56">    }</span>
+
+    /**
+     * Agrega un nuevo dato al reporte.
+     *
+     * @param dato Elemento a agregar.
+     */
+    public void agregarDato(T dato) {
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (dato == null)</span>
+<span class="fc" id="L65">            throw new IllegalArgumentException(&quot;El dato no puede ser nulo&quot;);</span>
+<span class="fc" id="L66">        datos.agregar(dato);</span>
+<span class="fc" id="L67">    }</span>
+
+    /**
+     * Devuelve el resumen básico del reporte.
+     */
+    public String getResumen() {
+<span class="nc" id="L73">        return &quot;Reporte [&quot; + tipo + &quot;] generado el &quot; + fechaGeneracion + &quot; con &quot; + datos.getTamanio() + &quot; entradas.&quot;;</span>
+    }
+
+    /**
+     * Representación legible del reporte.
+     */
+    public String generarContenido() {
+<span class="fc" id="L80">        StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L81">        sb.append(&quot;Reporte ID: &quot;).append(id)</span>
+<span class="fc" id="L82">                .append(&quot;\nTipo: &quot;).append(tipo)</span>
+<span class="fc" id="L83">                .append(&quot;\nFecha: &quot;).append(fechaGeneracion)</span>
+<span class="fc" id="L84">                .append(&quot;\nContenido:\n&quot;);</span>
+
+<span class="fc bfc" id="L86" title="All 2 branches covered.">        for (int i = 0; i &lt; datos.getTamanio(); i++) {</span>
+<span class="fc" id="L87">            sb.append(&quot;- &quot;).append(datos.obtener(i)).append(&quot;\n&quot;);</span>
+        }
+
+<span class="fc" id="L90">        return sb.toString();</span>
+    }
+
+    /**
+     * Exporta el contenido a archivo.
+     *
+     * @param formato     Formato del archivo: &quot;TXT&quot;, &quot;CSV&quot;, o &quot;JSON&quot;.
+     * @param rutaArchivo Ruta donde se guardará el archivo.
+     * @throws IOException Si hay errores de escritura.
+     */
+    public void exportar(String formato, String rutaArchivo) throws IOException {
+<span class="pc bpc" id="L101" title="2 of 4 branches missed.">        if (formato == null || rutaArchivo == null)</span>
+<span class="nc" id="L102">            throw new IllegalArgumentException(&quot;Formato y rutaArchivo no pueden ser nulos&quot;);</span>
+
+<span class="pc bpc" id="L104" title="1 of 4 branches missed.">        switch (formato.toUpperCase()) {</span>
+<span class="fc" id="L105">            case &quot;TXT&quot; -&gt; exportarTxt(rutaArchivo);</span>
+<span class="fc" id="L106">            case &quot;CSV&quot; -&gt; exportarCsv(rutaArchivo);</span>
+<span class="nc" id="L107">            case &quot;JSON&quot; -&gt; exportarJson(rutaArchivo);</span>
+<span class="fc" id="L108">            default -&gt; throw new IllegalArgumentException(&quot;Formato no soportado: &quot; + formato);</span>
+        }
+<span class="fc" id="L110">    }</span>
+
+    private void exportarTxt(String rutaArchivo) throws IOException {
+<span class="fc" id="L113">        try (BufferedWriter writer = new BufferedWriter(new FileWriter(rutaArchivo))) {</span>
+<span class="fc" id="L114">            writer.write(generarContenido());</span>
+        }
+<span class="fc" id="L116">    }</span>
+
+    private void exportarCsv(String rutaArchivo) throws IOException {
+<span class="fc" id="L119">        try (BufferedWriter writer = new BufferedWriter(new FileWriter(rutaArchivo))) {</span>
+<span class="fc" id="L120">            writer.write(&quot;ID,Tipo,Fecha,Dato\n&quot;);</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">            for (int i = 0; i &lt; datos.getTamanio(); i++) {</span>
+<span class="fc" id="L122">                T dato = datos.obtener(i);</span>
+<span class="fc" id="L123">                writer.write(String.format(&quot;\&quot;%s\&quot;,\&quot;%s\&quot;,\&quot;%s\&quot;,\&quot;%s\&quot;\n&quot;,</span>
+<span class="fc" id="L124">                        id, tipo, fechaGeneracion, dato.toString().replace(&quot;\&quot;&quot;, &quot;\&quot;\&quot;&quot;)));</span>
+            }
+        }
+<span class="fc" id="L127">    }</span>
+    /**
+     * Exporta el reporte actual al formato JSON, escribiéndolo en un archivo en disco.
+     * El contenido incluye todos los atributos del objeto Reporte serializados de forma legible.
+     * Utiliza la biblioteca Gson para la conversión a JSON.
+     *
+     * &lt;p&gt;Ejemplo de contenido generado:&lt;/p&gt;
+     * &lt;pre&gt;
+     * {
+     *   &quot;id&quot;: &quot;GEN-ESTUDIANTES_CONECTADOS&quot;,
+     *   &quot;tipo&quot;: &quot;ESTUDIANTES_CONECTADOS&quot;,
+     *   &quot;fechaGeneracion&quot;: &quot;2025-05-25T14:30:00&quot;,
+     *   &quot;datos&quot;: [
+     *     {&quot;nombre&quot;: &quot;Juan&quot;, &quot;valor&quot;: 5},
+     *     {&quot;nombre&quot;: &quot;Ana&quot;, &quot;valor&quot;: 4}
+     *   ]
+     * }
+     * &lt;/pre&gt;
+     *
+     * @param rutaArchivo Ruta completa donde se guardará el archivo JSON.
+     * @throws IOException Si ocurre un error de escritura en el archivo.
+     * @throws IllegalArgumentException Si la ruta del archivo es nula o vacía.
+     *
+     * @see com.google.gson.Gson
+     * @see com.google.gson.GsonBuilder
+     */
+    private void exportarJson(String rutaArchivo) throws IOException {
+<span class="nc" id="L154">        try (BufferedWriter writer = new BufferedWriter(new FileWriter(rutaArchivo))) {</span>
+<span class="nc" id="L155">            Gson gson = new GsonBuilder().setPrettyPrinting().create();</span>
+<span class="nc" id="L156">            writer.write(gson.toJson(this));</span>
+        }
+<span class="nc" id="L158">    }</span>
+
+    // ======================
+    // Getters y Setters
+    // ======================
+
+<span class="fc" id="L164">    public String getId() { return id; }</span>
+
+    public void setId(String id) {
+<span class="fc bfc" id="L167" title="All 4 branches covered.">        if (id == null || id.isBlank())</span>
+<span class="fc" id="L168">            throw new IllegalArgumentException(&quot;El id no puede ser nulo ni vacío&quot;);</span>
+<span class="fc" id="L169">        this.id = id;</span>
+<span class="fc" id="L170">    }</span>
+
+<span class="fc" id="L172">    public TipoReporte getTipo() { return tipo; }</span>
+
+    public void setTipo(TipoReporte tipo) {
+<span class="fc bfc" id="L175" title="All 2 branches covered.">        if (tipo == null)</span>
+<span class="fc" id="L176">            throw new IllegalArgumentException(&quot;El tipo no puede ser nulo&quot;);</span>
+<span class="fc" id="L177">        this.tipo = tipo;</span>
+<span class="fc" id="L178">    }</span>
+
+<span class="nc" id="L180">    public LocalDateTime getFechaGeneracion() { return fechaGeneracion; }</span>
+
+<span class="fc" id="L182">    public ListaEnlazada&lt;T&gt; getDatos() { return datos; }</span>
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L186" title="All 2 branches missed.">        if (this == o) return true;</span>
+<span class="nc bnc" id="L187" title="All 4 branches missed.">        if (o == null || getClass() != o.getClass()) return false;</span>
+<span class="nc" id="L188">        Reporte&lt;?&gt; reporte = (Reporte&lt;?&gt;) o;</span>
+<span class="nc bnc" id="L189" title="All 6 branches missed.">        return Objects.equals(id, reporte.id) &amp;&amp; tipo == reporte.tipo &amp;&amp; Objects.equals(fechaGeneracion, reporte.fechaGeneracion);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L194">        return Objects.hash(id, tipo, fechaGeneracion);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

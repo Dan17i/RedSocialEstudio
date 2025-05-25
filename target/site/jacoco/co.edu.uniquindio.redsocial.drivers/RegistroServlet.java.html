@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RegistroServlet.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.drivers</a> &gt; <span class="el_source">RegistroServlet.java</span></div><h1>RegistroServlet.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.drivers;
+
+import co.edu.uniquindio.redsocial.models.Estudiante;
+import co.edu.uniquindio.redsocial.models.services.implement.SistemaAutenticacion;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+import java.io.IOException;
+
+@WebServlet(&quot;/Registro&quot;)
+<span class="nc" id="L12">public class RegistroServlet extends HttpServlet {</span>
+
+    private SistemaAutenticacion sistemaAutenticacion;
+
+    @Override
+    public void init() throws ServletException {
+<span class="nc" id="L18">        sistemaAutenticacion = (SistemaAutenticacion) getServletContext().getAttribute(&quot;sistemaAutenticacion&quot;);</span>
+<span class="nc" id="L19">    }</span>
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+<span class="nc" id="L25">        String nombre = request.getParameter(&quot;nombre&quot;);</span>
+<span class="nc" id="L26">        String correo = request.getParameter(&quot;correo&quot;);</span>
+<span class="nc" id="L27">        String contrasena = request.getParameter(&quot;contrasena&quot;);</span>
+
+        try {
+<span class="nc" id="L30">            Estudiante estudiante = sistemaAutenticacion.registrarEstudiante(nombre, correo, contrasena);</span>
+            // Mensaje de éxito
+<span class="nc" id="L32">            request.setAttribute(&quot;mensaje&quot;, &quot;Registro exitoso. Por favor, inicia sesión.&quot;);</span>
+<span class="nc" id="L33">            request.getRequestDispatcher(&quot;inicioSesion.jsp&quot;).forward(request, response);</span>
+<span class="nc" id="L34">        } catch (IllegalArgumentException e) {</span>
+            // Mensaje de error si ya está registrado
+<span class="nc" id="L36">            request.setAttribute(&quot;error&quot;, e.getMessage());</span>
+<span class="nc" id="L37">            request.getRequestDispatcher(&quot;registro.jsp&quot;).forward(request, response);</span>
+<span class="nc" id="L38">        }</span>
+<span class="nc" id="L39">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

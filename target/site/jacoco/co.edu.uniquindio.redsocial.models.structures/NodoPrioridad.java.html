@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NodoPrioridad.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models.structures</a> &gt; <span class="el_source">NodoPrioridad.java</span></div><h1>NodoPrioridad.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models.structures;
+
+import java.util.Objects;
+/**
+ * Clase que representa un nodo en una estructura de prioridad.
+ * Cada nodo contiene un dato genérico, una prioridad numérica y una
+ * referencia al siguiente nodo en la estructura.
+ *
+ * @param &lt;T&gt; Tipo del dato almacenado en el nodo.
+ * @author Daniel Jurado
+ * @author Sebastian Torres
+ * @author Juan Soto
+ * @since 2025-05-12
+ */
+public class NodoPrioridad&lt;T&gt; implements Comparable&lt;NodoPrioridad&lt;T&gt;&gt; {
+
+    private T dato;                        // Dato almacenado
+    private int prioridad;                 // Prioridad del nodo
+    private NodoPrioridad&lt;T&gt; siguiente;    // Enlace al siguiente nodo
+    /**
+     * Crea un nodo con el dato y la prioridad proporcionados.
+     * La referencia al siguiente nodo se inicializa en null.
+     *
+     * @param dato      El valor que almacena el nodo (no puede ser null).
+     * @param prioridad La prioridad asociada al nodo.
+     * @throws IllegalArgumentException si el dato es null.
+     */
+<span class="nc" id="L28">    public NodoPrioridad(T dato, int prioridad) {</span>
+<span class="nc bnc" id="L29" title="All 2 branches missed.">        if (dato == null) {</span>
+<span class="nc" id="L30">            throw new IllegalArgumentException(&quot;El dato no puede ser null&quot;);</span>
+        }
+<span class="nc" id="L32">        this.dato = dato;</span>
+<span class="nc" id="L33">        this.prioridad = prioridad;</span>
+<span class="nc" id="L34">        this.siguiente = null;</span>
+<span class="nc" id="L35">    }</span>
+    /**
+     * Verifica si el nodo es el último de la lista (no tiene siguiente).
+     *
+     * @return true si no hay siguiente nodo; false en caso contrario.
+     */
+    public boolean esUltimo() {
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        return siguiente == null;</span>
+    }
+    /**
+     * Devuelve una representación textual del nodo.
+     *
+     * @return Cadena con el dato y su prioridad.
+     */
+    @Override
+    public String toString() {
+<span class="nc" id="L51">        return &quot;NodoPrioridad{&quot; + &quot;dato=&quot; + dato + &quot;, prioridad=&quot; + prioridad + '}';</span>
+    }
+    /**
+     * Compara este nodo con otro según la prioridad.
+     * Una menor prioridad numérica indica mayor prioridad lógica.
+     *
+     * @param otro El nodo a comparar.
+     * @return Un valor negativo si este nodo tiene mayor prioridad,
+     *         cero si son iguales,
+     *         positivo si este nodo tiene menor prioridad.
+     */
+    @Override
+    public int compareTo(NodoPrioridad&lt;T&gt; otro) {
+<span class="nc" id="L64">        return Integer.compare(this.prioridad, otro.prioridad);</span>
+    }
+
+    // Getters y Setters
+
+    public T getDato() {
+<span class="nc" id="L70">        return dato;</span>
+    }
+
+    public void setDato(T dato) {
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (dato == null) {</span>
+<span class="nc" id="L75">            throw new IllegalArgumentException(&quot;El dato no puede ser null&quot;);</span>
+        }
+<span class="nc" id="L77">        this.dato = dato;</span>
+<span class="nc" id="L78">    }</span>
+
+    public int getPrioridad() {
+<span class="nc" id="L81">        return prioridad;</span>
+    }
+
+    public void setPrioridad(int prioridad) {
+<span class="nc" id="L85">        this.prioridad = prioridad;</span>
+<span class="nc" id="L86">    }</span>
+
+    public NodoPrioridad&lt;T&gt; getSiguiente() {
+<span class="nc" id="L89">        return siguiente;</span>
+    }
+
+    public void setSiguiente(NodoPrioridad&lt;T&gt; siguiente) {
+<span class="nc" id="L93">        this.siguiente = siguiente;</span>
+<span class="nc" id="L94">    }</span>
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L98" title="All 2 branches missed.">        if (this == obj) return true;</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        if (!(obj instanceof NodoPrioridad&lt;?&gt; otro)) return false;</span>
+<span class="nc bnc" id="L100" title="All 4 branches missed.">        return prioridad == otro.prioridad &amp;&amp; Objects.equals(dato, otro.dato);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L105">        return Objects.hash(dato, prioridad);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

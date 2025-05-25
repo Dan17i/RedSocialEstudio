@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Valoracion.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models</a> &gt; <span class="el_source">Valoracion.java</span></div><h1>Valoracion.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.UUID;
+
+/**
+ * Clase que representa una valoración realizada por un estudiante a un contenido.
+ * Una valoración incluye la puntuación dada, un comentario opcional, la fecha de la valoración,
+ * y el estudiante y contenido asociado a la valoración.
+ * &lt;p&gt;
+ * Nota: La lógica para agregar esta valoración al contenido o al estudiante debe implementarse
+ * en las respectivas clases (por ejemplo, Contenido.agregarValoracion()).
+ * Además, la validación para evitar múltiples valoraciones del mismo estudiante a un mismo contenido
+ * debe manejarse en un gestor o controlador (no en esta clase).
+ */
+public class Valoracion {
+
+    private final String id;                 // Identificador único de la valoración
+    private final Estudiante estudiante;     // Estudiante que realiza la valoración (no puede ser nulo)
+    private final Contenido contenido;       // Contenido que está siendo valorado (no puede ser nulo)
+    private final int puntuacion;            // Puntuación del contenido (de 1 a 5)
+    private String comentario;               // Comentario opcional sobre el contenido
+    private final LocalDateTime fechaValoracion;  // Fecha y hora en que se realizó la valoración
+
+    /**
+     * Constructor de la clase Valoracion.
+     *
+     * @param estudiante  El estudiante que realiza la valoración (no puede ser nulo).
+     * @param contenido   El contenido que está siendo valorado (no puede ser nulo).
+     * @param puntuacion  La puntuación otorgada (de 1 a 5).
+     * @param comentario  Un comentario opcional sobre el contenido valorado.
+     * @throws IllegalArgumentException Si la puntuación no está entre 1 y 5,
+     *                                  o si estudiante o contenido son nulos.
+     */
+<span class="fc" id="L36">    public Valoracion(Estudiante estudiante, Contenido contenido, int puntuacion, String comentario) {</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        if (estudiante == null) {</span>
+<span class="fc" id="L38">            throw new IllegalArgumentException(&quot;El estudiante no puede ser nulo.&quot;);</span>
+        }
+<span class="fc bfc" id="L40" title="All 2 branches covered.">        if (contenido == null) {</span>
+<span class="fc" id="L41">            throw new IllegalArgumentException(&quot;El contenido no puede ser nulo.&quot;);</span>
+        }
+<span class="fc bfc" id="L43" title="All 4 branches covered.">        if (puntuacion &lt; 1 || puntuacion &gt; 5) {</span>
+<span class="fc" id="L44">            throw new IllegalArgumentException(&quot;La puntuación debe estar entre 1 y 5.&quot;);</span>
+        }
+
+<span class="fc" id="L47">        this.id = UUID.randomUUID().toString();</span>
+<span class="fc" id="L48">        this.estudiante = estudiante;</span>
+<span class="fc" id="L49">        this.contenido = contenido;</span>
+<span class="fc" id="L50">        this.puntuacion = puntuacion;</span>
+<span class="pc bpc" id="L51" title="2 of 4 branches missed.">        this.comentario = (comentario != null &amp;&amp; !comentario.trim().isEmpty()) ? comentario : &quot;Sin comentario&quot;;</span>
+<span class="fc" id="L52">        this.fechaValoracion = LocalDateTime.now();</span>
+<span class="fc" id="L53">    }</span>
+
+    /**
+     * Obtiene el identificador único de la valoración.
+     *
+     * @return El ID único de la valoración.
+     */
+    public String getId() {
+<span class="fc" id="L61">        return id;</span>
+    }
+
+    /**
+     * Obtiene el estudiante que realizó la valoración.
+     *
+     * @return El estudiante que hizo la valoración.
+     */
+    public Estudiante getEstudiante() {
+<span class="fc" id="L70">        return estudiante;</span>
+    }
+
+    /**
+     * Obtiene el contenido que fue valorado.
+     *
+     * @return El contenido valorado.
+     */
+    public Contenido getContenido() {
+<span class="fc" id="L79">        return contenido;</span>
+    }
+
+    /**
+     * Obtiene la puntuación otorgada en la valoración.
+     *
+     * @return La puntuación de la valoración (entre 1 y 5).
+     */
+    public int getPuntuacion() {
+<span class="fc" id="L88">        return puntuacion;</span>
+    }
+
+    /**
+     * Obtiene el comentario asociado a la valoración.
+     *
+     * @return El comentario de la valoración.
+     */
+    public String getComentario() {
+<span class="fc" id="L97">        return comentario;</span>
+    }
+
+    /**
+     * Establece un nuevo comentario para la valoración.
+     *
+     * @param comentario El nuevo comentario de la valoración.
+     */
+    public void setComentario(String comentario) {
+<span class="fc bfc" id="L106" title="All 4 branches covered.">        this.comentario = (comentario != null &amp;&amp; !comentario.trim().isEmpty()) ? comentario : &quot;Sin comentario&quot;;</span>
+<span class="fc" id="L107">    }</span>
+
+    /**
+     * Obtiene la fecha y hora en que se realizó la valoración.
+     *
+     * @return La fecha y hora de la valoración.
+     */
+    public LocalDateTime getFechaValoracion() {
+<span class="fc" id="L115">        return fechaValoracion;</span>
+    }
+
+    /**
+     * Devuelve una representación en cadena de la valoración.
+     *
+     * @return Una cadena que representa la valoración.
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L125">        return String.format(</span>
+                &quot;Valoración{id='%s', estudiante='%s', contenido='%s', puntuacion=%d, comentario='%s', fecha='%s'}&quot;,
+                id,
+<span class="fc" id="L128">                estudiante.getNombre(),</span>
+<span class="fc" id="L129">                contenido.getTema(),</span>
+<span class="fc" id="L130">                puntuacion,</span>
+                comentario,
+                fechaValoracion
+        );
+    }
+
+    /**
+     * Compara esta valoración con otra para determinar si son iguales,
+     * basándose en el identificador único.
+     *
+     * @param o El objeto a comparar.
+     * @return true si los objetos son iguales, false en caso contrario.
+     */
+    @Override
+    public boolean equals(Object o) {
+<span class="pc bpc" id="L145" title="1 of 2 branches missed.">        if (this == o) return true;</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">        if (!(o instanceof Valoracion)) return false;</span>
+<span class="nc" id="L147">        Valoracion that = (Valoracion) o;</span>
+<span class="nc" id="L148">        return id.equals(that.id);</span>
+    }
+
+    /**
+     * Calcula el código hash de esta valoración.
+     *
+     * @return El código hash basado en el identificador único.
+     */
+    @Override
+    public int hashCode() {
+<span class="nc" id="L158">        return Objects.hash(id);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

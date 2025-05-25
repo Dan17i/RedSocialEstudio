@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GrafoImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models.structures</a> &gt; <span class="el_source">GrafoImpl.java</span></div><h1>GrafoImpl.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models.structures;
+
+import co.edu.uniquindio.redsocial.models.services.interf.IGrafo;
+
+import java.util.*;
+
+/**
+ * Implementación concreta de la interfaz {@link IGrafo} que representa un grafo genérico.
+ * Permite grafos dirigidos o no dirigidos, con operaciones de agregado, eliminación, búsqueda
+ * de ruta más corta (Dijkstra) y detección de comunidades.
+ *
+ * @param &lt;T&gt; Tipo genérico de los nodos del grafo.
+ *
+ * @author Daniel Jurado
+ * @since 2025-05-24
+ */
+public class GrafoImpl&lt;T&gt; implements IGrafo&lt;T&gt; {
+
+    private ListaEnlazada&lt;NodoGrafo&lt;T&gt;&gt; nodos;
+    private final Map&lt;T, NodoGrafo&lt;T&gt;&gt; mapaDeNodos;
+    private final boolean esDirigido;
+
+    /**
+     * Crea un grafo no dirigido vacío.
+     */
+    public GrafoImpl() {
+<span class="nc" id="L27">        this(false);</span>
+<span class="nc" id="L28">    }</span>
+
+    /**
+     * Crea un grafo, indicando si es dirigido o no.
+     * @param esDirigido true si es dirigido, false si es no dirigido.
+     */
+<span class="nc" id="L34">    public GrafoImpl(boolean esDirigido) {</span>
+<span class="nc" id="L35">        this.nodos = new ListaEnlazada&lt;&gt;();</span>
+<span class="nc" id="L36">        this.mapaDeNodos = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L37">        this.esDirigido = esDirigido;</span>
+<span class="nc" id="L38">    }</span>
+    /**
+     * Agrega un nodo al grafo si no existe previamente.
+     * @param dato El dato del nodo
+     * @throws IllegalArgumentException si el dato es null
+     */
+    @Override
+    public void agregarNodo(T dato) {
+<span class="nc bnc" id="L46" title="All 2 branches missed.">        if (dato == null) throw new IllegalArgumentException(&quot;El nodo no puede ser null&quot;);</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        if (!mapaDeNodos.containsKey(dato)) {</span>
+<span class="nc" id="L48">            NodoGrafo&lt;T&gt; nuevo = new NodoGrafo&lt;&gt;(dato);</span>
+<span class="nc" id="L49">            nodos.agregar(nuevo);</span>
+<span class="nc" id="L50">            mapaDeNodos.put(dato, nuevo);</span>
+        }
+<span class="nc" id="L52">    }</span>
+    /**
+     * Agrega una arista con un peso específico.
+     * @param nodo1 Nodo de origen
+     * @param nodo2 Nodo de destino
+     * @param peso Peso de la arista (debe ser &gt;= 0)
+     * @throws IllegalArgumentException si nodos no existen o el peso es inválido
+     */
+    @Override
+    public void agregarArista(T nodo1, T nodo2, double peso) {
+<span class="nc bnc" id="L62" title="All 4 branches missed.">        if (nodo1 == null || nodo2 == null) throw new IllegalArgumentException(&quot;Nodos no pueden ser null&quot;);</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (nodo1.equals(nodo2)) throw new IllegalArgumentException(&quot;No se permiten lazos (nodo igual a sí mismo)&quot;);</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        if (peso &lt; 0) throw new IllegalArgumentException(&quot;Peso no puede ser negativo&quot;);</span>
+
+<span class="nc" id="L66">        NodoGrafo&lt;T&gt; n1 = mapaDeNodos.get(nodo1);</span>
+<span class="nc" id="L67">        NodoGrafo&lt;T&gt; n2 = mapaDeNodos.get(nodo2);</span>
+<span class="nc bnc" id="L68" title="All 4 branches missed.">        if (n1 == null || n2 == null) throw new IllegalArgumentException(&quot;Uno o ambos nodos no existen&quot;);</span>
+
+<span class="nc" id="L70">        n1.agregarAdyacente(n2, peso);</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">        if (!esDirigido) n2.agregarAdyacente(n1, peso);</span>
+<span class="nc" id="L72">    }</span>
+    /**
+     * Agrega una arista sin peso (valor por defecto 0.0).
+     */
+    @Override
+    public void agregarArista(T nodo1, T nodo2) {
+<span class="nc" id="L78">        agregarArista(nodo1, nodo2, 0.0);</span>
+<span class="nc" id="L79">    }</span>
+    /**
+     * Elimina un nodo y todas sus conexiones.
+     * @param dato Dato del nodo
+     * @return true si fue eliminado, false si no existe
+     */
+    @Override
+    public boolean eliminarNodo(T dato) {
+<span class="nc bnc" id="L87" title="All 2 branches missed.">        if (dato == null) return false;</span>
+<span class="nc" id="L88">        NodoGrafo&lt;T&gt; nodo = mapaDeNodos.remove(dato);</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        if (nodo == null) return false;</span>
+<span class="nc" id="L90">        nodos.eliminar(nodo);</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        for (NodoGrafo&lt;T&gt; otro : nodos) {</span>
+<span class="nc" id="L92">            otro.eliminarAdyacente(nodo);</span>
+<span class="nc" id="L93">        }</span>
+<span class="nc" id="L94">        return true;</span>
+    }
+    /**
+     * Elimina una arista entre dos nodos.
+     * @param nodo1 Origen
+     * @param nodo2 Destino
+     * @return true si fue eliminada, false si no existía
+     */
+    @Override
+    public boolean eliminarArista(T nodo1, T nodo2) {
+<span class="nc" id="L104">        NodoGrafo&lt;T&gt; n1 = mapaDeNodos.get(nodo1);</span>
+<span class="nc" id="L105">        NodoGrafo&lt;T&gt; n2 = mapaDeNodos.get(nodo2);</span>
+<span class="nc bnc" id="L106" title="All 4 branches missed.">        if (n1 == null || n2 == null) return false;</span>
+
+<span class="nc" id="L108">        boolean eliminado = n1.eliminarAdyacente(n2);</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">        if (!esDirigido) n2.eliminarAdyacente(n1);</span>
+<span class="nc" id="L110">        return eliminado;</span>
+    }
+    /**
+     * Devuelve la ruta más corta entre dos nodos usando Dijkstra.
+     * @param origen Nodo inicial
+     * @param destino Nodo final
+     * @return Lista con la ruta más corta o null si no existe
+     */
+    @Override
+    public ListaEnlazada&lt;T&gt; buscarRutaCorta(T origen, T destino) {
+<span class="nc bnc" id="L120" title="All 4 branches missed.">        if (origen == null || destino == null)</span>
+<span class="nc" id="L121">            throw new IllegalArgumentException(&quot;Nodos no pueden ser null&quot;);</span>
+
+<span class="nc" id="L123">        NodoGrafo&lt;T&gt; nodoOrigen = mapaDeNodos.get(origen);</span>
+<span class="nc" id="L124">        NodoGrafo&lt;T&gt; nodoDestino = mapaDeNodos.get(destino);</span>
+
+<span class="nc bnc" id="L126" title="All 4 branches missed.">        if (nodoOrigen == null || nodoDestino == null)</span>
+<span class="nc" id="L127">            throw new IllegalArgumentException(&quot;Uno o ambos nodos no existen&quot;);</span>
+
+<span class="nc bnc" id="L129" title="All 2 branches missed.">        if (origen.equals(destino)) {</span>
+<span class="nc" id="L130">            ListaEnlazada&lt;T&gt; ruta = new ListaEnlazada&lt;&gt;();</span>
+<span class="nc" id="L131">            ruta.agregar(origen);</span>
+<span class="nc" id="L132">            return ruta;</span>
+        }
+
+<span class="nc" id="L135">        Map&lt;NodoGrafo&lt;T&gt;, Double&gt; distancias = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L136">        Map&lt;NodoGrafo&lt;T&gt;, NodoGrafo&lt;T&gt;&gt; predecesores = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L137">        PriorityQueue&lt;NodoGrafo&lt;T&gt;&gt; cola = new PriorityQueue&lt;&gt;(Comparator.comparingDouble(n -&gt; distancias.getOrDefault(n, Double.MAX_VALUE)));</span>
+
+<span class="nc bnc" id="L139" title="All 2 branches missed.">        for (NodoGrafo&lt;T&gt; nodo : nodos) {</span>
+<span class="nc" id="L140">            distancias.put(nodo, Double.MAX_VALUE);</span>
+<span class="nc" id="L141">        }</span>
+
+<span class="nc" id="L143">        distancias.put(nodoOrigen, 0.0);</span>
+<span class="nc" id="L144">        cola.add(nodoOrigen);</span>
+
+<span class="nc bnc" id="L146" title="All 2 branches missed.">        while (!cola.isEmpty()) {</span>
+<span class="nc" id="L147">            NodoGrafo&lt;T&gt; actual = cola.poll();</span>
+
+<span class="nc bnc" id="L149" title="All 2 branches missed.">            if (actual.equals(nodoDestino)) return reconstruirRuta(nodoDestino, predecesores);</span>
+
+<span class="nc bnc" id="L151" title="All 2 branches missed.">            for (Map.Entry&lt;NodoGrafo&lt;T&gt;, Double&gt; entrada : actual.getAdyacentes().entrySet()) {</span>
+<span class="nc" id="L152">                NodoGrafo&lt;T&gt; vecino = entrada.getKey();</span>
+<span class="nc" id="L153">                double peso = entrada.getValue();</span>
+<span class="nc" id="L154">                double nuevaDistancia = distancias.get(actual) + peso;</span>
+
+<span class="nc bnc" id="L156" title="All 2 branches missed.">                if (nuevaDistancia &lt; distancias.get(vecino)) {</span>
+<span class="nc" id="L157">                    distancias.put(vecino, nuevaDistancia);</span>
+<span class="nc" id="L158">                    predecesores.put(vecino, actual);</span>
+<span class="nc" id="L159">                    cola.remove(vecino);</span>
+<span class="nc" id="L160">                    cola.add(vecino);</span>
+                }
+<span class="nc" id="L162">            }</span>
+<span class="nc" id="L163">        }</span>
+
+<span class="nc" id="L165">        return null;</span>
+    }
+
+    /**
+     * Reconstruye una ruta desde un mapa de predecesores.
+     * @param destino Nodo destino.
+     * @param predecesores Mapa de predecesores.
+     * @return Ruta reconstruida.
+     */
+    private ListaEnlazada&lt;T&gt; reconstruirRuta(NodoGrafo&lt;T&gt; destino, Map&lt;NodoGrafo&lt;T&gt;, NodoGrafo&lt;T&gt;&gt; predecesores) {
+<span class="nc" id="L175">        ListaEnlazada&lt;T&gt; ruta = new ListaEnlazada&lt;&gt;();</span>
+<span class="nc" id="L176">        NodoGrafo&lt;T&gt; actual = destino;</span>
+
+<span class="nc bnc" id="L178" title="All 2 branches missed.">        while (actual != null) {</span>
+<span class="nc" id="L179">            ruta.agregarInicio(actual.getDato());</span>
+<span class="nc" id="L180">            actual = predecesores.get(actual);</span>
+        }
+
+<span class="nc" id="L183">        return ruta;</span>
+    }
+    /**
+     * Retorna el nodo asociado a un dato.
+     */
+    @Override
+    public NodoGrafo&lt;T&gt; obtenerNodo(T dato) {
+<span class="nc" id="L190">        return mapaDeNodos.get(dato);</span>
+    }
+    /**
+     * Obtiene todos los nodos del grafo.
+     */
+    @Override
+    public ListaEnlazada&lt;NodoGrafo&lt;T&gt;&gt; obtenerNodos() {
+<span class="nc" id="L197">        return nodos;</span>
+    }
+    /**
+     * Indica si el grafo es dirigido.
+     */
+    @Override
+    public boolean esDirigido() {
+<span class="nc" id="L204">        return esDirigido;</span>
+    }
+    /**
+     * Retorna el número de nodos en el grafo.
+     */
+    @Override
+    public int tamano() {
+<span class="nc" id="L211">        return mapaDeNodos.size();</span>
+    }
+
+    /**
+     * Agrega un nodo al grafo si no existe previamente.
+     * Método auxiliar para asegurarse que los nodos existen antes de agregar aristas.
+     * @param dato El dato del nodo
+     */
+    public void agregarVertice(T dato) {
+<span class="nc" id="L220">        mapaDeNodos.putIfAbsent(dato, new NodoGrafo&lt;&gt;(dato));</span>
+<span class="nc" id="L221">    }</span>
+
+    public Map&lt;T, Double&gt; obtenerAdyacentes(T dato) {
+<span class="nc" id="L224">        NodoGrafo&lt;T&gt; nodo = mapaDeNodos.get(dato);</span>
+<span class="nc bnc" id="L225" title="All 2 branches missed.">        if (nodo == null) return Collections.emptyMap();</span>
+
+<span class="nc" id="L227">        Map&lt;T, Double&gt; adyacentes = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L228" title="All 2 branches missed.">        for (Map.Entry&lt;NodoGrafo&lt;T&gt;, Double&gt; entry : nodo.getAdyacentes().entrySet()) {</span>
+<span class="nc" id="L229">            adyacentes.put(entry.getKey().getDato(), entry.getValue());</span>
+<span class="nc" id="L230">        }</span>
+<span class="nc" id="L231">        return adyacentes;</span>
+    }
+
+    public boolean contieneNodo(T dato) {
+<span class="nc" id="L235">        return mapaDeNodos.containsKey(dato);</span>
+    }
+
+    public Set&lt;T&gt; obtenerTodosLosDatos() {
+<span class="nc" id="L239">        return mapaDeNodos.keySet();</span>
+    }
+
+    public NodoGrafo&lt;T&gt; buscarNodo(T dato) {
+<span class="nc bnc" id="L243" title="All 2 branches missed.">        for (int i = 0; i &lt; nodos.getTamanio(); i++) {</span>
+<span class="nc" id="L244">            NodoGrafo&lt;T&gt; nodo = nodos.obtener(i);</span>
+<span class="nc bnc" id="L245" title="All 2 branches missed.">            if (nodo.getDato().equals(dato)) {</span>
+<span class="nc" id="L246">                return nodo;</span>
+            }
+        }
+<span class="nc" id="L249">        return null;</span>
+    }
+
+    public ListaEnlazada&lt;NodoGrafo&lt;T&gt;&gt; getNodos() {
+<span class="nc" id="L253">        return nodos;</span>
+    }
+
+    /**
+     * Detecta comunidades dentro del grafo utilizando componentes conexas.
+     * Cada comunidad es una lista de nodos conectados entre sí.
+     *
+     * @return Lista de comunidades (cada una representada como una lista de nodos).
+     */
+    @Override
+    public List&lt;List&lt;T&gt;&gt; detectarComunidades() {
+<span class="nc" id="L264">        List&lt;List&lt;T&gt;&gt; comunidades = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L265">        Set&lt;T&gt; visitados = new HashSet&lt;&gt;();</span>
+
+<span class="nc bnc" id="L267" title="All 2 branches missed.">        for (T vertice : mapaDeNodos.keySet()) {</span>
+<span class="nc bnc" id="L268" title="All 2 branches missed.">            if (!visitados.contains(vertice)) {</span>
+<span class="nc" id="L269">                List&lt;T&gt; comunidad = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L270">                dfs(vertice, visitados, comunidad);</span>
+<span class="nc" id="L271">                comunidades.add(comunidad);</span>
+            }
+<span class="nc" id="L273">        }</span>
+
+<span class="nc" id="L275">        return comunidades;</span>
+    }
+
+    /**
+     * Algoritmo DFS para detectar comunidades (componentes conexas).
+     * @param actual Nodo actual.
+     * @param visitados Conjunto de nodos visitados.
+     * @param comunidad Lista para almacenar nodos de la comunidad actual.
+     */
+    private void dfs(T actual, Set&lt;T&gt; visitados, List&lt;T&gt; comunidad) {
+<span class="nc" id="L285">        visitados.add(actual);</span>
+<span class="nc" id="L286">        comunidad.add(actual);</span>
+<span class="nc" id="L287">        NodoGrafo&lt;T&gt; nodoActual = mapaDeNodos.get(actual);</span>
+<span class="nc bnc" id="L288" title="All 2 branches missed.">        if (nodoActual == null) return;</span>
+
+<span class="nc bnc" id="L290" title="All 2 branches missed.">        for (NodoGrafo&lt;T&gt; vecinoNodo : nodoActual.getAdyacentes().keySet()) {</span>
+<span class="nc" id="L291">            T vecino = vecinoNodo.getDato();</span>
+<span class="nc bnc" id="L292" title="All 2 branches missed.">            if (!visitados.contains(vecino)) {</span>
+<span class="nc" id="L293">                dfs(vecino, visitados, comunidad);</span>
+            }
+<span class="nc" id="L295">        }</span>
+<span class="nc" id="L296">    }</span>
+
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

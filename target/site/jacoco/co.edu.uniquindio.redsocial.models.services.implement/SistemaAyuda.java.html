@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SistemaAyuda.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models.services.implement</a> &gt; <span class="el_source">SistemaAyuda.java</span></div><h1>SistemaAyuda.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models.services.implement;
+
+import co.edu.uniquindio.redsocial.models.SolicitudAyuda;
+import co.edu.uniquindio.redsocial.models.services.interf.ISistemaAyuda;
+import co.edu.uniquindio.redsocial.models.structures.ColaPrioridad;
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+import co.edu.uniquindio.redsocial.models.structures.NodoPrioridad;
+
+public class SistemaAyuda implements ISistemaAyuda {
+
+    private final ColaPrioridad&lt;SolicitudAyuda&gt; solicitudesGlobales;
+
+<span class="nc" id="L13">    public SistemaAyuda() {</span>
+<span class="nc" id="L14">        this.solicitudesGlobales = new ColaPrioridad&lt;&gt;();</span>
+<span class="nc" id="L15">    }</span>
+
+    public void agregarSolicitud(SolicitudAyuda solicitud) {
+<span class="nc" id="L18">        solicitudesGlobales.encolar(solicitud, solicitud.getUrgencia());</span>
+<span class="nc" id="L19">    }</span>
+
+    public SolicitudAyuda atenderSolicitud() {
+<span class="nc" id="L22">        return solicitudesGlobales.desencolar();</span>
+    }
+
+    /**
+     * Filtra y retorna todas las solicitudes de ayuda cuyo tema coincida con el proporcionado.
+     *
+     * Este método recorre la cola de prioridad interna y extrae aquellas solicitudes
+     * cuyo campo de tema coincide (ignorando mayúsculas/minúsculas) con el argumento dado.
+     *
+     * @param tema Tema por el cual se desea filtrar las solicitudes de ayuda.
+     * @return Una lista enlazada con todas las solicitudes que coinciden con el tema dado.
+     */
+    @Override
+    public ListaEnlazada&lt;SolicitudAyuda&gt; obtenerSolicitudesPorTema(String tema) {
+<span class="nc" id="L36">        ListaEnlazada&lt;SolicitudAyuda&gt; resultado = new ListaEnlazada&lt;&gt;();</span>
+
+<span class="nc" id="L38">        ListaEnlazada&lt;NodoPrioridad&lt;SolicitudAyuda&gt;&gt; nodos = solicitudesGlobales.getElementos();</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        for (int i = 0; i &lt; nodos.getTamanio(); i++) {</span>
+<span class="nc" id="L40">            NodoPrioridad&lt;SolicitudAyuda&gt; nodo = nodos.obtener(i);</span>
+<span class="nc" id="L41">            SolicitudAyuda solicitud = nodo.getDato();</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">            if (solicitud.getTema().equalsIgnoreCase(tema)) {</span>
+<span class="nc" id="L43">                resultado.agregar(solicitud);</span>
+            }
+        }
+
+<span class="nc" id="L47">        return resultado;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

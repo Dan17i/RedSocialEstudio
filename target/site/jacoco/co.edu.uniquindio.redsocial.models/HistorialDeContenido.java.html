@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HistorialDeContenido.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models</a> &gt; <span class="el_source">HistorialDeContenido.java</span></div><h1>HistorialDeContenido.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models;
+
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+import co.edu.uniquindio.redsocial.models.structures.NodoLista;
+
+import java.time.LocalDateTime;
+
+/**
+ * Clase que representa el historial de acceso a contenidos por parte de un usuario,
+ * manteniendo sincronizadas las listas de contenidos y fechas de acceso correspondientes.
+ *
+ * Cada contenido accedido está vinculado a su respectiva fecha en la misma posición de ambas listas.
+ *
+ * @author
+ * Daniel Jurado, Sebastian Torres, Juan Soto
+ * @since 2025-05-12
+ */
+public class HistorialDeContenido {
+
+    private String idUsuario;
+    private ListaEnlazada&lt;Contenido&gt; contenidos;
+    private ListaEnlazada&lt;LocalDateTime&gt; fechasAcceso;
+
+    /**
+     * Constructor del historial de contenido.
+     *
+     * @param idUsuario     ID del usuario asociado.
+     * @param contenidos    Lista de contenidos accedidos.
+     * @param fechasAcceso  Lista de fechas correspondientes al acceso de cada contenido.
+     */
+    public HistorialDeContenido(String idUsuario,
+                                ListaEnlazada&lt;Contenido&gt; contenidos,
+<span class="fc" id="L33">                                ListaEnlazada&lt;LocalDateTime&gt; fechasAcceso) {</span>
+<span class="fc" id="L34">        this.idUsuario = idUsuario;</span>
+<span class="pc bpc" id="L35" title="1 of 2 branches missed.">        this.contenidos = (contenidos != null) ? contenidos : new ListaEnlazada&lt;&gt;();</span>
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">        this.fechasAcceso = (fechasAcceso != null) ? fechasAcceso : new ListaEnlazada&lt;&gt;();</span>
+<span class="fc" id="L37">    }</span>
+
+    /**
+     * Agrega un nuevo contenido al historial con su fecha de acceso,
+     * asegurando que ambas listas mantengan sincronización.
+     *
+     * @param contenido Contenido accedido.
+     * @param fecha     Fecha de acceso.
+     */
+    public void agregarContenido(Contenido contenido, LocalDateTime fecha) {
+<span class="pc bpc" id="L47" title="2 of 4 branches missed.">        if (contenido != null &amp;&amp; fecha != null) {</span>
+<span class="fc" id="L48">            contenidos.agregar(contenido);</span>
+<span class="fc" id="L49">            fechasAcceso.agregar(fecha);</span>
+        }
+<span class="fc" id="L51">    }</span>
+
+    /**
+     * Elimina un contenido específico del historial, junto con su fecha correspondiente.
+     * Si el contenido aparece varias veces, solo se elimina la primera ocurrencia.
+     *
+     * @param contenido Contenido a eliminar.
+     * @return true si se eliminó, false si no se encontró.
+     */
+    public boolean eliminarContenido(Contenido contenido) {
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        if (contenido == null) return false;</span>
+
+<span class="nc" id="L63">        NodoLista&lt;Contenido&gt; actual = contenidos.getCabeza();</span>
+<span class="nc" id="L64">        NodoLista&lt;LocalDateTime&gt; actualFecha = fechasAcceso.getCabeza();</span>
+<span class="nc" id="L65">        int posicion = 0;</span>
+
+<span class="nc bnc" id="L67" title="All 4 branches missed.">        while (actual != null &amp;&amp; actualFecha != null) {</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">            if (contenido.equals(actual.getDato())) {</span>
+<span class="nc" id="L69">                contenidos.eliminarEn(posicion);</span>
+<span class="nc" id="L70">                fechasAcceso.eliminarEn(posicion);</span>
+<span class="nc" id="L71">                return true;</span>
+            }
+<span class="nc" id="L73">            actual = actual.getSiguiente();</span>
+<span class="nc" id="L74">            actualFecha = actualFecha.getSiguiente();</span>
+<span class="nc" id="L75">            posicion++;</span>
+        }
+
+<span class="nc" id="L78">        return false;</span>
+    }
+
+
+    /**
+     * Filtra los contenidos del historial por tema.
+     *
+     * @param tema Tema a filtrar.
+     * @return Lista con los contenidos que coinciden con el tema.
+     */
+    public ListaEnlazada&lt;Contenido&gt; filtrarPorTema(String tema) {
+<span class="fc" id="L89">        ListaEnlazada&lt;Contenido&gt; resultado = new ListaEnlazada&lt;&gt;();</span>
+<span class="fc" id="L90">        NodoLista&lt;Contenido&gt; actual = contenidos.getCabeza();</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        while (actual != null) {</span>
+<span class="fc" id="L92">            Contenido c = actual.getDato();</span>
+<span class="pc bpc" id="L93" title="1 of 4 branches missed.">            if (c != null &amp;&amp; c.getTema().equalsIgnoreCase(tema)) {</span>
+<span class="fc" id="L94">                resultado.agregar(c);</span>
+            }
+<span class="fc" id="L96">            actual = actual.getSiguiente();</span>
+<span class="fc" id="L97">        }</span>
+<span class="fc" id="L98">        return resultado;</span>
+    }
+
+    /**
+     * Invierte el orden de los contenidos y sus fechas de acceso, manteniendo la correspondencia entre ambos.
+     */
+    public void invertirHistorial() {
+<span class="fc" id="L105">        contenidos.invertir();</span>
+<span class="fc" id="L106">        fechasAcceso.invertir();</span>
+<span class="fc" id="L107">    }</span>
+
+    /**
+     * Clona el historial de contenido.
+     *
+     * @return Un nuevo objeto de tipo {@link HistorialDeContenido} con los mismos datos,
+     * pero con listas independientes.
+     */
+    public HistorialDeContenido clonarHistorial() {
+<span class="fc" id="L116">        return new HistorialDeContenido(idUsuario, contenidos.clonar(), fechasAcceso.clonar());</span>
+    }
+
+    /**
+     * Devuelve los últimos 'n' contenidos accedidos por el usuario.
+     *
+     * @param cantidad Número máximo de contenidos a recuperar.
+     * @return Lista con los últimos contenidos accedidos.
+     */
+    public ListaEnlazada&lt;Contenido&gt; obtenerContenidosRecientes(int cantidad) {
+<span class="fc" id="L126">        ListaEnlazada&lt;Contenido&gt; recientes = new ListaEnlazada&lt;&gt;();</span>
+
+<span class="fc" id="L128">        int total = contenidos.getTamanio();</span>
+<span class="fc" id="L129">        int desde = Math.max(0, total - cantidad);</span>
+
+<span class="fc bfc" id="L131" title="All 2 branches covered.">        for (int i = desde; i &lt; total; i++) {</span>
+<span class="fc" id="L132">            recientes.agregar(contenidos.obtener(i));</span>
+        }
+
+<span class="fc" id="L135">        return recientes;</span>
+    }
+
+    /**
+     * Verifica que ambas listas del historial tengan el mismo tamaño.
+     *
+     * @return true si están sincronizadas, false si hay una discrepancia.
+     */
+    public boolean validarSincronizacion() {
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        return contenidos.getTamanio() == fechasAcceso.getTamanio();</span>
+    }
+    /**
+     * Obtiene una lista con los últimos n contenidos agregados al historial.
+     * Si n es mayor que el número total de contenidos, devuelve todos los contenidos.
+     *
+     * @param n el número de contenidos recientes a obtener
+     * @return una ListaEnlazada con los últimos n contenidos en orden de inserción
+     */
+    public ListaEnlazada&lt;Contenido&gt; obtenerUltimos(int n) {
+<span class="fc" id="L154">        ListaEnlazada&lt;Contenido&gt; ultimos = new ListaEnlazada&lt;&gt;();</span>
+
+<span class="fc" id="L156">        int total = this.contenidos.getTamanio();  // supongo que 'contenidos' es la lista interna</span>
+
+<span class="pc bpc" id="L158" title="1 of 2 branches missed.">        if (n &gt; total) {</span>
+<span class="nc" id="L159">            n = total;</span>
+        }
+
+        // Obtener los últimos n elementos
+<span class="fc bfc" id="L163" title="All 2 branches covered.">        for (int i = total - n; i &lt; total; i++) {</span>
+<span class="fc" id="L164">            ultimos.agregar(this.contenidos.obtener(i));</span>
+        }
+
+<span class="fc" id="L167">        return ultimos;</span>
+    }
+
+    // Getters y Setters
+
+    public String getIdUsuario() {
+<span class="nc" id="L173">        return idUsuario;</span>
+    }
+
+    public void setIdUsuario(String idUsuario) {
+<span class="nc" id="L177">        this.idUsuario = idUsuario;</span>
+<span class="nc" id="L178">    }</span>
+
+    public ListaEnlazada&lt;Contenido&gt; getContenidos() {
+<span class="fc" id="L181">        return contenidos;</span>
+    }
+
+    public void setContenidos(ListaEnlazada&lt;Contenido&gt; contenidos) {
+<span class="nc bnc" id="L185" title="All 2 branches missed.">        this.contenidos = (contenidos != null) ? contenidos : new ListaEnlazada&lt;&gt;();</span>
+<span class="nc" id="L186">    }</span>
+
+    public ListaEnlazada&lt;LocalDateTime&gt; getFechasAcceso() {
+<span class="fc" id="L189">        return fechasAcceso;</span>
+    }
+
+    public void setFechasAcceso(ListaEnlazada&lt;LocalDateTime&gt; fechasAcceso) {
+<span class="nc bnc" id="L193" title="All 2 branches missed.">        this.fechasAcceso = (fechasAcceso != null) ? fechasAcceso : new ListaEnlazada&lt;&gt;();</span>
+<span class="nc" id="L194">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L198">        return &quot;HistorialDeContenido{&quot; +</span>
+                &quot;idUsuario='&quot; + idUsuario + '\'' +
+<span class="nc" id="L200">                &quot;, totalContenidos=&quot; + contenidos.getTamanio() +</span>
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

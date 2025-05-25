@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Estudiante.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models</a> &gt; <span class="el_source">Estudiante.java</span></div><h1>Estudiante.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models;
+
+import co.edu.uniquindio.redsocial.models.services.implement.GestorContenidos;
+import co.edu.uniquindio.redsocial.models.structures.ColaPrioridad;
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+import co.edu.uniquindio.redsocial.models.structures.NodoLista;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * Clase que representa a un estudiante dentro de la red social educativa.
+ * Hereda de {@link Usuario} y permite funcionalidades como valorar contenidos, unirse a grupos de estudio,
+ * enviar mensajes, buscar contenidos y gestionar solicitudes de ayuda.
+ * @author Daniel Jurado
+ * @author Sebastian Torres
+ * @author Juan Soto
+ * @since 2025-05-12
+ */
+public class Estudiante extends Usuario {
+
+    private ColaPrioridad&lt;SolicitudAyuda&gt; solicitudesAyuda;
+    private ListaEnlazada&lt;GrupoEstudio&gt; gruposEstudio;
+    private ListaEnlazada&lt;Mensaje&gt; bandejaEntrada;
+
+    /**
+     * Constructor principal para inicializar un estudiante con todos sus atributos.
+     *
+     * @param id                 Identificador único del estudiante.
+     * @param nombre             Nombre del estudiante.
+     * @param email              Correo electrónico del estudiante.
+     * @param contrasenia        Contraseña de acceso.
+     * @param intereses          Lista de intereses del estudiante.
+     * @param historialContenidos Historial de contenidos vistos o publicados.
+     * @param valoraciones       Lista de valoraciones realizadas por el estudiante.
+     * @param solicitudesAyuda   Cola de solicitudes de ayuda priorizadas.
+     * @param gruposEstudio      Lista de grupos de estudio en los que participa.
+     */
+    public Estudiante(
+            String id,
+            String nombre,
+            String email,
+            String contrasenia,
+            ListaEnlazada&lt;String&gt; intereses,
+            ListaEnlazada&lt;Contenido&gt; historialContenidos,
+            ListaEnlazada&lt;Valoracion&gt; valoraciones,
+            ColaPrioridad&lt;SolicitudAyuda&gt; solicitudesAyuda,
+            ListaEnlazada&lt;GrupoEstudio&gt; gruposEstudio,
+            ListaEnlazada&lt;Mensaje&gt; bandejaEntrada
+    ) {
+<span class="fc" id="L52">        super(id, nombre, email, contrasenia, intereses, historialContenidos, valoraciones);</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        this.solicitudesAyuda = (solicitudesAyuda != null) ? solicitudesAyuda : new ColaPrioridad&lt;&gt;();</span>
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">        this.gruposEstudio = (gruposEstudio != null) ? gruposEstudio : new ListaEnlazada&lt;&gt;();</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        this.bandejaEntrada = (bandejaEntrada != null) ? bandejaEntrada : new ListaEnlazada&lt;&gt;();</span>
+<span class="fc" id="L56">    }</span>
+
+    /**
+     * Permite al estudiante valorar un contenido.
+     *
+     * @param contenido  Contenido a valorar.
+     * @param puntuacion Puntuación entre 1 y 5.
+     * @param comentario Comentario adicional sobre el contenido.
+     * @throws IllegalArgumentException si el contenido es nulo o la puntuación está fuera de rango.
+     */
+    public void valorarContenido(Contenido contenido, int puntuacion, String comentario) {
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">        if (contenido == null) throw new IllegalArgumentException(&quot;El contenido no puede ser null&quot;);</span>
+<span class="pc bpc" id="L68" title="2 of 4 branches missed.">        if (puntuacion &lt; 1 || puntuacion &gt; 5) throw new IllegalArgumentException(&quot;La puntuación debe estar entre 1 y 5&quot;);</span>
+
+<span class="fc" id="L70">        Valoracion v = new Valoracion(this, contenido, puntuacion, comentario);</span>
+<span class="fc" id="L71">        contenido.getValoraciones().agregar(v);</span>
+<span class="fc" id="L72">        getValoraciones().agregar(v);</span>
+<span class="fc" id="L73">    }</span>
+
+    /**
+     * Publica un contenido en el sistema mediante el gestor de contenidos.
+     *
+     * @param contenido Contenido a publicar.
+     * @param gestor    Gestor de contenidos que lo administra.
+     * @throws IllegalArgumentException si el contenido o el gestor son nulos.
+     */
+    public void publicarContenido(Contenido contenido, GestorContenidos gestor) {
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        if (contenido == null) throw new IllegalArgumentException(&quot;El contenido no puede ser null&quot;);</span>
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">        if (gestor == null) throw new IllegalArgumentException(&quot;El gestor no puede ser null&quot;);</span>
+
+<span class="fc" id="L86">        gestor.agregarContenido(contenido);</span>
+<span class="fc" id="L87">        getHistorialContenidos().agregar(contenido);</span>
+<span class="fc" id="L88">    }</span>
+
+    /**
+     * Busca contenidos destacados según filtros opcionales.
+     *
+     * @param tema   Tema del contenido (puede ser null o vacío para ignorar).
+     * @param autor  Nombre del autor (puede ser null o vacío para ignorar).
+     * @param tipo   Tipo del contenido (puede ser null o vacío para ignorar).
+     * @param gestor Gestor de contenidos desde donde buscar.
+     * @return Lista de contenidos que cumplen los filtros.
+     * @throws IllegalArgumentException si el gestor es nulo.
+     */
+    public ListaEnlazada&lt;Contenido&gt; buscarContenido(String tema, String autor, String tipo, GestorContenidos gestor) {
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">        if (gestor == null) throw new IllegalArgumentException(&quot;El gestor no puede ser null&quot;);</span>
+
+<span class="pc bpc" id="L103" title="2 of 4 branches missed.">        boolean filtrarTema = tema != null &amp;&amp; !tema.isEmpty();</span>
+<span class="pc bpc" id="L104" title="2 of 4 branches missed.">        boolean filtrarAutor = autor != null &amp;&amp; !autor.isEmpty();</span>
+<span class="pc bpc" id="L105" title="2 of 4 branches missed.">        boolean filtrarTipo = tipo != null &amp;&amp; !tipo.isEmpty();</span>
+
+<span class="fc" id="L107">        ListaEnlazada&lt;Contenido&gt; resultados = new ListaEnlazada&lt;&gt;();</span>
+<span class="fc" id="L108">        NodoLista&lt;Contenido&gt; actual = gestor.getContenidoDestacado().getCabeza();</span>
+
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        while (actual != null) {</span>
+<span class="fc" id="L111">            Contenido c = actual.getDato();</span>
+<span class="pc bpc" id="L112" title="1 of 4 branches missed.">            boolean coincideTema = !filtrarTema || c.getTema().equalsIgnoreCase(tema);</span>
+<span class="pc bpc" id="L113" title="1 of 4 branches missed.">            boolean coincideAutor = !filtrarAutor || c.getAutor().getNombre().equalsIgnoreCase(autor);</span>
+<span class="pc bpc" id="L114" title="1 of 4 branches missed.">            boolean coincideTipo = !filtrarTipo || c.getTipo().name().equalsIgnoreCase(tipo);</span>
+
+<span class="pc bpc" id="L116" title="2 of 6 branches missed.">            if (coincideTema &amp;&amp; coincideAutor &amp;&amp; coincideTipo) {</span>
+<span class="fc" id="L117">                resultados.agregar(c);</span>
+            }
+
+<span class="fc" id="L120">            actual = actual.getSiguiente();</span>
+<span class="fc" id="L121">        }</span>
+
+<span class="fc" id="L123">        return resultados;</span>
+    }
+
+    /**
+     * Busca contenidos en el historial personal usando filtros opcionales.
+     *
+     * @param tema  Tema del contenido.
+     * @param autor Nombre del autor.
+     * @param tipo  Tipo de contenido.
+     * @return Lista de contenidos filtrados encontrados en el historial.
+     */
+    public ListaEnlazada&lt;Contenido&gt; buscarEnHistorial(String tema, String autor, String tipo) {
+<span class="nc" id="L135">        ListaEnlazada&lt;Contenido&gt; resultados = new ListaEnlazada&lt;&gt;();</span>
+<span class="nc" id="L136">        NodoLista&lt;Contenido&gt; actual = getHistorialContenidos().getCabeza();</span>
+
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        while (actual != null) {</span>
+<span class="nc" id="L139">            Contenido c = actual.getDato();</span>
+<span class="nc bnc" id="L140" title="All 6 branches missed.">            boolean coincideTema = (tema == null || tema.isEmpty()) || c.getTema().equalsIgnoreCase(tema);</span>
+<span class="nc bnc" id="L141" title="All 6 branches missed.">            boolean coincideAutor = (autor == null || autor.isEmpty()) || c.getAutor().getNombre().equalsIgnoreCase(autor);</span>
+<span class="nc bnc" id="L142" title="All 6 branches missed.">            boolean coincideTipo = (tipo == null || tipo.isEmpty()) || c.getTipo().name().equalsIgnoreCase(tipo);</span>
+
+<span class="nc bnc" id="L144" title="All 6 branches missed.">            if (coincideTema &amp;&amp; coincideAutor &amp;&amp; coincideTipo) {</span>
+<span class="nc" id="L145">                resultados.agregar(c);</span>
+            }
+
+<span class="nc" id="L148">            actual = actual.getSiguiente();</span>
+<span class="nc" id="L149">        }</span>
+
+<span class="nc" id="L151">        return resultados;</span>
+    }
+
+    /**
+     * Envía un mensaje a otro estudiante.
+     *
+     * @param destino Estudiante receptor.
+     * @param texto   Contenido del mensaje.
+     * @throws IllegalArgumentException si el destino es nulo o el texto está vacío.
+     */
+    public void enviarMensaje(Estudiante destino, String texto) {
+<span class="nc bnc" id="L162" title="All 2 branches missed.">        if (destino == null) throw new IllegalArgumentException(&quot;El destinatario no puede ser null&quot;);</span>
+<span class="nc bnc" id="L163" title="All 4 branches missed.">        if (texto == null || texto.isEmpty()) throw new IllegalArgumentException(&quot;El mensaje no puede estar vacío&quot;);</span>
+
+<span class="nc" id="L165">        Mensaje msg = new Mensaje(this, destino, texto, LocalDateTime.now());</span>
+<span class="nc" id="L166">        msg.enviar();</span>
+<span class="nc" id="L167">    }</span>
+
+    /**
+     * Añade una nueva solicitud de ayuda a la cola de prioridades.
+     *
+     * @param solicitud Solicitud a registrar.
+     * @throws IllegalArgumentException si la solicitud es nula.
+     */
+    public void solicitarAyuda(SolicitudAyuda solicitud) {
+<span class="nc bnc" id="L176" title="All 2 branches missed.">        if (solicitud == null) throw new IllegalArgumentException(&quot;Solicitud no puede ser null&quot;);</span>
+<span class="nc" id="L177">        solicitudesAyuda.encolar(solicitud, solicitud.getUrgencia());</span>
+<span class="nc" id="L178">    }</span>
+
+    /**
+     * Procesa y retorna la siguiente solicitud de ayuda con mayor prioridad.
+     *
+     * @return Solicitud procesada o null si no hay solicitudes.
+     */
+    public SolicitudAyuda procesarSiguienteSolicitud() {
+<span class="nc" id="L186">        return solicitudesAyuda.desencolar();</span>
+    }
+
+    @Override
+    public void recibirMensaje(Mensaje mensaje) {
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">        if (mensaje != null) {</span>
+<span class="fc" id="L192">            bandejaEntrada.agregar(mensaje);</span>
+<span class="fc" id="L193">            System.out.println(&quot;Mensaje recibido por &quot; + getNombre() + &quot;: &quot; + mensaje.getTexto());</span>
+        }
+<span class="fc" id="L195">    }</span>
+    /**
+     * Añade al estudiante a un grupo de estudio, si aún no pertenece a él.
+     *
+     * @param grupo Grupo de estudio al que se desea unir.
+     * @throws IllegalArgumentException si el grupo es nulo.
+     */
+    public void unirseAGrupo(GrupoEstudio grupo) {
+<span class="pc bpc" id="L203" title="1 of 2 branches missed.">        if (grupo == null) throw new IllegalArgumentException(&quot;El grupo no puede ser null&quot;);</span>
+
+<span class="pc bpc" id="L205" title="1 of 2 branches missed.">        if (!gruposEstudio.buscar(grupo)) {</span>
+<span class="fc" id="L206">            gruposEstudio.agregar(grupo);</span>
+        }
+
+<span class="pc bpc" id="L209" title="1 of 2 branches missed.">        if (!grupo.getMiembrosInterno().buscar(this)) {</span>
+<span class="fc" id="L210">            grupo.getMiembrosInterno().agregar(this);</span>
+        }
+<span class="fc" id="L212">    }</span>
+
+    /**
+     * Obtiene la lista de grupos de estudio a los que pertenece el estudiante.
+     *
+     * @return Lista de grupos de estudio.
+     */
+    public ListaEnlazada&lt;GrupoEstudio&gt; getGruposEstudio() {
+<span class="fc" id="L220">        return gruposEstudio;</span>
+    }
+
+    /**
+     * Obtiene la cola de solicitudes de ayuda del estudiante.
+     *
+     * @return Cola de solicitudes priorizadas.
+     */
+    public ColaPrioridad&lt;SolicitudAyuda&gt; getSolicitudesAyuda() {
+<span class="nc" id="L229">        return solicitudesAyuda;</span>
+    }
+
+    @Override
+    public boolean equals(Object o) {
+<span class="fc bfc" id="L234" title="All 2 branches covered.">        if (this == o) return true;</span>
+<span class="pc bpc" id="L235" title="1 of 2 branches missed.">        if (!(o instanceof Estudiante)) return false;</span>
+<span class="fc" id="L236">        Estudiante e = (Estudiante) o;</span>
+<span class="fc" id="L237">        return Objects.equals(getId(), e.getId());</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="fc" id="L242">        return Objects.hash(getId());</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

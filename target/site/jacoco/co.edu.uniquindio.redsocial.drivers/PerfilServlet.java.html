@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PerfilServlet.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.drivers</a> &gt; <span class="el_source">PerfilServlet.java</span></div><h1>PerfilServlet.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.drivers;
+
+
+import co.edu.uniquindio.redsocial.models.Estudiante;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+import java.io.IOException;
+
+@WebServlet(&quot;/perfil&quot;)
+<span class="nc" id="L12">public class PerfilServlet extends HttpServlet {</span>
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+<span class="nc" id="L18">        HttpSession session = request.getSession(false);</span>
+<span class="nc bnc" id="L19" title="All 2 branches missed.">        Estudiante estudiante = (session != null) ? (Estudiante) session.getAttribute(&quot;usuarioActual&quot;) : null;</span>
+
+<span class="nc bnc" id="L21" title="All 2 branches missed.">        if (estudiante == null) {</span>
+<span class="nc" id="L22">            response.sendRedirect(&quot;login.jsp&quot;);</span>
+<span class="nc" id="L23">            return;</span>
+        }
+
+        // Redirige a la vista de perfil
+<span class="nc" id="L27">        request.getRequestDispatcher(&quot;perfil.jsp&quot;).forward(request, response);</span>
+<span class="nc" id="L28">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

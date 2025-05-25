@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Contenido.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models</a> &gt; <span class="el_source">Contenido.java</span></div><h1>Contenido.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models;
+
+import co.edu.uniquindio.redsocial.ArchivoMultimedia;
+import co.edu.uniquindio.redsocial.models.Enums.TipoContenido;
+import co.edu.uniquindio.redsocial.models.services.interf.Tematico;
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+import co.edu.uniquindio.redsocial.models.structures.NodoLista;
+
+import java.io.File;
+import java.time.LocalDateTime;
+
+/**
+ * Representa un contenido publicado por un estudiante dentro de la red social.
+ * Un contenido tiene un identificador único, tema, autor, tipo y una lista de valoraciones.
+ * Esta clase proporciona métodos de acceso para sus atributos y evita modificaciones posteriores.
+ *
+ * @author
+ * Daniel Jurado, Sebastián Torres, Juan Soto
+ * @since 2025-05-12
+ */
+public class Contenido implements Tematico {
+
+    /** Identificador único del contenido. */
+    private final String id;
+
+    /** Tema o título del contenido. */
+    private final String tema;
+
+    /** Descripción del contenido. */
+    private final String descripcion;
+
+    /** Estudiante que publicó el contenido. */
+    private final Estudiante autor;
+
+    /** Tipo de contenido (ej: Texto, Video, Imagen, etc.). */
+    private final TipoContenido tipo;
+
+    /** Fecha de creación del contenido. */
+    private final LocalDateTime fechaCreacion;
+
+    /** Lista de valoraciones que ha recibido el contenido. */
+    private final ListaEnlazada&lt;Valoracion&gt; valoraciones;
+
+    /** archivos multimedia para ser obtenidos   */
+    private ArchivoMultimedia archivomultimedia;
+
+    private String rutaArchivo;
+
+
+    /**
+     * Constructor para crear un contenido con los datos esenciales.
+     *
+     * @param id Identificador único del contenido. No debe ser nulo ni vacío.
+     * @param tema Tema o título del contenido. No debe ser nulo ni vacío.
+     * @param descripcion Descripción del contenido. Puede ser nula o vacía.
+     * @param autor Estudiante que publica el contenido. No debe ser nulo.
+     * @param tipo Tipo de contenido. No debe ser nulo ni vacío.
+     * @param fechaCreacion Fecha en que se creó el contenido. No debe ser nula.
+     * @param valoraciones Lista de valoraciones asociadas. No debe ser nula (puede estar vacía).
+     * @throws IllegalArgumentException Si alguno de los parámetros obligatorios es inválido.
+     */
+<span class="fc" id="L62">    public Contenido(String id, String tema, String descripcion, Estudiante autor, TipoContenido tipo, LocalDateTime fechaCreacion, ListaEnlazada&lt;Valoracion&gt; valoraciones, ArchivoMultimedia archivomultimedia) {</span>
+<span class="pc bpc" id="L63" title="2 of 4 branches missed.">        if (id == null || id.isBlank()) {</span>
+<span class="nc" id="L64">            throw new IllegalArgumentException(&quot;El id no puede ser nulo ni vacío&quot;);</span>
+        }
+<span class="pc bpc" id="L66" title="2 of 4 branches missed.">        if (tema == null || tema.isBlank()) {</span>
+<span class="nc" id="L67">            throw new IllegalArgumentException(&quot;El tema no puede ser nulo ni vacío&quot;);</span>
+        }
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">        if (autor == null) {</span>
+<span class="nc" id="L70">            throw new IllegalArgumentException(&quot;El autor no puede ser nulo&quot;);</span>
+        }
+<span class="pc bpc" id="L72" title="2 of 4 branches missed.">        if (tipo == null || tipo.name().isBlank()) {</span>
+<span class="nc" id="L73">            throw new IllegalArgumentException(&quot;El tipo no puede ser nulo ni vacío&quot;);</span>
+        }
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">        if (fechaCreacion == null) {</span>
+<span class="nc" id="L76">            throw new IllegalArgumentException(&quot;La fecha de creación no puede ser nula&quot;);</span>
+        }
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">        if (valoraciones == null) {</span>
+<span class="nc" id="L79">            throw new IllegalArgumentException(&quot;La lista de valoraciones no puede ser nula&quot;);</span>
+        }
+
+<span class="fc" id="L82">        this.id = id;</span>
+<span class="fc" id="L83">        this.tema = tema;</span>
+<span class="fc" id="L84">        this.descripcion = descripcion;</span>
+<span class="fc" id="L85">        this.autor = autor;</span>
+<span class="fc" id="L86">        this.tipo = tipo;</span>
+<span class="fc" id="L87">        this.fechaCreacion = fechaCreacion;</span>
+<span class="fc" id="L88">        this.valoraciones = valoraciones;</span>
+<span class="fc" id="L89">        this.archivomultimedia = archivomultimedia;</span>
+<span class="fc" id="L90">    }</span>
+
+    /**
+     * Calcula el promedio de las valoraciones del contenido.
+     * Recorre la lista enlazada de valoraciones, suma los puntajes y devuelve el promedio.
+     *
+     * @return El promedio de los puntajes de las valoraciones como un valor float. Devuelve 0.0f si no hay valoraciones.
+     */
+    public float calcularValoracionPromedio() {
+<span class="nc bnc" id="L99" title="All 4 branches missed.">        if (valoraciones == null || valoraciones.getTamanio() == 0) {</span>
+<span class="nc" id="L100">            return 0.0f;</span>
+        }
+
+<span class="nc" id="L103">        float suma = 0;</span>
+<span class="nc" id="L104">        NodoLista&lt;Valoracion&gt; actual = valoraciones.getCabeza();</span>
+
+<span class="nc bnc" id="L106" title="All 2 branches missed.">        while (actual != null) {</span>
+<span class="nc" id="L107">            suma += actual.getDato().getPuntuacion();</span>
+<span class="nc" id="L108">            actual = actual.getSiguiente();</span>
+        }
+
+<span class="nc" id="L111">        return suma / valoraciones.getTamanio();</span>
+    }
+
+    /** @return Identificador único del contenido. */
+    public String getId() {
+<span class="nc" id="L116">        return id;</span>
+    }
+
+    /** @return Tema o título del contenido. */
+    public String getTema() {
+<span class="fc" id="L121">        return tema;</span>
+    }
+
+    /** @return Descripción del contenido. */
+    public String getDescripcion() {
+<span class="nc" id="L126">        return descripcion;</span>
+    }
+
+    /** @return Estudiante autor del contenido. */
+    public Estudiante getAutor() {
+<span class="fc" id="L131">        return autor;</span>
+    }
+
+    /** @return Tipo de contenido (ej: Texto, Video, etc.). */
+    public TipoContenido getTipo() {
+<span class="fc" id="L136">        return tipo;</span>
+    }
+
+    /** @return Fecha de creación del contenido. */
+    public LocalDateTime getFechaCreacion() {
+<span class="nc" id="L141">        return fechaCreacion;</span>
+    }
+
+    /** @return Lista de valoraciones del contenido. */
+    public ListaEnlazada&lt;Valoracion&gt; getValoraciones() {
+<span class="fc" id="L146">        return valoraciones;</span>
+    }
+
+    /** @return Archivos multimedia de contenido*/
+<span class="nc" id="L150">    public ArchivoMultimedia getArchivoMultimedia(){return archivomultimedia;}</span>
+
+    public void setArchivomultimedia(ArchivoMultimedia archivomultimedia) {
+<span class="nc" id="L153">        this.archivomultimedia = archivomultimedia;</span>
+<span class="nc" id="L154">    }</span>
+
+    public String getRutaArchivo() {
+<span class="nc" id="L157">        return rutaArchivo;</span>
+    }
+
+    public void setRutaArchivo(String rutaArchivo) {
+<span class="nc" id="L161">        this.rutaArchivo = rutaArchivo;</span>
+<span class="nc" id="L162">    }</span>
+
+    public String getTipoMime(){
+<span class="nc bnc" id="L165" title="All 2 branches missed.">        if(tipo==null)</span>
+<span class="nc" id="L166">            return &quot;application/octet-stream&quot;;</span>
+<span class="nc bnc" id="L167" title="All 6 branches missed.">        switch(tipo.name().toLowerCase()){</span>
+<span class="nc" id="L168">            case &quot;imagen&quot;: return &quot;image/jpeg&quot;;</span>
+<span class="nc" id="L169">            case &quot;video&quot;: return &quot;video/mp4&quot;;</span>
+<span class="nc" id="L170">            case &quot;audio&quot;: return &quot;audio/mpeg&quot;;</span>
+<span class="nc" id="L171">            case &quot;pdf&quot;: return &quot;application/pdf&quot;;</span>
+<span class="nc" id="L172">            case &quot;texto&quot;: return &quot;text/plain&quot;;</span>
+<span class="nc" id="L173">            default: return &quot;application/octet-stream&quot;;</span>
+        }
+    }
+
+    /**
+     * Agrega una nueva valoración al contenido.
+     *
+     * @param valoracion Valoración a agregar. No debe ser nula.
+     */
+    public void agregarValoracion(Valoracion valoracion) {
+<span class="nc bnc" id="L183" title="All 2 branches missed.">        if (valoracion == null) {</span>
+<span class="nc" id="L184">            throw new IllegalArgumentException(&quot;La valoración no puede ser nula&quot;);</span>
+        }
+<span class="nc" id="L186">        valoraciones.agregar(valoracion);</span>
+<span class="nc" id="L187">    }</span>
+    /**
+     * Calcula el promedio de las valoraciones recibidas por este contenido.
+     *
+     * @return El promedio de valoraciones, o 0 si no hay valoraciones.
+     */
+    public double promedioValoraciones() {
+<span class="nc bnc" id="L194" title="All 2 branches missed.">        if (valoraciones.isEmpty()) return 0.0;</span>
+<span class="nc" id="L195">        double suma = 0.0;</span>
+<span class="nc" id="L196">        int contador = 0;</span>
+<span class="nc bnc" id="L197" title="All 2 branches missed.">        for (Valoracion v : valoraciones) {</span>
+<span class="nc" id="L198">            suma += v.getPuntuacion(); // Asumiendo que este método existe</span>
+<span class="nc" id="L199">            contador++;</span>
+<span class="nc" id="L200">        }</span>
+<span class="nc" id="L201">        return suma / contador;</span>
+    }
+
+   public boolean esValido(){
+<span class="nc bnc" id="L205" title="All 6 branches missed.">        if (rutaArchivo == null || rutaArchivo.isEmpty() || tipo==null)</span>
+<span class="nc" id="L206">            return false;</span>
+<span class="nc" id="L207">        File archivo= new File(rutaArchivo);</span>
+<span class="nc" id="L208">        return  archivo.exists();</span>
+   }
+    /**
+     * Representación textual del contenido.
+     *
+     * @return Cadena que representa al contenido.
+     */
+    @Override
+    public String toString() {
+<span class="nc" id="L217">        return &quot;Contenido{id='&quot; + id + &quot;', tema='&quot; + tema + &quot;', autor='&quot; + autor.getNombre() +</span>
+<span class="nc" id="L218">                &quot;', tipo='&quot; + tipo + &quot;', valoraciones=&quot; + valoraciones.getTamanio() + &quot;}&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

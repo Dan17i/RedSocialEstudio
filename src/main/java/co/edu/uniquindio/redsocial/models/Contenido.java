@@ -86,6 +86,7 @@ public class Contenido implements Tematico {
         this.tipo = tipo;
         this.fechaCreacion = fechaCreacion;
         this.valoraciones = valoraciones;
+        this.archivomultimedia = archivomultimedia;
     }
 
     /**

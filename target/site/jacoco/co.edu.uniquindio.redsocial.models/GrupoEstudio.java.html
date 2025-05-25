@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GrupoEstudio.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models</a> &gt; <span class="el_source">GrupoEstudio.java</span></div><h1>GrupoEstudio.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models;
+
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Representa un grupo de estudio conformado por varios estudiantes y un tema específico.
+ * Los grupos permiten agregar o eliminar miembros, publicar contenidos y consultar subconjuntos de miembros.
+ * La clase mantiene la integridad interna mediante encapsulamiento y control de acceso.
+ *
+ * @author
+ * Daniel Jurado, Sebastián Torres, Juan Soto
+ * @since 2025-05-12
+ */
+public class GrupoEstudio {
+
+    /** Identificador único del grupo (inmutable). */
+    private final String id;
+
+    /** Tema central del grupo. */
+    private String tema;
+
+    /** Lista interna de miembros del grupo. */
+    private final ListaEnlazada&lt;Estudiante&gt; miembros;
+
+    /** Lista interna de publicaciones del grupo. */
+    private final ListaEnlazada&lt;Contenido&gt; publicaciones;
+
+<span class="fc" id="L31">    private List&lt;Mensaje&gt; mensajesGrupo = new ArrayList&lt;&gt;();</span>
+
+
+    /**
+     * Constructor que inicializa el grupo de estudio con un identificador y tema.
+     * La lista de miembros y publicaciones se inicializa vacía.
+     *
+     * @param id Identificador único del grupo. No debe ser nulo ni vacío.
+     * @param tema Tema principal del grupo. No debe ser nulo ni vacío.
+     * @throws IllegalArgumentException si el id o el tema son inválidos.
+     */
+<span class="fc" id="L42">    public GrupoEstudio(String id, String tema) {</span>
+<span class="pc bpc" id="L43" title="1 of 4 branches missed.">        if (id == null || id.isBlank()) {</span>
+<span class="fc" id="L44">            throw new IllegalArgumentException(&quot;El id no puede ser nulo ni vacío&quot;);</span>
+        }
+<span class="pc bpc" id="L46" title="1 of 4 branches missed.">        if (tema == null || tema.isBlank()) {</span>
+<span class="fc" id="L47">            throw new IllegalArgumentException(&quot;El tema no puede ser nulo ni vacío&quot;);</span>
+        }
+<span class="fc" id="L49">        this.id = id;</span>
+<span class="fc" id="L50">        this.tema = tema;</span>
+<span class="fc" id="L51">        this.miembros = new ListaEnlazada&lt;&gt;();</span>
+<span class="fc" id="L52">        this.publicaciones = new ListaEnlazada&lt;&gt;();</span>
+<span class="fc" id="L53">    }</span>
+
+    /**
+     * Agrega un estudiante al grupo si no está presente aún.
+     * También actualiza al estudiante para que registre su pertenencia a este grupo.
+     *
+     * Esta operación genera una dependencia bidireccional controlada entre el grupo y el estudiante.
+     *
+     * @param estudiante Estudiante a agregar. No debe ser nulo.
+     * @throws IllegalArgumentException si el estudiante es nulo.
+     */
+    public void agregarMiembro(Estudiante estudiante) {
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        if (estudiante == null) {</span>
+<span class="fc" id="L66">            throw new IllegalArgumentException(&quot;El estudiante no puede ser nulo&quot;);</span>
+        }
+
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">        if (!miembros.contiene(estudiante)) {</span>
+<span class="fc" id="L70">            miembros.agregar(estudiante);</span>
+        }
+
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">        if (!estudiante.getGruposEstudio().contiene(this)) {</span>
+<span class="fc" id="L74">            estudiante.getGruposEstudio().agregar(this);</span>
+        }
+<span class="fc" id="L76">    }</span>
+
+    /**
+     * Elimina un estudiante del grupo, si está presente.
+     * También elimina este grupo de la lista de grupos del estudiante.
+     *
+     * @param estudiante Estudiante a eliminar. No debe ser nulo.
+     * @throws IllegalArgumentException si el estudiante es nulo.
+     */
+    public void eliminarMiembro(Estudiante estudiante) {
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        if (estudiante == null) {</span>
+<span class="nc" id="L87">            throw new IllegalArgumentException(&quot;El estudiante no puede ser nulo&quot;);</span>
+        }
+
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        if (miembros.eliminar(estudiante)) {</span>
+<span class="nc" id="L91">            estudiante.getGruposEstudio().eliminar(this);</span>
+        }
+<span class="nc" id="L93">    }</span>
+
+    /**
+     * Obtiene un subconjunto de miembros del grupo, desde el índice {@code desde} hasta {@code hasta}, ambos inclusivos.
+     *
+     * Nota: Esta operación tiene complejidad O(n) debido al recorrido de la lista enlazada.
+     *
+     * @param desde Índice inicial del subgrupo (inclusive).
+     * @param hasta Índice final del subgrupo (inclusive).
+     * @return Sublista de miembros entre los índices indicados.
+     * @throws IndexOutOfBoundsException si los índices son inválidos.
+     */
+    public ListaEnlazada&lt;Estudiante&gt; obtenerSubgrupo(int desde, int hasta) {
+<span class="pc bpc" id="L106" title="2 of 6 branches missed.">        if (desde &lt; 0 || hasta &gt;= miembros.getTamanio() || desde &gt; hasta) {</span>
+<span class="fc" id="L107">            throw new IndexOutOfBoundsException(&quot;Rango inválido para obtener subgrupo&quot;);</span>
+        }
+<span class="fc" id="L109">        return miembros.sublista(desde, hasta);</span>
+    }
+
+    /**
+     * Publica un contenido dentro del grupo, visible solo para sus miembros.
+     *
+     * @param contenido Contenido a publicar. No debe ser nulo.
+     * @throws IllegalArgumentException si el contenido es nulo.
+     */
+    public void publicarContenidoGrupo(Contenido contenido) {
+<span class="fc bfc" id="L119" title="All 2 branches covered.">        if (contenido == null) {</span>
+<span class="fc" id="L120">            throw new IllegalArgumentException(&quot;El contenido no puede ser nulo&quot;);</span>
+        }
+<span class="fc" id="L122">        publicaciones.agregar(contenido);</span>
+<span class="fc" id="L123">    }</span>
+
+    /**
+     * Obtiene una copia superficial de las publicaciones actuales del grupo.
+     *
+     * Nota: Esta operación tiene complejidad O(n) y puede impactar el rendimiento
+     * si se invoca con alta frecuencia en listas grandes.
+     *
+     * @return Lista de publicaciones del grupo.
+     */
+    public ListaEnlazada&lt;Contenido&gt; getPublicaciones() {
+<span class="fc" id="L134">        ListaEnlazada&lt;Contenido&gt; copia = new ListaEnlazada&lt;&gt;();</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">        for (int i = 0; i &lt; publicaciones.getTamanio(); i++) {</span>
+<span class="fc" id="L136">            copia.agregar(publicaciones.obtener(i));</span>
+        }
+<span class="fc" id="L138">        return copia;</span>
+    }
+
+    /**
+     * Devuelve una copia superficial de la lista de miembros del grupo,
+     * protegiendo la lista interna de modificaciones externas.
+     *
+     * Nota: Esta operación tiene complejidad O(n).
+     *
+     * @return Lista de estudiantes miembros del grupo.
+     */
+    public ListaEnlazada&lt;Estudiante&gt; getMiembros() {
+<span class="fc" id="L150">        ListaEnlazada&lt;Estudiante&gt; copia = new ListaEnlazada&lt;&gt;();</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">        for (int i = 0; i &lt; miembros.getTamanio(); i++) {</span>
+<span class="fc" id="L152">            copia.agregar(miembros.obtener(i));</span>
+        }
+<span class="fc" id="L154">        return copia;</span>
+    }
+
+    /**
+     * Devuelve el identificador único del grupo.
+     *
+     * @return ID del grupo.
+     */
+    public String getId() {
+<span class="fc" id="L163">        return id;</span>
+    }
+
+    /**
+     * Devuelve el tema central del grupo.
+     *
+     * @return Tema del grupo.
+     */
+    public String getTema() {
+<span class="fc" id="L172">        return tema;</span>
+    }
+
+    /**
+     * Modifica el tema central del grupo.
+     *
+     * @param tema Nuevo tema del grupo. No debe ser nulo ni vacío.
+     * @throws IllegalArgumentException si el tema es inválido.
+     */
+    public void setTema(String tema) {
+<span class="pc bpc" id="L182" title="1 of 4 branches missed.">        if (tema == null || tema.isBlank()) {</span>
+<span class="fc" id="L183">            throw new IllegalArgumentException(&quot;El tema no puede ser nulo ni vacío&quot;);</span>
+        }
+<span class="fc" id="L185">        this.tema = tema;</span>
+<span class="fc" id="L186">    }</span>
+
+    /**
+     * Solo para uso interno del modelo, no exponer fuera del paquete.
+     * Devuelve la referencia directa a la lista interna de miembros del grupo.
+     *
+     * Usar con extrema precaución para no comprometer el encapsulamiento.
+     *
+     * @return Lista enlazada interna de miembros.
+     */
+    ListaEnlazada&lt;Estudiante&gt; getMiembrosInterno() {
+<span class="fc" id="L197">        return miembros;</span>
+    }
+
+    public void recibirMensaje(Mensaje mensaje) {
+<span class="nc" id="L201">        mensajesGrupo.add(mensaje);</span>
+<span class="nc" id="L202">        System.out.println(&quot;Mensaje recibido por grupo: &quot; + mensaje.getTexto());</span>
+<span class="nc" id="L203">    }</span>
+
+    /**
+     * Representación textual del grupo de estudio.
+     *
+     * @return Cadena con él, id, tema y cantidad de miembros.
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L212">        return &quot;GrupoEstudio{id='&quot; + id + &quot;', tema='&quot; + tema + &quot;', miembros=&quot; + miembros.getTamanio() + &quot;}&quot;;</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

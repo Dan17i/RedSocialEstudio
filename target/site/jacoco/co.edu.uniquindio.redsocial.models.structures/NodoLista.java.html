@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NodoLista.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models.structures</a> &gt; <span class="el_source">NodoLista.java</span></div><h1>NodoLista.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models.structures;
+
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
+
+/**
+ * Clase que representa un nodo en una lista enlazada.
+ * Cada nodo contiene un dato de tipo T y una referencia al siguiente nodo de la lista.
+ *
+ * @param &lt;T&gt; Tipo de dato que almacena el nodo.
+ * @author Daniel Jurado
+ * @author Sebastian Torres
+ * @author Juan Soto
+ * @since 2025-05-12
+ */
+public class NodoLista&lt;T&gt; {
+
+    private T dato;                // Valor almacenado en el nodo
+    private NodoLista&lt;T&gt; siguiente; // Referencia al siguiente nodo de la lista
+    /**
+     * Constructor para crear un nodo con un dato y una referencia al siguiente nodo.
+     *
+     * @param dato     Valor almacenado en el nodo.
+     * @param siguiente Nodo al que apunta el nodo actual.
+     */
+<span class="fc" id="L27">    public NodoLista(T dato, NodoLista&lt;T&gt; siguiente) {</span>
+<span class="fc" id="L28">        this.dato = dato;</span>
+<span class="fc" id="L29">        this.siguiente = siguiente;</span>
+<span class="fc" id="L30">    }</span>
+    /**
+     * Constructor para crear un nodo con un dato, con el siguiente nodo como null.
+     * Llama al constructor principal con null como siguiente.
+     *
+     * @param dato Valor almacenado en el nodo.
+     */
+    public NodoLista(T dato) {
+<span class="fc" id="L38">        this(dato, null);  // Llama al constructor principal con null como siguiente</span>
+<span class="fc" id="L39">    }</span>
+    /**
+     * Verifica si el nodo es el último de la lista.
+     * Un nodo es el último si su siguiente es null.
+     *
+     * @return true si el nodo es el último, false si no lo es.
+     */
+    public boolean esUltimo() {
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        return siguiente == null;</span>
+    }
+    /**
+     * Devuelve una representación en cadena del nodo y su dato.
+     *
+     * @return Cadena con la representación del nodo.
+     */
+    @Override
+    public String toString() {
+<span class="nc" id="L56">        return &quot;Nodo{&quot; + &quot;dato=&quot; + dato + '}';</span>
+    }
+    /**
+     * Compara este nodo con otro objeto para verificar igualdad basada en el dato almacenado.
+     *
+     * @param obj El objeto a comparar con este nodo.
+     * @return true si los datos de ambos nodos son iguales, false en caso contrario.
+     */
+    @Override
+    public boolean equals(@Nullable Object obj) {
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        if (this == obj) return true;</span>
+<span class="nc bnc" id="L67" title="All 4 branches missed.">        if (obj == null || getClass() != obj.getClass()) return false;</span>
+<span class="nc" id="L68">        NodoLista&lt;?&gt; that = (NodoLista&lt;?&gt;) obj;</span>
+<span class="nc" id="L69">        return Objects.equals(dato, that.dato);</span>
+    }
+    /**
+     * Devuelve un valor hash basado en el dato almacenado en el nodo.
+     *
+     * @return Un valor hash entero del dato.
+     */
+    @Override
+    public int hashCode() {
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        return dato != null ? dato.hashCode() : 0;</span>
+    }
+    // Getters y Setters
+    public T getDato() {
+<span class="fc" id="L82">        return dato;</span>
+    }
+
+    public void setDato(T dato) {
+<span class="nc" id="L86">        this.dato = dato;</span>
+<span class="nc" id="L87">    }</span>
+
+    public NodoLista&lt;T&gt; getSiguiente() {
+<span class="fc" id="L90">        return siguiente;</span>
+    }
+
+    public void setSiguiente(NodoLista&lt;T&gt; siguiente) {
+<span class="fc" id="L94">        this.siguiente = siguiente;</span>
+<span class="fc" id="L95">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

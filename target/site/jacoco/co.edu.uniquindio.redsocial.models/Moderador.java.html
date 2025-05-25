@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Moderador.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models</a> &gt; <span class="el_source">Moderador.java</span></div><h1>Moderador.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models;
+
+import co.edu.uniquindio.redsocial.models.Enums.TipoReporte;
+import co.edu.uniquindio.redsocial.models.services.interf.IGestorRedSocial;
+import co.edu.uniquindio.redsocial.models.services.interf.IGestorUsuarios;
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+import co.edu.uniquindio.redsocial.models.services.implement.GestorContenidos;
+
+
+import java.time.LocalDateTime;
+
+/**
+ * Clase que representa un moderador en la red social.
+ * Un moderador tiene acceso a gestionar usuarios, eliminar contenido y generar reportes.
+ *
+ * Aplica principios de separación de responsabilidades, acoplamiento controlado y eficiencia en generación de reportes.
+ *
+ * @author ...
+ * @since 2025-04-02
+ */
+public class Moderador extends Usuario {
+
+    private boolean accesoCompleto;
+    private ListaEnlazada&lt;String&gt; areasResponsabilidad;
+
+    private IGestorUsuarios gestorUsuarios;
+    private GestorContenidos gestorContenidos;
+    private IGestorRedSocial gestorRedSocial;
+
+    /**
+     * Constructor del moderador con inyección de gestores.
+     *
+     * @param id                    ID del moderador
+     * @param nombre                Nombre del moderador
+     * @param email                 Correo electrónico
+     * @param contraseña            Contraseña
+     * @param intereses             Intereses
+     * @param historialContenidos  Historial de contenidos
+     * @param valoraciones          Valoraciones realizadas
+     * @param accesoCompleto        Acceso total
+     * @param areasResponsabilidad  Áreas que puede gestionar
+     * @param gestorUsuarios        Referencia al gestor de usuarios
+     * @param gestorContenidos      Referencia al gestor de contenidos
+     * @param gestorRedSocial       Referencia al gestor de la red social
+     */
+    public Moderador(String id, String nombre, String email, String contraseña,
+                     ListaEnlazada&lt;String&gt; intereses,
+                     ListaEnlazada&lt;Contenido&gt; historialContenidos,
+                     ListaEnlazada&lt;Valoracion&gt; valoraciones,
+                     boolean accesoCompleto,
+                     ListaEnlazada&lt;String&gt; areasResponsabilidad,
+                     IGestorUsuarios gestorUsuarios,
+                     GestorContenidos gestorContenidos,
+                     IGestorRedSocial gestorRedSocial) {
+
+<span class="fc" id="L56">        super(id, nombre, email, contraseña, intereses, historialContenidos, valoraciones);</span>
+<span class="fc" id="L57">        this.accesoCompleto = accesoCompleto;</span>
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">        this.areasResponsabilidad = (areasResponsabilidad != null) ? areasResponsabilidad : new ListaEnlazada&lt;&gt;();</span>
+<span class="fc" id="L59">        this.gestorUsuarios = gestorUsuarios;</span>
+<span class="fc" id="L60">        this.gestorContenidos = gestorContenidos;</span>
+<span class="fc" id="L61">        this.gestorRedSocial = gestorRedSocial;</span>
+<span class="fc" id="L62">    }</span>
+
+    public void gestionarUsuarios() {
+<span class="nc" id="L65">        gestorUsuarios.listarUsuarios().forEach(usuario -&gt;</span>
+<span class="nc" id="L66">                System.out.println(&quot;Usuario: &quot; + usuario.getNombre()));</span>
+<span class="nc" id="L67">    }</span>
+
+    public void darAltaUsuario(Usuario usuario) {
+<span class="fc" id="L70">        gestorUsuarios.registrarUsuario(usuario);</span>
+<span class="fc" id="L71">        System.out.println(&quot;[Moderador] Usuario dado de alta: &quot; + usuario.getNombre());</span>
+<span class="fc" id="L72">    }</span>
+
+    public void darBajaUsuario(Usuario usuario) {
+<span class="fc" id="L75">        gestorUsuarios.eliminarUsuario(usuario.getId());</span>
+<span class="fc" id="L76">        System.out.println(&quot;[Moderador] Usuario dado de baja: &quot; + usuario.getNombre());</span>
+<span class="fc" id="L77">    }</span>
+
+    public void modificarUsuario(Usuario usuario, String nuevoNombre) {
+<span class="fc" id="L80">        usuario.setNombre(nuevoNombre);</span>
+<span class="fc" id="L81">        gestorUsuarios.actualizarUsuario(usuario);</span>
+<span class="fc" id="L82">        System.out.println(&quot;[Moderador] Usuario modificado a: &quot; + nuevoNombre);</span>
+<span class="fc" id="L83">    }</span>
+
+    public void eliminarContenido(Contenido contenido) {
+<span class="nc" id="L86">        gestorContenidos.eliminarContenido(contenido.getId());</span>
+<span class="nc" id="L87">        System.out.println(&quot;[Moderador] Contenido eliminado: &quot; + contenido.getTema());</span>
+<span class="nc" id="L88">    }</span>
+
+    public void visualizarGrafo() {
+<span class="nc" id="L91">        gestorRedSocial.visualizarGrafoUsuarios(); // método asumido en gestorRedSocial</span>
+<span class="nc" id="L92">    }</span>
+
+    public ListaEnlazada&lt;ListaEnlazada&lt;Estudiante&gt;&gt; generarReporteComunidades() {
+<span class="nc" id="L95">        return gestorRedSocial.detectarComunidades();</span>
+    }
+    /**
+     * Genera un reporte genérico basado en el tipo especificado.
+     *
+     * @param &lt;T&gt;  Tipo de los datos que contendrá el reporte.
+     * @param tipo Tipo de reporte a generar, según los valores del enum {@link TipoReporte}.
+     *             Puede ser uno de:
+     *             &lt;ul&gt;
+     *               &lt;li&gt;ESTUDIANTES_CONECTADOS: Reporte con los estudiantes más conectados.&lt;/li&gt;
+     *               &lt;li&gt;CONTENIDOS_VALORADOS: Reporte con los contenidos más valorados.&lt;/li&gt;
+     *               &lt;li&gt;INFORME: Reporte genérico sin datos específicos (vacío por ahora).&lt;/li&gt;
+     *             &lt;/ul&gt;
+     * @return Un objeto {@link Reporte} que contiene un identificador, tipo, fecha de generación y la lista de datos.
+     * @throws IllegalArgumentException Si se pasa un tipo de reporte no soportado.
+     */
+    public &lt;T&gt; Reporte&lt;T&gt; generarReporte(TipoReporte tipo) {
+<span class="pc bpc" id="L112" title="3 of 4 branches missed.">        ListaEnlazada&lt;T&gt; datos = switch (tipo) {</span>
+<span class="nc" id="L113">            case ESTUDIANTES_CONECTADOS -&gt; (ListaEnlazada&lt;T&gt;) gestorRedSocial.obtenerEstudiantesMasConectados();</span>
+<span class="nc" id="L114">            case CONTENIDOS_VALORADOS -&gt; (ListaEnlazada&lt;T&gt;) gestorContenidos.obtenerContenidosMasValorados();</span>
+<span class="fc" id="L115">            case INFORME -&gt; new ListaEnlazada&lt;&gt;();</span>
+<span class="pc" id="L116">            default -&gt; throw new IllegalArgumentException(&quot;Tipo de reporte no soportado: &quot; + tipo);</span>
+        };
+<span class="fc" id="L118">        return new Reporte&lt;&gt;(&quot;GEN-&quot; + tipo.name(), tipo, LocalDateTime.now(), datos);</span>
+    }
+
+    public Reporte&lt;Contenido&gt; generarReporteContenidosMasValorados() {
+<span class="fc" id="L122">        ListaEnlazada&lt;Contenido&gt; datos = gestorContenidos.obtenerContenidosMasValorados();</span>
+<span class="fc" id="L123">        return new Reporte&lt;&gt;(&quot;CONT-01&quot;, TipoReporte.CONTENIDOS_VALORADOS, LocalDateTime.now(), datos);</span>
+    }
+
+    public Reporte&lt;Estudiante&gt; generarReporteEstudiantesMasConectados() {
+<span class="fc" id="L127">        ListaEnlazada&lt;Estudiante&gt; datos = gestorRedSocial.obtenerEstudiantesMasConectados();</span>
+<span class="pc bpc" id="L128" title="1 of 2 branches missed.">        if (datos == null) {</span>
+<span class="fc" id="L129">            datos = new ListaEnlazada&lt;&gt;();</span>
+        }
+<span class="fc" id="L131">        return new Reporte&lt;&gt;(&quot;EST-01&quot;, TipoReporte.ESTUDIANTES_CONECTADOS, LocalDateTime.now(), datos);</span>
+    }
+
+
+    public Reporte&lt;String&gt; generarReporteCaminosMasCortos(String idOrigen, String idDestino) {
+<span class="fc" id="L136">        ListaEnlazada&lt;String&gt; caminos = gestorRedSocial.calcularCaminosMasCortos(idOrigen, idDestino);</span>
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">        if (caminos == null) {</span>
+<span class="fc" id="L138">            caminos = new ListaEnlazada&lt;&gt;();</span>
+        }
+<span class="fc" id="L140">        return new Reporte&lt;&gt;(&quot;CAM-01&quot;, TipoReporte.INFORME, LocalDateTime.now(), caminos);</span>
+    }
+
+
+    public Reporte&lt;String&gt; generarReporteParticipacion() {
+<span class="fc" id="L145">        ListaEnlazada&lt;String&gt; niveles = gestorRedSocial.obtenerNivelesParticipacion();</span>
+<span class="pc bpc" id="L146" title="1 of 2 branches missed.">        if (niveles == null) {</span>
+<span class="fc" id="L147">            niveles = new ListaEnlazada&lt;&gt;();</span>
+        }
+<span class="fc" id="L149">        return new Reporte&lt;&gt;(&quot;PAR-01&quot;, TipoReporte.INFORME, LocalDateTime.now(), niveles);</span>
+    }
+
+
+    public boolean tieneAccesoCompleto() {
+<span class="fc" id="L154">        return accesoCompleto;</span>
+    }
+
+    public void setAccesoCompleto(boolean accesoCompleto) {
+<span class="fc" id="L158">        this.accesoCompleto = accesoCompleto;</span>
+<span class="fc" id="L159">    }</span>
+
+    public ListaEnlazada&lt;String&gt; getAreasResponsabilidad() {
+<span class="fc" id="L162">        return areasResponsabilidad;</span>
+    }
+
+    public void setAreasResponsabilidad(ListaEnlazada&lt;String&gt; areasResponsabilidad) {
+<span class="fc bfc" id="L166" title="All 4 branches covered.">        if (areasResponsabilidad != null &amp;&amp; !areasResponsabilidad.isEmpty()) {</span>
+<span class="fc" id="L167">            this.areasResponsabilidad = areasResponsabilidad;</span>
+        } else {
+<span class="fc" id="L169">            throw new IllegalArgumentException(&quot;Las áreas de responsabilidad no pueden ser nulas o vacías&quot;);</span>
+        }
+<span class="fc" id="L171">    }</span>
+
+    public boolean puedeGestionarArea(String area) {
+<span class="pc bpc" id="L174" title="1 of 6 branches missed.">        return accesoCompleto || (areasResponsabilidad != null &amp;&amp; areasResponsabilidad.contiene(area));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -24,11 +24,20 @@ public class ContenidoTest {
     @BeforeEach
     public void setUp() {
 
+
                 valoraciones = new ListaEnlazada<>();
                 archivo= new ArchivoMultimedia("video_prueba.mp4","/multimedia/video_prueba.mp4","video/mp4", 1024);
                 autor = new Estudiante("idJuan", "Juan", "juan@email.com", "12345",
                 new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
                 new ColaPrioridad<>(), new ListaEnlazada<>(),new ListaEnlazada<>());
+                contenido= new Contenido("001",
+                        "Matemáticas",
+                        "Explicación múltiple",
+                        autor,
+                        TipoContenido.VIDEO,
+                        LocalDateTime.now(),
+                        valoraciones,
+                        archivo);
     }
 
     @Test
@@ -44,11 +53,10 @@ public class ContenidoTest {
                 archivo);
 
         assertEquals("001", contenido.getId());
-        assertEquals("Matematicas", contenido.getTema());
+        assertEquals("Matemáticas", contenido.getTema());
         assertEquals("sobre Matematicas", contenido.getDescripcion());
         assertEquals(autor, contenido.getAutor());
         assertEquals(TipoContenido.VIDEO, contenido.getTipo());
-        assertEquals(LocalDateTime.now(), contenido.getFechaCreacion());
         assertEquals(valoraciones, contenido.getValoraciones());
         assertEquals(archivo, contenido.getArchivoMultimedia());
     }

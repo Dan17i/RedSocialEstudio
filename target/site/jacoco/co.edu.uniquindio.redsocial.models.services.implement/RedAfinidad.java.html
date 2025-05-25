@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RedAfinidad.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models.services.implement</a> &gt; <span class="el_source">RedAfinidad.java</span></div><h1>RedAfinidad.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models.services.implement;
+
+import co.edu.uniquindio.redsocial.models.Estudiante;
+import co.edu.uniquindio.redsocial.models.structures.GrafoImpl;
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+import co.edu.uniquindio.redsocial.models.structures.NodoGrafo;
+import co.edu.uniquindio.redsocial.models.services.interf.IRedAfinidad;
+
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * Clase que representa una red de afinidad entre estudiantes,
+ * utilizando un grafo para establecer relaciones y sugerencias
+ * de compañeros potenciales.
+ *
+ * Esta clase se encarga de analizar las relaciones y atributos de
+ * los estudiantes para sugerir conexiones relevantes dentro de la red.
+ * Utiliza el patrón Singleton.
+ *
+ * @author Daniel Jurado
+ * @author Sebastian Torres
+ * @author Juan Soto
+ * @since 2025-05-12
+ */
+
+public class RedAfinidad implements IRedAfinidad {
+    private final GrafoImpl&lt;Estudiante&gt; grafoEstudiantes;
+    private static RedAfinidad instancia;
+
+    /**
+     * Constructor privado para garantizar el patrón Singleton.
+     *
+     * @param grafoEstudiantes grafo que contiene los estudiantes y sus relaciones.
+     */
+<span class="nc" id="L36">    private RedAfinidad(GrafoImpl&lt;Estudiante&gt; grafoEstudiantes) {</span>
+<span class="nc" id="L37">        this.grafoEstudiantes = grafoEstudiantes;</span>
+<span class="nc" id="L38">    }</span>
+
+    /**
+     * Devuelve la instancia única de RedAfinidad (patrón Singleton).
+     *
+     * @return instancia única de RedAfinidad.
+     */
+    public static RedAfinidad getInstancia() {
+<span class="nc bnc" id="L46" title="All 2 branches missed.">        if (instancia == null) {</span>
+<span class="nc" id="L47">            instancia = new RedAfinidad(new GrafoImpl&lt;&gt;());</span>
+        }
+<span class="nc" id="L49">        return instancia;</span>
+    }
+
+    /**
+     * Agrega un estudiante a la red de afinidad.
+     *
+     * @param estudiante el estudiante a agregar.
+     */
+    public void agregarEstudiante(Estudiante estudiante) {
+<span class="nc" id="L58">        grafoEstudiantes.agregarNodo(estudiante);</span>
+<span class="nc" id="L59">    }</span>
+
+    /**
+     * Sugiere compañeros afines a un estudiante en base al número de intereses en común.
+     *
+     * @param estudiante estudiante para el cual se desean sugerencias.
+     * @return una lista enlazada de estudiantes sugeridos.
+     */
+    public ListaEnlazada&lt;Estudiante&gt; sugerirCompaneros(Estudiante estudiante) {
+<span class="nc" id="L68">        ListaEnlazada&lt;Estudiante&gt; sugerencias = new ListaEnlazada&lt;&gt;();</span>
+
+<span class="nc bnc" id="L70" title="All 4 branches missed.">        if (estudiante == null || estudiante.getIntereses() == null) {</span>
+<span class="nc" id="L71">            return sugerencias;</span>
+        }
+
+<span class="nc" id="L74">        NodoGrafo&lt;Estudiante&gt; nodoEstudiante = grafoEstudiantes.buscarNodo(estudiante);</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">        if (nodoEstudiante == null) {</span>
+<span class="nc" id="L76">            return sugerencias; // El estudiante no está en el grafo</span>
+        }
+
+<span class="nc" id="L79">        ListaEnlazada&lt;NodoGrafo&lt;Estudiante&gt;&gt; todos = grafoEstudiantes.getNodos();</span>
+
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        for (int i = 0; i &lt; todos.getTamanio(); i++) {</span>
+<span class="nc" id="L82">            Estudiante candidato = todos.obtener(i).getDato();</span>
+
+<span class="nc bnc" id="L84" title="All 4 branches missed.">            if (!candidato.equals(estudiante) &amp;&amp; tieneAfinidad(estudiante, candidato, 2)) {</span>
+<span class="nc" id="L85">                sugerencias.agregar(candidato);</span>
+            }
+        }
+
+<span class="nc" id="L89">        return sugerencias;</span>
+    }
+
+    /**
+     * Determina si dos estudiantes tienen una cantidad mínima de intereses en común.
+     *
+     * @param e1      primer estudiante
+     * @param e2      segundo estudiante
+     * @param umbral  mínimo de intereses en común requeridos
+     * @return true si cumplen el umbral de afinidad, false en caso contrario
+     */
+    private boolean tieneAfinidad(Estudiante e1, Estudiante e2, int umbral) {
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        return contarCoincidencias(e1.getIntereses(), e2.getIntereses()) &gt;= umbral;</span>
+    }
+
+    /**
+     * Cuenta cuántos elementos tienen en común entre dos listas de intereses.
+     * Utiliza un Set para mayor eficiencia.
+     *
+     * @param lista1 primera lista
+     * @param lista2 segunda lista
+     * @return número de coincidencias
+     */
+    private int contarCoincidencias(ListaEnlazada&lt;String&gt; lista1, ListaEnlazada&lt;String&gt; lista2) {
+<span class="nc" id="L113">        Set&lt;String&gt; conjunto = new HashSet&lt;&gt;();</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">        for (int i = 0; i &lt; lista1.getTamanio(); i++) {</span>
+<span class="nc" id="L115">            conjunto.add(lista1.obtener(i).toLowerCase());</span>
+        }
+
+<span class="nc" id="L118">        int contador = 0;</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        for (int i = 0; i &lt; lista2.getTamanio(); i++) {</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">            if (conjunto.contains(lista2.obtener(i).toLowerCase())) {</span>
+<span class="nc" id="L121">                contador++;</span>
+            }
+        }
+
+<span class="nc" id="L125">        return contador;</span>
+    }
+}
+
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

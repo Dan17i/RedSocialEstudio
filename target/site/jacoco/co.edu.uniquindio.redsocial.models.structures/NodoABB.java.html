@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NodoABB.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RedSocialEstudio</a> &gt; <a href="index.source.html" class="el_package">co.edu.uniquindio.redsocial.models.structures</a> &gt; <span class="el_source">NodoABB.java</span></div><h1>NodoABB.java</h1><pre class="source lang-java linenums">package co.edu.uniquindio.redsocial.models.structures;
+
+/**
+ * Clase que representa un nodo en un Árbol Binario de Búsqueda (ABB).
+ * Cada nodo contiene una clave de tipo String, un valor de tipo genérico T,
+ * y dos referencias a sus nodos izquierdo y derecho.
+ *
+ * @param &lt;T&gt; Tipo de datos que almacena el valor del nodo.
+ */
+class NodoABB&lt;T&gt; {
+    private String clave;
+    private T valor;
+    private NodoABB&lt;T&gt; izquierda;
+    private NodoABB&lt;T&gt; derecha;
+
+<span class="fc" id="L16">    public NodoABB(String clave, T valor, NodoABB&lt;T&gt; izquierda, NodoABB&lt;T&gt; derecha) {</span>
+<span class="fc" id="L17">        this.clave = clave;</span>
+<span class="fc" id="L18">        this.valor = valor;</span>
+<span class="fc" id="L19">        this.izquierda = izquierda;</span>
+<span class="fc" id="L20">        this.derecha = derecha;</span>
+<span class="fc" id="L21">    }</span>
+
+    public NodoABB(String clave, T valor) {
+<span class="fc" id="L24">        this(clave, valor, null, null);</span>
+<span class="fc" id="L25">    }</span>
+
+<span class="fc" id="L27">    public String getClave() { return clave; }</span>
+<span class="nc" id="L28">    public void setClave(String clave) { this.clave = clave; }</span>
+
+<span class="nc" id="L30">    public T getValor() { return valor; }</span>
+<span class="nc" id="L31">    public void setValor(T valor) { this.valor = valor; }</span>
+
+<span class="fc" id="L33">    public NodoABB&lt;T&gt; getIzquierda() { return izquierda; }</span>
+<span class="fc" id="L34">    public void setIzquierda(NodoABB&lt;T&gt; izquierda) { this.izquierda = izquierda; }</span>
+
+<span class="nc" id="L36">    public NodoABB&lt;T&gt; getDerecha() { return derecha; }</span>
+<span class="nc" id="L37">    public void setDerecha(NodoABB&lt;T&gt; derecha) { this.derecha = derecha; }</span>
+    /**
+     * Verifica si el nodo no tiene hijos.
+     *
+     * @return true si el nodo es una hoja, false en caso contrario.
+     */
+    public boolean isLeaf() {
+<span class="nc bnc" id="L44" title="All 4 branches missed.">        return izquierda == null &amp;&amp; derecha == null;</span>
+    }
+    /**
+     * Verifica si el nodo tiene exactamente un hijo.
+     *
+     * @return true si tiene solo un hijo, false si tiene ambos o ninguno.
+     */
+    public boolean hasOnlyOneChild() {
+<span class="nc bnc" id="L52" title="All 8 branches missed.">        return (izquierda == null &amp;&amp; derecha != null) || (izquierda != null &amp;&amp; derecha == null);</span>
+    }
+    /**
+     * Retorna el único hijo del nodo si tiene uno.
+     *
+     * @return Referencia al único hijo o null si tiene ambos o ninguno.
+     */
+    public NodoABB&lt;T&gt; getOnlyChild() {
+<span class="nc bnc" id="L60" title="All 4 branches missed.">        if (izquierda != null &amp;&amp; derecha == null) return izquierda;</span>
+<span class="nc bnc" id="L61" title="All 4 branches missed.">        if (derecha != null &amp;&amp; izquierda == null) return derecha;</span>
+<span class="nc" id="L62">        return null;</span>
+    }
+    @Override
+    public String toString() {
+<span class="nc" id="L66">        return &quot;NodoABB{&quot; +</span>
+                &quot;clave='&quot; + clave + '\'' +
+                &quot;, valor=&quot; + valor +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

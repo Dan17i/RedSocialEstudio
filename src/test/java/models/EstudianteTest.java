@@ -121,9 +121,11 @@ public class EstudianteTest {
 
         // Ahora buscar con el mismo objeto que tiene el método buscarContenido
         ArbolBinarioBusqueda<Contenido> arbolContenidos = new ArbolBinarioBusqueda<>();
+
         ListaEnlazada<Contenido> contenidoDestacado = new ListaEnlazada<>();
-        GestorContenidos gestorContenidos = new GestorContenidos(arbolContenidos,contenidoDestacado);
-        ListaEnlazada<Contenido> resultados = juan.buscarContenido("Matemáticas", "Juan Pérez", "Video",gestorContenidos);
+        ListaEnlazada<Contenido> resultados = juan.buscarContenido("Matemáticas", "Juan Pérez", "Video", gestor);
+
+        // corregirlo @Daniel
 
         assertEquals(1, resultados.getTamanio());
         assertEquals(c1, resultados.obtener(0));

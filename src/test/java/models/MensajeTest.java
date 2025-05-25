@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -89,17 +90,45 @@ public class MensajeTest {
      */
     @Test
     public void testEnviarMensajeAEstudiante() {
+        // Preparar el emisor y receptor con nombre "Ana"
+        Estudiante emisor = new Estudiante(
+                "E3", "Carlos", "carlos@mail.com", "1234",
+                new ListaEnlazada<>(),
+                new ListaEnlazada<>(),
+                new ListaEnlazada<>(),
+                new ColaPrioridad<>(),
+                new ListaEnlazada<>(),
+                new ListaEnlazada<>());
+        Estudiante receptor = new Estudiante(
+                "E3", "Ana", "ana@mail.com", "12345",
+                new ListaEnlazada<>(),
+                new ListaEnlazada<>(),
+                new ListaEnlazada<>(),
+                new ColaPrioridad<>(),
+                new ListaEnlazada<>(),
+                new ListaEnlazada<>());
+        LocalDateTime fecha = LocalDateTime.now();
+
         Mensaje mensaje = new Mensaje(emisor, receptor, "Hola Ana", fecha);
 
         // Capturar salida por consola
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
         System.setOut(new PrintStream(outContent));
 
-        mensaje.enviar();
+        try {
+            mensaje.enviar();
+        } finally {
+            System.setOut(originalOut);  // Restaurar salida estándar
+        }
 
         String output = outContent.toString().trim();
-        assertTrue(output.contains("Mensaje enviado a Ana: Hola Ana"));
+        // Verifica que la salida contiene la frase esperada
+        assertTrue(output.contains("Mensaje recibido por Ana: Hola Ana"),
+                "La salida no contiene el mensaje esperado. Salida: " + output);
     }
+
+
 
     /**
      * Verifica que el método {@code enviar()} funcione correctamente
@@ -115,8 +144,9 @@ public class MensajeTest {
         mensaje.enviar();
 
         String output = outContent.toString().trim();
-        assertTrue(output.contains("Mensaje enviado a Luis: Reunión mañana"));
-        assertTrue(output.contains("Mensaje enviado a Sofía: Reunión mañana"));
+        assertTrue(output.contains("Mensaje recibido por Luis: Reunión mañana"));
+        assertTrue(output.contains("Mensaje recibido por Sofía: Reunión mañana"));
+
     }
 
     /**

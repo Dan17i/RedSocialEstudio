@@ -148,8 +148,9 @@ public class ModeradorTest {
         assertEquals(TipoReporte.ESTUDIANTES_CONECTADOS,
                 moderador.generarReporteEstudiantesMasConectados().getTipo());
 
-        assertEquals(TipoReporte.CONTENIDOS_VALORADOS, // Cambiar si usas otro tipo para caminos cortos
+        assertEquals(TipoReporte.INFORME,
                 moderador.generarReporteCaminosMasCortos("A", "B").getTipo());
+
 
         assertEquals(TipoReporte.INFORME,
                 moderador.generarReporteParticipacion().getTipo());

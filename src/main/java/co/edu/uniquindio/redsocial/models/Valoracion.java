@@ -126,7 +126,7 @@ public class Valoracion {
                 "Valoración{id='%s', estudiante='%s', contenido='%s', puntuacion=%d, comentario='%s', fecha='%s'}",
                 id,
                 estudiante.getNombre(),
-                contenido.getTema(),  
+                contenido.getTema(),
                 puntuacion,
                 comentario,
                 fechaValoracion

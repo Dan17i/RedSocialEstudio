@@ -124,18 +124,30 @@ public class Moderador extends Usuario {
 
     public Reporte<Estudiante> generarReporteEstudiantesMasConectados() {
         ListaEnlazada<Estudiante> datos = gestorRedSocial.obtenerEstudiantesMasConectados();
+        if (datos == null) {
+            datos = new ListaEnlazada<>();
+        }
         return new Reporte<>("EST-01", TipoReporte.ESTUDIANTES_CONECTADOS, LocalDateTime.now(), datos);
     }
 
+
     public Reporte<String> generarReporteCaminosMasCortos(String idOrigen, String idDestino) {
         ListaEnlazada<String> caminos = gestorRedSocial.calcularCaminosMasCortos(idOrigen, idDestino);
+        if (caminos == null) {
+            caminos = new ListaEnlazada<>();
+        }
         return new Reporte<>("CAM-01", TipoReporte.INFORME, LocalDateTime.now(), caminos);
     }
 
+
     public Reporte<String> generarReporteParticipacion() {
         ListaEnlazada<String> niveles = gestorRedSocial.obtenerNivelesParticipacion();
+        if (niveles == null) {
+            niveles = new ListaEnlazada<>();
+        }
         return new Reporte<>("PAR-01", TipoReporte.INFORME, LocalDateTime.now(), niveles);
     }
+
 
     public boolean tieneAccesoCompleto() {
         return accesoCompleto;

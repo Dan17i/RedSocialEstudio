@@ -102,7 +102,7 @@ public class GestorArchivos implements IGestorArchivos {
 
     @Override
     public long obtenerTamanio(String rutaArchivo){
-        File archivo = new File(rutaRelativa);
+        File archivo = new File(rutaArchivo);
         if (archivo.exists()) {
             return archivo.length();
         }

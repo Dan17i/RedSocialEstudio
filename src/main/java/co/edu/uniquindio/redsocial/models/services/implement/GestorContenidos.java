@@ -34,14 +34,15 @@ public class GestorContenidos implements IGestorContenidos {
     }
 
     @Override
-    public void agregarContenido(Contenido contenido){
-       if (contenido != null) {
+    public void agregarContenido(Contenido contenido) {
+        if (contenido != null) {
             arbolContenidos.insertar(contenido.getTema(), contenido);
             listaDeContenidos.agregar(contenido);
+        }
     }
 
     @Override
-    public boolean eliminarContenido(String id){
+    public boolean eliminarContenido (String id){
         ListaEnlazada<Contenido> todos = arbolContenidos.listarTodos();
         NodoLista<Contenido> actual = todos.getCabeza();
         while (actual != null) {

@@ -82,6 +82,7 @@
     </div>
 
     <nav class="nav flex-column mt-3">
+        <a class="nav-link" href="inicio.jsp?seccion=home"><i class="bi bi-house-door"></i> Home</a>
         <a class="nav-link" href="inicio.jsp?seccion=perfil"><i class="bi bi-person"></i> Perfil</a>
         <a class="nav-link" href="inicio.jsp?seccion=grupos"><i class="bi bi-people"></i> Grupos</a>
         <a class="nav-link" href="inicio.jsp?seccion=chats"><i class="bi bi-chat-dots"></i> Chats</a>
@@ -103,7 +104,11 @@
     <div id="contenido">
         <%
             switch (seccion) {
-                case "perfil":
+                case "home":
+        %><jsp:include page="home.jsp" /><%
+            break;
+
+        case "perfil":
         %><jsp:include page="perfil.jsp" /><%
             break;
         case "grupos":

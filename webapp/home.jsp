@@ -68,7 +68,7 @@
                 <strong>Valoración promedio:</strong> <%= p.promedioValoraciones() %> / 5
             </div>
 
-            <% // comentarios
+            <%
                 ListaEnlazada<Valoracion> vs = p.getValoraciones();
                 if (vs != null && !vs.isEmpty()) { %>
             <ul class="list-group mb-3">

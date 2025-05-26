@@ -1,145 +1,160 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page session="true" %>
+<%@ page import="co.edu.uniquindio.redsocial.models.Estudiante" %>
+<%@ page import="co.edu.uniquindio.redsocial.models.Conversacion" %>
+<%@ page import="co.edu.uniquindio.redsocial.models.Mensaje" %>
+<%@ page import="co.edu.uniquindio.redsocial.models.structures.ListaEnlazada" %>
+<%
+    Estudiante usuario = (Estudiante) session.getAttribute("usuarioActual");
+    @SuppressWarnings("unchecked")
+    ListaEnlazada<Conversacion> conversaciones =
+            (ListaEnlazada<Conversacion>) application.getAttribute("conversaciones");
+    @SuppressWarnings("unchecked")
+    ListaEnlazada<Estudiante> resultados =
+            (ListaEnlazada<Estudiante>) request.getAttribute("searchResults");
+    Conversacion actual = (Conversacion) request.getAttribute("conversacionActual");
+    String ctx = request.getContextPath();
+%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!--CAMBIAAAAAR-->
-    <meta charset="UTF-8">
-    <title>Visualización de Contenido - EduSocial</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        .star {
-            color: #ccc;
-            font-size: 24px;
-            cursor: pointer;
-            transition: color 0.2s ease;
-            margin-right: 5px;
-        }
-        .star.active, .star:hover {
-            color: #ffcc00;
-        }
-        .commenter-photo, .author-photo {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            overflow: hidden;
-            background-color: #ddd;
-        }
-    </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Chat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="<%= ctx %>/css/chat.css" rel="stylesheet"/>
 </head>
-<body class="bg-light">
-
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="#">EduSocial</a>
-        <div class="d-flex align-items-center">
-            <img src="images/avatar.png" alt="Usuario" class="rounded-circle" width="40" height="40">
+<body>
+<div class="row g-0" style="height:100vh;">
+    <!-- Sidebar de conversaciones -->
+    <div class="col-4 border-end d-flex flex-column">
+        <form id="search-form" action="Chat" method="get" class="p-3">
+            <div class="input-group">
+                <input type="text" name="buscar" class="form-control" placeholder="Buscar usuarios..."
+                       value="<%= request.getParameter("buscar") != null ? request.getParameter("buscar") : "" %>"/>
+                <button class="btn btn-primary" type="submit">Buscar</button>
+            </div>
+        </form>
+        <div class="flex-grow-0 overflow-auto">
+            <% if (resultados != null && !resultados.isEmpty()) { %>
+            <div class="list-group list-group-flush">
+                <% for (int i = 0; i < resultados.getTamanio(); i++) {
+                    Estudiante e = resultados.obtener(i); %>
+                <a href="Chat?startId=<%= e.getId() %>&buscar=<%= request.getParameter("buscar") %>"
+                   class="list-group-item list-group-item-action">
+                    <%= e.getNombre() %> &lt;<%= e.getEmail() %>&gt;
+                </a>
+                <% } %>
+            </div>
+            <% } %>
+        </div>
+        <div class="flex-grow-1 overflow-auto">
+            <div class="list-group list-group-flush">
+                <% if (conversaciones != null) {
+                    for (int i = 0; i < conversaciones.getTamanio(); i++) {
+                        Conversacion c = conversaciones.obtener(i);
+                        boolean activa = actual != null && actual.getId().equals(c.getId());
+                        Mensaje ultimo = c.getUltimoMensaje();
+                %>
+                <a href="Chat?id=<%= c.getId() %>"
+                   class="list-group-item list-group-item-action <%= activa ? "active" : "" %>">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1"><%= c.getNombre() %></h6>
+                        <small>
+                            <%= ultimo != null
+                                    ? ultimo.getFecha().toLocalTime()
+                                    .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"))
+                                    : "" %>
+                        </small>
+                    </div>
+                    <p class="mb-1 text-truncate">
+                        <%= ultimo != null ? ultimo.getTexto() : "Sin mensajes" %>
+                    </p>
+                </a>
+                <% } } %>
+            </div>
         </div>
     </div>
-</nav>
 
-<!-- Contenido -->
-<div class="container mt-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-white">
-            <h4 class="text-primary mb-0">Introducción a la Programación Orientada a Objetos</h4>
-            <div class="d-flex align-items-center mt-2">
-                <div class="author-photo me-3">
-                    <img src="images/avatar.png" alt="Autor" width="50" height="50">
-                </div>
-                <div>
-                    <strong>Profesor García</strong><br>
-                    <small class="text-muted">Publicado el 10 de abril de 2025</small>
-                </div>
-            </div>
+    <!-- Chat Area -->
+    <div class="col-8 d-flex flex-column">
+        <% if (actual != null) { %>
+        <div class="border-bottom p-3">
+            <h5 class="mb-0"><%= actual.getNombre() %></h5>
         </div>
-
-        <div class="card-body">
-            <p>Este contenido ofrece una introducción completa a los conceptos fundamentales de la Programación Orientada a Objetos (POO)...</p>
-            <p>El material incluye ejemplos de código en Java y ejercicios interactivos...</p>
+        <div id="chat-messages" class="flex-grow-1 overflow-auto p-3">
+            <!-- Mensajes se cargarán por AJAX -->
         </div>
-
-        <div class="card-footer bg-light d-flex justify-content-between align-items-center flex-wrap">
-            <div>
-                <span class="star active">★</span>
-                <span class="star active">★</span>
-                <span class="star active">★</span>
-                <span class="star active">★</span>
-                <span class="star">★</span>
-                <small class="ms-2">(4.0/5.0 - 28 valoraciones)</small>
-            </div>
-            <div>
-                <button class="btn btn-outline-primary btn-sm">Valorar</button>
-                <button class="btn btn-primary btn-sm">Comentar</button>
-            </div>
+        <form id="chat-form" class="border-top p-3 d-flex" action="#">
+            <input type="hidden" id="convId" value="<%= actual.getId() %>"/>
+            <input type="text" id="texto" class="form-control me-2" placeholder="Escribe un mensaje..." required/>
+            <button class="btn btn-primary" type="submit">Enviar</button>
+        </form>
+        <% } else { %>
+        <div class="flex-grow-1 d-flex justify-content-center align-items-center">
+            <p class="text-muted">Selecciona o inicia una conversación.</p>
         </div>
-
-        <!-- Sección de comentarios -->
-        <div class="p-4 border-top">
-            <h5>Comentarios (3)</h5>
-            <div class="d-flex mb-3">
-                <textarea class="form-control me-2" rows="2" placeholder="Escribe un comentario..."></textarea>
-                <button class="btn btn-primary">Enviar</button>
-            </div>
-
-            <!-- Comentario 1 -->
-            <div class="mb-4 border-bottom pb-3">
-                <div class="d-flex align-items-center mb-2">
-                    <div class="commenter-photo me-2">
-                        <img src="images/avatar.png" width="40" height="40" alt="María López">
-                    </div>
-                    <strong class="me-2">María López</strong>
-                    <small class="text-muted">Hace 2 días</small>
-                </div>
-                <p>¡Excelente contenido! Los ejemplos prácticos me ayudaron mucho a comprender el concepto de herencia...</p>
-            </div>
-
-            <!-- Comentario 2 -->
-            <div class="mb-4 border-bottom pb-3">
-                <div class="d-flex align-items-center mb-2">
-                    <div class="commenter-photo me-2">
-                        <img src="images/avatar.png" width="40" height="40" alt="Carlos Mendoza">
-                    </div>
-                    <strong class="me-2">Carlos Mendoza</strong>
-                    <small class="text-muted">Hace 3 días</small>
-                </div>
-                <p>Muy buena explicación sobre encapsulamiento. Me gustaría ver más ejemplos...</p>
-            </div>
-
-            <!-- Comentario 3 -->
-            <div class="mb-2">
-                <div class="d-flex align-items-center mb-2">
-                    <div class="commenter-photo me-2">
-                        <img src="images/avatar.png" width="40" height="40" alt="Ana Torres">
-                    </div>
-                    <strong class="me-2">Ana Torres</strong>
-                    <small class="text-muted">Hace 5 días</small>
-                </div>
-                <p>Los ejercicios interactivos son útiles para practicar. Me gustaría una explicación más profunda de polimorfismo.</p>
-            </div>
-        </div>
+        <% } %>
     </div>
 </div>
 
-<!-- JS de Bootstrap y lógica ligera -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    document.querySelectorAll('.star').forEach((star, index) => {
-        star.addEventListener('click', () => {
-            document.querySelectorAll('.star').forEach((s, i) => {
-                s.classList.toggle('active', i <= index);
+    const ctx = '<%= ctx %>';
+    const convId = document.getElementById('convId') ? document.getElementById('convId').value : '';
+
+    async function loadMessages() {
+        if (!convId) return;
+        try {
+            const res = await fetch(`${ctx}/ChatMessages?id=${convId}`);
+            const data = await res.json();
+            const container = document.getElementById('chat-messages');
+            container.innerHTML = '';
+            let lastDate = '';
+            data.forEach(m => {
+                const datePart = m.fecha.split('T')[0];
+                if (datePart !== lastDate) {
+                    const sep = document.createElement('div');
+                    sep.className = 'text-center text-muted my-2';
+                    sep.innerHTML = `<small>${datePart}</small>`;
+                    container.appendChild(sep);
+                    lastDate = datePart;
+                }
+                const wrapper = document.createElement('div');
+                wrapper.className = 'd-flex mb-2 ' +
+                    (m.remitenteId === '<%= usuario.getId() %>' ? 'justify-content-end' : 'justify-content-start');
+                const bubble = document.createElement('div');
+                bubble.className = 'p-2 rounded ' +
+                    (m.remitenteId === '<%= usuario.getId() %>' ? 'bg-primary text-white' : 'bg-light');
+                bubble.innerText = m.texto;
+                wrapper.appendChild(bubble);
+                container.appendChild(wrapper);
             });
-        });
+            container.scrollTop = container.scrollHeight;
+        } catch (e) {
+            console.error('Error loading messages', e);
+        }
+    }
+
+    document.getElementById('chat-form')?.addEventListener('submit', async e => {
+        e.preventDefault();
+        const textInput = document.getElementById('texto');
+        const text = textInput.value.trim();
+        if (!text) return;
+        try {
+            await fetch(`${ctx}/EnviarMensaje`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: `idConversacion=${encodeURIComponent(convId)}&texto=${encodeURIComponent(text)}`
+            });
+            textInput.value = '';
+            loadMessages();
+        } catch (e) {
+            console.error('Error sending message', e);
+        }
     });
 
-    document.querySelector('.btn-primary').addEventListener('click', () => {
-        document.querySelector('textarea').focus();
-    });
+    setInterval(loadMessages, 3000);
+    window.onload = loadMessages;
 </script>
 </body>
 </html>

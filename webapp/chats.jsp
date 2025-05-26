@@ -70,6 +70,15 @@
     <!-- Chat Area -->
     <div class="col-8 d-flex flex-column">
         <% if (actual != null) { %>
+        <!-- Botón Volver -->
+        <div class="p-3">
+            <button type="button"
+                    class="btn btn-outline-secondary"
+                    onclick="window.location.href='inicio.jsp?seccion=chats'">
+                Volver
+            </button>
+        </div>
+
         <div class="border-bottom p-3">
             <h5 class="mb-0"><%= actual.getNombre() %></h5>
         </div>

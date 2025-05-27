@@ -428,4 +428,16 @@ public class ListaEnlazada<T> implements Iterable<T> {
     public boolean isEmpty() {
         return cabeza == null;
     }
+    public boolean hayInterseccion(ListaEnlazada<T> otra) {
+        for (int i = 0; i < this.getTamanio(); i++) {
+            T elem = this.obtener(i);
+            for (int j = 0; j < otra.getTamanio(); j++) {
+                if (elem.equals(otra.obtener(j))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
+

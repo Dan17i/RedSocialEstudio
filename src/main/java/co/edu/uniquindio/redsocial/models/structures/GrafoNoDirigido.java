@@ -60,15 +60,15 @@ public class GrafoNoDirigido<T> extends GrafoImpl<T> {
      *
      * @return Lista de comunidades (listas de nodos).
      */
-    public List<List<T>> detectarComunidades() {
-        List<List<T>> comunidades = new ArrayList<>();
+    public ListaEnlazada<ListaEnlazada<T>> detectarComunidades() {
+        ListaEnlazada<ListaEnlazada<T>> comunidades = new ListaEnlazada<>();
         Set<T> visitados = new HashSet<>();
 
         for (T nodo : listaAdyacencia.keySet()) {
             if (!visitados.contains(nodo)) {
-                List<T> comunidad = new ArrayList<>();
+                ListaEnlazada<T> comunidad = new ListaEnlazada<>();
                 dfs(nodo, visitados, comunidad);
-                comunidades.add(comunidad);
+                comunidades.agregar(comunidad);
             }
         }
 
@@ -82,9 +82,9 @@ public class GrafoNoDirigido<T> extends GrafoImpl<T> {
      * @param visitados Conjunto de nodos visitados.
      * @param comunidad Lista donde se acumulan nodos de la comunidad.
      */
-    private void dfs(T nodo, Set<T> visitados, List<T> comunidad) {
+    private void dfs(T nodo, Set<T> visitados, ListaEnlazada<T> comunidad) {
         visitados.add(nodo);
-        comunidad.add(nodo);
+        comunidad.agregar(nodo);
         for (T vecino : listaAdyacencia.getOrDefault(nodo, Collections.emptyList())) {
             if (!visitados.contains(vecino)) {
                 dfs(vecino, visitados, comunidad);

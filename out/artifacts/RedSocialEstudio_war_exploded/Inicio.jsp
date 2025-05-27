@@ -112,29 +112,50 @@
         <%
             switch (seccion) {
                 case "home":
-        %><jsp:include page="home.jsp" /><%
-            break;
-
-        case "perfil":
-        %><jsp:include page="perfil.jsp" /><%
-            break;
-        case "grupos":
-    %><jsp:include page="grupos.jsp" /><%
-            break;
-        case "chats":
-    %><jsp:include page="chats.jsp" /><%
-            break;
-        case "sugerencias":
-    %><jsp:include page="sugerencias.jsp" /><%
-            break;
-        case "publicar":
-    %><jsp:include page="publicar.jsp" /><%
-            break;
-        default:
-    %><p>Bienvenido a tu espacio personal en la red social universitaria.</p><%
+        %>
+        <jsp:include page="home.jsp" />
+        <%
                 break;
-        }
-    %>
+            case "perfil":
+        %>
+        <jsp:include page="perfil.jsp" />
+        <%
+                break;
+            case "grupos":
+        %>
+        <%
+            // 1) Invocamos el servlet para cargar misGrupos
+            request.getRequestDispatcher("/grupos").include(request, response);
+        %>
+        <jsp:include page="grupos/lista.jsp" />
+        <%
+                break;
+            case "sugerencias":
+        %>
+        <%
+            // 1) Invocamos el servlet para cargar sugeridos
+            request.getRequestDispatcher("/grupos/sugeridos").include(request, response);
+        %>
+        <jsp:include page="grupos/sugeridos.jsp" />
+        <%
+                break;
+            case "chats":
+        %>
+        <jsp:include page="chats.jsp" />
+        <%
+                break;
+            case "publicar":
+        %>
+        <jsp:include page="publicar.jsp" />
+        <%
+                break;
+            default:
+        %>
+        <p>Bienvenido a tu espacio personal en la red social universitaria.</p>
+        <%
+                    break;
+            }
+        %>
     </div>
 </div>
 

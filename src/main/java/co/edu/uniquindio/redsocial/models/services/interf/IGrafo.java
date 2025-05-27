@@ -91,6 +91,6 @@ public interface IGrafo<T> {
      * Detecta comunidades (componentes conexas) dentro del grafo.
      * @return Lista de comunidades, cada una representada como lista de nodos.
      */
-    List<List<T>> detectarComunidades();
+    ListaEnlazada<ListaEnlazada<T>> detectarComunidades();
 }
 

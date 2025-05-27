@@ -1,9 +1,12 @@
 package co.edu.uniquindio.redsocial.models;
 
+import co.edu.uniquindio.redsocial.models.structures.ColaPrioridad;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+import co.edu.uniquindio.redsocial.models.Mensaje;
+import co.edu.uniquindio.redsocial.models.SolicitudAyuda;
 
-import java.util.ArrayList;
-import java.util.List;
+
+import java.time.LocalDateTime;
 
 /**
  * Representa un grupo de estudio conformado por varios estudiantes y un tema específico.
@@ -28,7 +31,10 @@ public class GrupoEstudio {
     /** Lista interna de publicaciones del grupo. */
     private final ListaEnlazada<Contenido> publicaciones;
 
-    private List<Mensaje> mensajesGrupo = new ArrayList<>();
+    private ListaEnlazada<Mensaje> mensajesGrupo = new ListaEnlazada<>();
+
+    // 2) Solicitudes de ayuda
+    private final ColaPrioridad<SolicitudAyuda> solicitudesAyudaGrupo = new ColaPrioridad<>();
 
 
     /**
@@ -52,6 +58,28 @@ public class GrupoEstudio {
         this.publicaciones = new ListaEnlazada<>();
     }
 
+    /** Envía un mensaje de chat a todos los miembros y lo guarda. */
+    public void enviarMensajeGrupo(Estudiante remitente, String texto) {
+        Mensaje m = new Mensaje(remitente, this, texto, LocalDateTime.now());
+        m.enviar();
+        mensajesGrupo.agregar(m);
+    }
+
+    /** Obtiene el historial de chat del grupo. */
+    public ListaEnlazada<Mensaje> getMensajesGrupo() {
+        return mensajesGrupo;
+    }
+
+    /** Encola una solicitud de ayuda en el grupo. */
+    public void solicitarAyudaEnGrupo(SolicitudAyuda solicitud) {
+        if (solicitud == null) throw new IllegalArgumentException("La solicitud no puede ser nula");
+        solicitudesAyudaGrupo.encolar(solicitud, solicitud.getUrgencia());
+    }
+
+    /** Obtiene la cola de solicitudes de ayuda del grupo. */
+    public ColaPrioridad<SolicitudAyuda> getSolicitudesAyudaGrupo() {
+        return solicitudesAyudaGrupo;
+    }
     /**
      * Agrega un estudiante al grupo si no está presente aún.
      * También actualiza al estudiante para que registre su pertenencia a este grupo.
@@ -198,7 +226,7 @@ public class GrupoEstudio {
     }
 
     public void recibirMensaje(Mensaje mensaje) {
-        mensajesGrupo.add(mensaje);
+        mensajesGrupo.agregar(mensaje);
         System.out.println("Mensaje recibido por grupo: " + mensaje.getTexto());
     }
 

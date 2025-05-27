@@ -5,14 +5,25 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Clase que representa una valoración realizada por un estudiante a un contenido.
- * Una valoración incluye la puntuación dada, un comentario opcional, la fecha de la valoración,
- * y el estudiante y contenido asociado a la valoración.
+ * Representa una valoración que un estudiante realiza sobre un contenido dentro
+ * de la plataforma de red social educativa.
  * <p>
- * Nota: La lógica para agregar esta valoración al contenido o al estudiante debe implementarse
- * en las respectivas clases (por ejemplo, Contenido.agregarValoracion()).
- * Además, la validación para evitar múltiples valoraciones del mismo estudiante a un mismo contenido
- * debe manejarse en un gestor o controlador (no en esta clase).
+ * Cada valoración incluye una puntuación del 1 al 5, un comentario opcional,
+ * la fecha y hora en que se realizó, y está asociada a un estudiante y un contenido específicos.
+ * </p>
+ * <p>
+ * Esta clase es inmutable excepto por el comentario, que puede modificarse después de la creación.
+ * La gestión de la agregación de valoraciones a contenidos y estudiantes
+ * y la validación para evitar valoraciones duplicadas
+ * debe ser manejada externamente (por ejemplo, en clases de servicio o controladores).
+ * </p>
+ *
+ * @author Daniel Jurado
+ * @author Sebastian Torres
+ * @author Juan Soto
+ * @since 2025-05-13
+ * @version 1.0
+ * @since 2025-05-18
  */
 public class Valoracion {
 

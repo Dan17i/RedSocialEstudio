@@ -110,6 +110,14 @@ public class Mensaje {
     public void setRemitente(Estudiante remitente) { this.remitente = remitente; }
 
     public Object getDestinatario() { return destinatario; }
+    /**
+     * Establece el destinatario del mensaje, que puede ser un {@link Estudiante}
+     * o un {@link GrupoEstudio}. Lanza una excepción si el tipo no es válido.
+     *
+     * @param destinatario Objeto destinatario del mensaje.
+     *                     Debe ser instancia de {@code Estudiante} o {@code GrupoEstudio}.
+     * @throws IllegalArgumentException si el destinatario no es de un tipo permitido.
+     */
     public void setDestinatario(Object destinatario) {
         if (!(destinatario instanceof Estudiante || destinatario instanceof GrupoEstudio)) {
             throw new IllegalArgumentException("El destinatario debe ser un Estudiante o un GrupoEstudio");
@@ -118,6 +126,12 @@ public class Mensaje {
     }
 
     public String getTexto() { return texto; }
+    /**
+     * Establece el contenido de texto del mensaje.
+     *
+     * @param texto Contenido textual del mensaje.
+     * @throws IllegalArgumentException si el texto es {@code null} o está vacío.
+     */
     public void setTexto(String texto) {
         if (texto == null || texto.isEmpty()) {
             throw new IllegalArgumentException("El texto no puede ser nulo o vacío");

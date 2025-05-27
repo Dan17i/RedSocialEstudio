@@ -97,7 +97,17 @@ public class Usuario {
 
         return sb.toString();
     }
-
+    /**
+     * Procesa la recepción de un mensaje para este estudiante.
+     * <p>
+     * Actualmente, el método simplemente imprime el texto del mensaje
+     * junto con el nombre del estudiante receptor en la consola.
+     * En implementaciones futuras, podría guardarse en una lista o
+     * bandeja de entrada.
+     * </p>
+     *
+     * @param mensaje El mensaje recibido.
+     */
     public void recibirMensaje(Mensaje mensaje) {
         // Por ejemplo, guardar en una lista de bandejas de entrada
         System.out.println("Mensaje recibido por " + getNombre() + ": " + mensaje.getTexto());
@@ -121,11 +131,21 @@ public class Usuario {
     public void setIntereses(ListaEnlazada<String> intereses) { this.intereses = intereses; }
 
     public ListaEnlazada<Contenido> getHistorialContenidos() { return historialContenidos; }
+    /**
+     * Establece el historial de contenidos consumidos o gestionados por el estudiante.
+     *
+     * @param historialContenidos Lista enlazada que contiene los contenidos del historial.
+     */
     public void setHistorialContenidos(ListaEnlazada<Contenido> historialContenidos) {
         this.historialContenidos = historialContenidos;
     }
 
     public ListaEnlazada<Valoracion> getValoraciones() { return valoraciones; }
+    /**
+     * Establece la lista de valoraciones realizadas por el estudiante.
+     *
+     * @param valoraciones Lista enlazada que contiene las valoraciones.
+     */
     public void setValoraciones(ListaEnlazada<Valoracion> valoraciones) {
         this.valoraciones = valoraciones;
     }

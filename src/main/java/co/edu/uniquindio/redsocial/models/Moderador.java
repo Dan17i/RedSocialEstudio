@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  *
  * Aplica principios de separación de responsabilidades, acoplamiento controlado y eficiencia en generación de reportes.
  *
- * @author ...
+ * @author Daniel Jurado, Sebastian Torres y Juan Soto
  * @since 2025-04-02
  */
 public class Moderador extends Usuario {

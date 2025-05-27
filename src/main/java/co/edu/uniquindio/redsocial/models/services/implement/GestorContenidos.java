@@ -8,7 +8,12 @@ import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import co.edu.uniquindio.redsocial.models.structures.NodoLista;
 
 import java.util.HashMap;
-
+/**
+ * Implementación del servicio {@link IGestorContenidos} para gestionar los contenidos
+ * dentro del sistema de red social educativa.
+ * Esta clase utiliza un árbol binario de búsqueda para organizar los contenidos por tema
+ * y una lista enlazada para destacar y listar contenidos.
+ */
 public class GestorContenidos implements IGestorContenidos {
 
     private final ArbolBinarioBusqueda<Contenido> arbolContenidos;
@@ -19,20 +24,33 @@ public class GestorContenidos implements IGestorContenidos {
     private String mimeType;
     private long tamanioArchivo;
 
-
+    /**
+     * Constructor que inicializa el gestor con un árbol de contenidos y una lista de contenidos destacados.
+     *
+     * @param arbolContenidos     Árbol binario de búsqueda que almacena los contenidos.
+     * @param contenidoDestacado  Lista enlazada de contenidos destacados.
+     */
     public GestorContenidos(ArbolBinarioBusqueda<Contenido> arbolContenidos,
                             ListaEnlazada<Contenido> contenidoDestacado) {
         this.arbolContenidos = arbolContenidos;
         this.contenidoDestacado = contenidoDestacado;
     }
-
+    /**
+     * Devuelve la instancia única del gestor de contenidos (patrón Singleton).
+     *
+     * @return Instancia única de GestorContenidos.
+     */
     public static GestorContenidos getInstancia() {
         if (instancia == null) {
             instancia = new GestorContenidos(new ArbolBinarioBusqueda<>(), new ListaEnlazada<>());
         }
         return instancia;
     }
-
+    /**
+     * Agrega un contenido al árbol de contenidos y a la lista general.
+     *
+     * @param contenido Contenido a agregar.
+     */
     @Override
     public void agregarContenido(Contenido contenido) {
         if (contenido != null) {
@@ -40,7 +58,12 @@ public class GestorContenidos implements IGestorContenidos {
             listaDeContenidos.agregar(contenido);
         }
     }
-
+    /**
+     * Elimina un contenido del árbol por su ID.
+     *
+     * @param id ID del contenido a eliminar.
+     * @return true si fue eliminado, false si no se encontró.
+     */
     @Override
     public boolean eliminarContenido (String id){
         ListaEnlazada<Contenido> todos = arbolContenidos.listarTodos();
@@ -55,12 +78,22 @@ public class GestorContenidos implements IGestorContenidos {
         }
         return false;
     }
-
+    /**
+     * Busca contenidos por tema.
+     *
+     * @param tema Tema a buscar.
+     * @return Lista enlazada de contenidos que coinciden con el tema.
+     */
     @Override
     public ListaEnlazada<Contenido> buscarPorTema(String tema) {
         return arbolContenidos.listarContenidosPorTema(tema);  // Ahora devuelve la lista filtrada por tema
     }
-
+    /**
+     * Busca contenidos por nombre del autor.
+     *
+     * @param autor Nombre del autor a buscar.
+     * @return Lista enlazada de contenidos del autor.
+     */
     @Override
     public ListaEnlazada<Contenido> buscarPorAutor(String autor) {
         ListaEnlazada<Contenido> resultados = new ListaEnlazada<>();
@@ -76,12 +109,20 @@ public class GestorContenidos implements IGestorContenidos {
         }
         return resultados;
     }
-
+    /**
+     * Marca un contenido como destacado, agregándolo a la lista correspondiente.
+     *
+     * @param contenido Contenido a destacar.
+     */
     @Override
     public void marcarComoDestacado(Contenido contenido) {
         contenidoDestacado.agregar(contenido);
     }
-
+    /**
+     * Genera estadísticas del número de contenidos por tipo.
+     *
+     * @return Mapa con tipo de contenido como clave y cantidad como valor.
+     */
     @Override
     public HashMap<String, Integer> generarEstadisticas() {
         HashMap<String, Integer> stats = new HashMap<>();
@@ -94,7 +135,14 @@ public class GestorContenidos implements IGestorContenidos {
         }
         return stats;
     }
-
+    /**
+     * Busca contenidos que coincidan con un tema, autor y tipo específicos.
+     *
+     * @param tema Tema del contenido.
+     * @param autor Nombre del autor.
+     * @param tipo Tipo de contenido (en formato nombre de enum).
+     * @return Lista enlazada de contenidos que cumplen todos los criterios.
+     */
     @Override
     public ListaEnlazada<Contenido> buscarPorTemaAutorTipo(String tema, String autor, String tipo) {
         ListaEnlazada<Contenido> resultados = new ListaEnlazada<>();
@@ -112,11 +160,22 @@ public class GestorContenidos implements IGestorContenidos {
         return resultados;
     }
 
+    /**
+     * Devuelve la lista de contenidos marcados como destacados.
+     *
+     * @return Lista enlazada de contenidos destacados.
+     */
+
     @Override
     public ListaEnlazada<Contenido> getContenidoDestacado() {
         return contenidoDestacado;
     }
 
+    /**
+     * Devuelve una lista de los contenidos más valorados, ordenados por su promedio de valoraciones de forma descendente.
+     *
+     * @return Lista enlazada de contenidos más valorados.
+     */
     @Override
     public ListaEnlazada<Contenido> obtenerContenidosMasValorados() {
         ListaEnlazada<Contenido> todos = obtenerTodosLosContenidos(); // Método asumido
@@ -132,6 +191,5 @@ public class GestorContenidos implements IGestorContenidos {
     public ListaEnlazada<Contenido> obtenerTodosLosContenidos() {
         return listaDeContenidos; // Asegúrate de tener esta lista como atributo interno.
     }
-
-    // Getters y Setters extra si necesitas exponer más control
+    
 }

@@ -120,11 +120,12 @@ public class SolicitudAyuda implements Comparable<SolicitudAyuda> {
      * @throws IllegalArgumentException si el estado es nulo.
      */
     public void setEstado(EstadoSolicitud estadoSolicitud) {
-        if (estado == null) {
+        if (estadoSolicitud == null) {
             throw new IllegalArgumentException("El estado no puede ser nulo");
         }
-        this.estado = estado;
+        this.estado = estadoSolicitud;
     }
+
 
     /**
      * Compara esta solicitud con otra según el nivel de urgencia

@@ -157,18 +157,34 @@ public class ModeradorTest {
                 moderador.generarReporteParticipacion().getTipo());
     }
 
-    /**
-     * Verifica que los métodos de gestión de usuarios se ejecutan sin errores.
-     */
     @Test
-    void testMetodosGestionUsuarios() {
+    void testDarAltaUsuario() {
         Usuario usuario = new Usuario("2", "Ana", "ana@correo.com", "pass",
                 new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>());
-
-        assertDoesNotThrow(() -> {
-            moderador.darAltaUsuario(usuario);
-            moderador.darBajaUsuario(usuario);
-            moderador.modificarUsuario(usuario, "Ana Actualizada");
-        });
+        assertDoesNotThrow(() -> moderador.darAltaUsuario(usuario));
+        // Verifica que usuario está registrado
+        assertNotNull(gestorUsuarios.buscarUsuarioPorId("2"));
     }
+
+    @Test
+    void testDarBajaUsuario() {
+        Usuario usuario = new Usuario("2", "Ana", "ana@correo.com", "pass",
+                new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>());
+        moderador.darAltaUsuario(usuario);
+        assertDoesNotThrow(() -> moderador.darBajaUsuario(usuario));
+        // Verifica que usuario ya no existe
+        assertNull(gestorUsuarios.buscarUsuarioPorId("2"));
+    }
+
+    @Test
+    void testModificarUsuario() {
+        Usuario usuario = new Usuario("2", "Ana", "ana@correo.com", "pass",
+                new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>());
+        moderador.darAltaUsuario(usuario);
+        assertDoesNotThrow(() -> moderador.modificarUsuario(usuario, "Ana Actualizada"));
+        // Verifica que nombre fue actualizado
+        Usuario modificado = gestorUsuarios.buscarUsuarioPorId("2");
+        assertEquals("Ana Actualizada", modificado.getNombre());
+    }
+
 }

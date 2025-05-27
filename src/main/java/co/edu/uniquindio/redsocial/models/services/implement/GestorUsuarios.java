@@ -86,4 +86,19 @@ public class GestorUsuarios implements IGestorUsuarios {
     public ListaEnlazada<Usuario> listarUsuarios() {
         return usuarios;
     }
+
+    /**
+     * Busca un usuario por su ID.
+     * @param id El identificador único del usuario.
+     * @return El objeto Usuario si se encuentra, o null si no existe.
+     */
+    public Usuario buscarUsuarioPorId(String id) {
+        for (int i = 0; i < usuarios.getTamanio(); i++) {
+            Usuario usuario = usuarios.obtener(i); // o el método para obtener el elemento i
+            if (usuario.getId().equals(id)) {
+                return usuario;
+            }
+        }
+        return null; // No se encontró usuario con ese id
+    }
 }

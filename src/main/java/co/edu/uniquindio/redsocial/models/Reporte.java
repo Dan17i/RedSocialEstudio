@@ -17,7 +17,6 @@ import java.util.Objects;
  * Soporta múltiples tipos de datos, formatos de exportación y validación completa.
  *
  * @param <T> Tipo de los datos almacenados en el reporte.
- *
  * Ejemplos de uso:
  * - Reporte<Par<String, Integer>> para contenidos más valorados
  * - Reporte<Par<String, Integer>> para estudiantes con más conexiones

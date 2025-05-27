@@ -24,7 +24,7 @@ public class HistorialDeContenido {
     /**
      * Constructor del historial de contenido.
      *
-     * @param idUsuario     ID del usuario asociado.
+     * @param idUsuario     iD del usuario asociado.
      * @param contenidos    Lista de contenidos accedidos.
      * @param fechasAcceso  Lista de fechas correspondientes al acceso de cada contenido.
      */

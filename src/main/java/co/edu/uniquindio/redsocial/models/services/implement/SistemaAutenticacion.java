@@ -34,9 +34,14 @@ public class SistemaAutenticacion implements ISistemaAutenticacion {
      */
     public Estudiante registrarEstudiante(String nombre, String email, String contraseña) {
         validarEmailUnico(email);
+        validarNombre(nombre);
+        validarContraseña(contraseña);
+
+        String idGenerado = generarId();
+        validarId(idGenerado.replace("USR- " , ""));
 
         Estudiante nuevo = new Estudiante(
-                generarId(),
+                idGenerado,
                 nombre,
                 email,
                 contraseña,
@@ -159,5 +164,24 @@ public class SistemaAutenticacion implements ISistemaAutenticacion {
         }
         return lista;
     }
+
+    private void validarNombre(String nombre) {
+        if (!nombre.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$")) {
+            throw new IllegalArgumentException("El nombre solo debe contener letras y espacios.");
+        }
+    }
+
+    private void validarContraseña(String contraseña) {
+        if (!contraseña.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&.])[A-Za-z\\d@$!%*?&.]{8,}$")) {
+            throw new IllegalArgumentException("La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula, un número y un carácter especial.");
+        }
+    }
+
+    private void validarId(String id) {
+        if (!id.matches("^\\d+$")) {
+            throw new IllegalArgumentException("El ID solo debe contener números.");
+        }
+    }
+
 
 }

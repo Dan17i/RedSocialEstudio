@@ -108,7 +108,8 @@ public class Contenido implements Tematico {
             actual = actual.getSiguiente();
         }
 
-        return suma / valoraciones.getTamanio();
+        float promedio= suma / valoraciones.getTamanio();
+        return Math.round(promedio*100f)/100f;
     }
 
     /** @return Identificador único del contenido. */

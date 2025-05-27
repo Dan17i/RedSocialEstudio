@@ -10,6 +10,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 /**
@@ -70,17 +71,19 @@ public class Reporte<T> {
      * Devuelve el resumen básico del reporte.
      */
     public String getResumen() {
-        return "Reporte [" + tipo + "] generado el " + fechaGeneracion + " con " + datos.getTamanio() + " entradas.";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        return "Reporte [" + tipo + "] generado el " + fechaGeneracion.format(formatter) + " con " + datos.getTamanio() + " entradas.";
     }
 
     /**
      * Representación legible del reporte.
      */
     public String generarContenido() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         StringBuilder sb = new StringBuilder();
         sb.append("Reporte ID: ").append(id)
                 .append("\nTipo: ").append(tipo)
-                .append("\nFecha: ").append(fechaGeneracion)
+                .append("\nFecha: ").append(fechaGeneracion.format(formatter))
                 .append("\nContenido:\n");
 
         for (int i = 0; i < datos.getTamanio(); i++) {
@@ -116,12 +119,13 @@ public class Reporte<T> {
     }
 
     private void exportarCsv(String rutaArchivo) throws IOException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(rutaArchivo))) {
             writer.write("ID,Tipo,Fecha,Dato\n");
             for (int i = 0; i < datos.getTamanio(); i++) {
                 T dato = datos.obtener(i);
                 writer.write(String.format("\"%s\",\"%s\",\"%s\",\"%s\"\n",
-                        id, tipo, fechaGeneracion, dato.toString().replace("\"", "\"\"")));
+                        id, tipo, fechaGeneracion.format(formatter), dato.toString().replace("\"", "\"\"")));
             }
         }
     }
@@ -157,9 +161,8 @@ public class Reporte<T> {
         }
     }
 
-    // ======================
-    // Getters y Setters
-    // ======================
+
+    /* Getters y Setters */
 
     public String getId() { return id; }
 

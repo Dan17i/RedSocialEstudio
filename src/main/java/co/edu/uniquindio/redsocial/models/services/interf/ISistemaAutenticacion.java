@@ -53,5 +53,7 @@ public interface ISistemaAutenticacion {
      */
     ListaEnlazada<Usuario> getUsuariosRegistrados();
 
-    
+
+
+
 }

@@ -14,11 +14,15 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.StringJoiner;
 
 @WebServlet("/grupos/formar")
 public class FormarGruposServlet extends HttpServlet {
 
+    /** Devuelve true si las dos listas de intereses comparten al menos un valor. */
     private boolean interesesSeCruzan(ListaEnlazada<String> i1, ListaEnlazada<String> i2) {
         for (int x = 0; x < i1.getTamanio(); x++) {
             String v = i1.obtener(x);
@@ -35,21 +39,25 @@ public class FormarGruposServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        // 1) Lista de todos los usuarios
+        // 1) Obtener todos los usuarios y quedarnos con los estudiantes
         SistemaAutenticacion auth = (SistemaAutenticacion)
                 getServletContext().getAttribute("sistemaAutenticacion");
         ListaEnlazada<Usuario> todosUsuarios = auth.getUsuariosRegistrados();
-
-        // 2) Construyo lista y grafo
-        GrafoNoDirigido<Estudiante> grafo = new GrafoNoDirigido<>();
         ListaEnlazada<Estudiante> listaEst = new ListaEnlazada<>();
         for (int i = 0; i < todosUsuarios.getTamanio(); i++) {
-            Estudiante e = (Estudiante) todosUsuarios.obtener(i);
-            grafo.agregarNodo(e);
-            listaEst.agregar(e);
+            Usuario u = todosUsuarios.obtener(i);
+            if (u instanceof Estudiante) {
+                listaEst.agregar((Estudiante) u);
+            }
         }
 
-        // 3) Conecto según intereses
+        // 2) Construir un grafo no dirigido y añadir vértices
+        GrafoNoDirigido<Estudiante> grafo = new GrafoNoDirigido<>();
+        for (int i = 0; i < listaEst.getTamanio(); i++) {
+            grafo.agregarNodo(listaEst.obtener(i));
+        }
+
+        // 3) Conectar dos estudiantes si comparten intereses
         for (int i = 0; i < listaEst.getTamanio(); i++) {
             Estudiante a = listaEst.obtener(i);
             for (int j = i + 1; j < listaEst.getTamanio(); j++) {
@@ -60,20 +68,49 @@ public class FormarGruposServlet extends HttpServlet {
             }
         }
 
-        // 4) Creo los grupos
+        // 4) Crear grupos por comunidades detectadas
         IGestorGrupos<Estudiante> gestor = new GestorGrupos<>();
         gestor.setGrafo(grafo);
         ListaEnlazada<GrupoEstudio> creados =
                 gestor.crearGruposPorAfinidadConObjetos("Grupo de Estudio");
 
-        // 5) Convierto a ListaEnlazada y guardo en contexto
-        ListaEnlazada<GrupoEstudio> todosGrupos = new ListaEnlazada<>();
+        // 5) Para cada grupo, calcula la intersección de intereses y úsala como tema
+        ListaEnlazada<GrupoEstudio> sugeridos = new ListaEnlazada<>();
         for (GrupoEstudio g : creados) {
-            todosGrupos.agregar(g);
+            // Obtener intereses comunes
+            Set<String> comunes = new HashSet<>();
+            if (g.getMiembros().getTamanio() > 0) {
+                // inicia con los intereses del primer miembro
+                ListaEnlazada<String> primero = g.getMiembros().obtener(0).getIntereses();
+                for (int k = 0; k < primero.getTamanio(); k++) {
+                    comunes.add(primero.obtener(k).toLowerCase());
+                }
+                // intersecta con cada miembro siguiente
+                for (int m = 1; m < g.getMiembros().getTamanio(); m++) {
+                    Estudiante est = g.getMiembros().obtener(m);
+                    Set<String> esta = new HashSet<>();
+                    ListaEnlazada<String> intereses = est.getIntereses();
+                    for (int k = 0; k < intereses.getTamanio(); k++) {
+                        esta.add(intereses.obtener(k).toLowerCase());
+                    }
+                    comunes.retainAll(esta);
+                }
+            }
+            // Si hay intereses comunes, únelos; si no, deja el tema por defecto
+            if (!comunes.isEmpty()) {
+                StringJoiner joiner = new StringJoiner(", ");
+                for (String tema : comunes) {
+                    joiner.add(Character.toUpperCase(tema.charAt(0)) + tema.substring(1));
+                }
+                g.setTema(joiner.toString());
+            }
+            sugeridos.agregar(g);
         }
-        getServletContext().setAttribute("todosGrupos", todosGrupos);
 
-        // 6) Redirijo a "Grupos sugeridos" para que se vean inmediatamente
+        // 6) Guardar en sesión y redirigir a la sección de sugeridos
+        HttpSession session = req.getSession();
+        session.setAttribute("sugeridos", sugeridos);
+
         String ctx = req.getContextPath();
         resp.sendRedirect(ctx + "/inicio.jsp?seccion=sugerencias"
                 + "&message=Grupos formados automáticamente");

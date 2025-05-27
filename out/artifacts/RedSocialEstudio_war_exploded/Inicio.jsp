@@ -122,21 +122,21 @@
         <%
                 break;
             case "grupos":
-        %>
-        <%
-            // 1) Invocamos el servlet para cargar misGrupos
-            request.getRequestDispatcher("/grupos").include(request, response);
+                request.getRequestDispatcher("/grupos").include(request, response);
         %>
         <jsp:include page="grupos/lista.jsp" />
         <%
                 break;
             case "sugerencias":
-        %>
-        <%
-            // 1) Invocamos el servlet para cargar sugeridos
-            request.getRequestDispatcher("/grupos/sugeridos").include(request, response);
+                request.getRequestDispatcher("/grupos/sugeridos").include(request, response);
         %>
         <jsp:include page="grupos/sugeridos.jsp" />
+        <%
+                break;
+            case "gruposDetalle":
+                request.getRequestDispatcher("/grupos/detalle").include(request, response);
+        %>
+        <jsp:include page="grupos/detalle.jsp" />
         <%
                 break;
             case "chats":

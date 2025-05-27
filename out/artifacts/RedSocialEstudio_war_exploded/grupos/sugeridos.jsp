@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="co.edu.uniquindio.redsocial.models.GrupoEstudio"%>
-<%@ page import="co.edu.uniquindio.redsocial.models.structures.ListaEnlazada"%>
+<%@ page import="co.edu.uniquindio.redsocial.models.GrupoEstudio" %>
+<%@ page import="co.edu.uniquindio.redsocial.models.structures.ListaEnlazada" %>
+
 <div class="container mt-4">
     <h3>Grupos Sugeridos</h3>
 
@@ -13,27 +14,32 @@
             for (int i = 0; i < sugeridos.getTamanio(); i++) {
                 GrupoEstudio g = sugeridos.obtener(i);
     %>
-    <div class="card mb-3">
+    <div class="card mb-3 shadow-sm">
         <div class="card-body d-flex justify-content-between align-items-center">
             <div>
-                <h5 class="card-title"><%= g.getTema() %></h5>
-                <p class="card-text">
-                    Miembros: <%= g.getMiembros().getTamanio() %>
-                </p>
+                <h5 class="card-title mb-1"><%= g.getTema() %></h5>
+                <small class="text-muted">Miembros: <%= g.getMiembros().getTamanio() %></small>
             </div>
-            <form action="<%= request.getContextPath() %>/grupos/unirse"
-                  method="post">
-                <input type="hidden" name="grupoId" value="<%= g.getId() %>" />
-                <button class="btn btn-success">Unirse</button>
-            </form>
+            <div>
+                <form action="<%= request.getContextPath() %>/grupos/unirse" method="post" class="d-inline">
+                    <input type="hidden" name="grupoId" value="<%= g.getId() %>" />
+                    <button class="btn btn-success btn-sm">Unirse</button>
+                </form>
+                <a href="<%= request.getContextPath() %>/inicio.jsp?seccion=gruposDetalle&id=<%= g.getId() %>"
+                   class="btn btn-outline-primary btn-sm ms-2">
+                    Ver detalle
+                </a>
+            </div>
         </div>
     </div>
-    <%  }
+    <% }
     } else { %>
-    <p>No hay grupos sugeridos.</p>
+    <p class="text-muted">No hay grupos sugeridos.</p>
     <% } %>
 
-    <a href="../inicio.jsp?seccion=grupos" class="btn btn-link">
-        Volver a mis grupos
-    </a>
+    <div class="mt-4">
+        <a href="inicio.jsp?seccion=grupos" class="btn btn-secondary">
+            Volver a mis grupos
+        </a>
+    </div>
 </div>

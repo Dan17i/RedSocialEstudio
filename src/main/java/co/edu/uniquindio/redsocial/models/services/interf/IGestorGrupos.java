@@ -4,6 +4,7 @@ package co.edu.uniquindio.redsocial.models.services.interf;
 import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.GrupoEstudio;
 import co.edu.uniquindio.redsocial.models.structures.GrafoImpl;
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
 
 import java.util.ArrayList;
@@ -40,14 +41,14 @@ public interface IGestorGrupos<T extends Estudiante> {
      * @throws IllegalStateException    si el grafo no ha sido establecido o no es un grafo no dirigido.
      * @throws IllegalArgumentException si el temaPorDefecto es nulo o vacío.
      */
-    List<GrupoEstudio> crearGruposPorAfinidadConObjetos(String temaPorDefecto);
+    ListaEnlazada<GrupoEstudio> crearGruposPorAfinidadConObjetos(String temaPorDefecto);
 
     /**
      * Obtiene la lista de grupos de estudio gestionados actualmente.
      *
      * @return Lista de grupos de estudio; puede ser vacía si no se han creado grupos.
      */
-    List<GrupoEstudio> getGruposEstudio();
+    ListaEnlazada<GrupoEstudio> getGruposEstudio();
 
 }
 

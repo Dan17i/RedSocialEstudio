@@ -1,10 +1,26 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="co.edu.uniquindio.redsocial.models.Enums.TipoContenido" %>
+<%@ page import="co.edu.uniquindio.redsocial.models.Estudiante" %>
 
+<%
+    Estudiante usuario = (Estudiante) session.getAttribute("usuarioActual");
+%>
 <div class="container">
     <h4 class="mb-4">Crear nueva publicación</h4>
-
     <form action="CrearPublicacion" method="post" enctype="multipart/form-data">
+
+        <div class="mb-3">
+            <label for="interes" class="form-label">Categoría (Interés)</label>
+            <select class="form-select" id="interes" name="interesSeleccionado" required>
+                <option value="">-- Selecciona un interés --</option>
+                <% for (int i = 0; i < usuario.getIntereses().getTamanio(); i++) {
+                    String interes = usuario.getIntereses().obtener(i);
+                %>
+                <option value="<%= interes %>"><%= interes %></option>
+                <% } %>
+            </select>
+        </div>
+
         <div class="mb-3">
             <label for="tema" class="form-label">Título / Tema</label>
             <input type="text" class="form-control" id="tema" name="tema" required>
@@ -18,13 +34,9 @@
         <div class="mb-3">
             <label for="tipo" class="form-label">Tipo de contenido</label>
             <select class="form-select" id="tipo" name="tipo" required>
-                <%
-                    for (TipoContenido tipo : TipoContenido.values()) {
-                %>
+                <% for (TipoContenido tipo : TipoContenido.values()) { %>
                 <option value="<%= tipo.name() %>"><%= tipo.name() %></option>
-                <%
-                    }
-                %>
+                <% } %>
             </select>
         </div>
 

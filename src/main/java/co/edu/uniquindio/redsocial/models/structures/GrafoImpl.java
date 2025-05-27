@@ -57,7 +57,7 @@ public class GrafoImpl<T> implements IGrafo<T> {
      * @param peso Peso de la arista (debe ser >= 0)
      * @throws IllegalArgumentException si nodos no existen o el peso es inválido
      */
-    @Override
+
     public void agregarArista(T nodo1, T nodo2, double peso) {
         if (nodo1 == null || nodo2 == null) throw new IllegalArgumentException("Nodos no pueden ser null");
         if (nodo1.equals(nodo2)) throw new IllegalArgumentException("No se permiten lazos (nodo igual a sí mismo)");
@@ -260,15 +260,15 @@ public class GrafoImpl<T> implements IGrafo<T> {
      * @return Lista de comunidades (cada una representada como una lista de nodos).
      */
     @Override
-    public List<List<T>> detectarComunidades() {
-        List<List<T>> comunidades = new ArrayList<>();
+    public ListaEnlazada<ListaEnlazada<T>> detectarComunidades() {
+        ListaEnlazada<ListaEnlazada<T>> comunidades = new ListaEnlazada<>();
         Set<T> visitados = new HashSet<>();
 
         for (T vertice : mapaDeNodos.keySet()) {
             if (!visitados.contains(vertice)) {
-                List<T> comunidad = new ArrayList<>();
+                ListaEnlazada<T> comunidad = new ListaEnlazada<>();
                 dfs(vertice, visitados, comunidad);
-                comunidades.add(comunidad);
+                comunidades.agregar(comunidad);
             }
         }
 
@@ -281,9 +281,9 @@ public class GrafoImpl<T> implements IGrafo<T> {
      * @param visitados Conjunto de nodos visitados.
      * @param comunidad Lista para almacenar nodos de la comunidad actual.
      */
-    private void dfs(T actual, Set<T> visitados, List<T> comunidad) {
+    private void dfs(T actual, Set<T> visitados, ListaEnlazada<T> comunidad) {
         visitados.add(actual);
-        comunidad.add(actual);
+        comunidad.agregar(actual);
         NodoGrafo<T> nodoActual = mapaDeNodos.get(actual);
         if (nodoActual == null) return;
 

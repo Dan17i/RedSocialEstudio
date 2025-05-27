@@ -56,7 +56,7 @@
                 <a href="Chat?id=<%= c.getId() %>"
                    class="list-group-item list-group-item-action <%= activa?"active":"" %>">
                     <div class="d-flex w-100 justify-content-between">
-                        <h6 class="mb-1"><%= c.getNombre() %></h6>
+                        <h6 class="mb-1"><%= c.getNombrePara(usuario) %></h6>
                         <% Mensaje ultimo = c.getUltimoMensaje(); %>
                         <small><%= ultimo!=null?ultimo.getFecha().toLocalTime().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm")):"" %></small>
                     </div>
@@ -70,8 +70,17 @@
     <!-- Chat Area -->
     <div class="col-8 d-flex flex-column">
         <% if (actual != null) { %>
+        <!-- Botón Volver -->
+        <div class="p-3">
+            <button type="button"
+                    class="btn btn-outline-secondary"
+                    onclick="window.location.href='inicio.jsp?seccion=chats'">
+                Volver
+            </button>
+        </div>
+
         <div class="border-bottom p-3">
-            <h5 class="mb-0"><%= actual.getNombre() %></h5>
+            <h5 class="mb-0"><%= actual.getNombrePara(usuario) %></h5>
         </div>
         <div id="chat-messages" class="flex-grow-1 overflow-auto p-3">
             <% String ultimoDia="";

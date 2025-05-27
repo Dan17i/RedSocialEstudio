@@ -5,6 +5,7 @@ import co.edu.uniquindio.redsocial.models.GrupoEstudio;
 import co.edu.uniquindio.redsocial.models.services.interf.IGestorGrupos;
 import co.edu.uniquindio.redsocial.models.structures.GrafoImpl;
 import co.edu.uniquindio.redsocial.models.structures.GrafoNoDirigido;
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +16,6 @@ import java.util.UUID;
  * grupos de estudio a partir de un grafo de estudiantes basado en afinidades.
  *
  * @param <T> Tipo de estudiante que conforma los grupos.
- * @author
- * Daniel Jurado, Sebastián Torres, Juan Soto
- * @since 2025-05-25
  */
 public class GestorGrupos<T extends Estudiante> implements IGestorGrupos<T> {
 
@@ -29,7 +27,7 @@ public class GestorGrupos<T extends Estudiante> implements IGestorGrupos<T> {
     /**
      * Lista de grupos de estudio creados por el gestor.
      */
-    private List<GrupoEstudio> gruposEstudio;
+    private ListaEnlazada<GrupoEstudio> gruposEstudio;
 
     /**
      * Establece el grafo de estudiantes que será utilizado para detectar comunidades
@@ -43,7 +41,8 @@ public class GestorGrupos<T extends Estudiante> implements IGestorGrupos<T> {
         if (grafoimpl == null) {
             throw new IllegalArgumentException("El grafo no puede ser nulo");
         }
-        this.grafoEstudiantes = new GrafoImpl<>();
+        // Ahora sí guardamos el grafo que recibimos (puede ser GrafoNoDirigido)
+        this.grafoEstudiantes = grafoimpl;
     }
 
     /**
@@ -66,7 +65,7 @@ public class GestorGrupos<T extends Estudiante> implements IGestorGrupos<T> {
      * @throws IllegalArgumentException si el temaPorDefecto es nulo o vacío.
      */
     @Override
-    public List<GrupoEstudio> crearGruposPorAfinidadConObjetos(String temaPorDefecto) {
+    public ListaEnlazada<GrupoEstudio> crearGruposPorAfinidadConObjetos(String temaPorDefecto) {
         if (grafoEstudiantes == null) {
             throw new IllegalStateException("El grafo no ha sido establecido");
         }
@@ -78,19 +77,16 @@ public class GestorGrupos<T extends Estudiante> implements IGestorGrupos<T> {
         }
 
         GrafoNoDirigido<T> grafoNoDirigido = (GrafoNoDirigido<T>) grafoEstudiantes;
+        ListaEnlazada<ListaEnlazada<T>> comunidades = grafoNoDirigido.detectarComunidades();
 
-        List<List<T>> comunidades = grafoNoDirigido.detectarComunidades();
-
-        gruposEstudio = new ArrayList<>();
-
-        for (List<T> comunidad : comunidades) {
+        gruposEstudio = new ListaEnlazada<>();
+        for (ListaEnlazada<T> comunidad : comunidades) {
             String idGrupo = UUID.randomUUID().toString();
             GrupoEstudio grupo = new GrupoEstudio(idGrupo, temaPorDefecto);
-
             for (T estudiante : comunidad) {
                 grupo.agregarMiembro(estudiante);
             }
-            gruposEstudio.add(grupo);
+            gruposEstudio.agregar(grupo);
         }
 
         return gruposEstudio;
@@ -102,13 +98,10 @@ public class GestorGrupos<T extends Estudiante> implements IGestorGrupos<T> {
      * @return Lista de grupos de estudio; si no se han creado grupos, retorna una lista vacía.
      */
     @Override
-    public List<GrupoEstudio> getGruposEstudio() {
+    public ListaEnlazada<GrupoEstudio> getGruposEstudio() {
         if (gruposEstudio == null) {
-            return new ArrayList<>();
+            return new ListaEnlazada<>();
         }
         return gruposEstudio;
     }
 }
-
-
-

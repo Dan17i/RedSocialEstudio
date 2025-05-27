@@ -26,11 +26,18 @@
             background-color: #f4f6fa;
         }
         .sidebar {
-            width: 250px;
-            background-color: #ffffff;
-            height: 100vh;
             position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            min-width: 250px;
+            max-width: 250px;
+            height: 100vh;
+            background-color: #ffffff;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;  /* permite scroll interno si hay muchos ítems */
         }
         .sidebar .profile {
             padding: 20px;
@@ -105,29 +112,50 @@
         <%
             switch (seccion) {
                 case "home":
-        %><jsp:include page="home.jsp" /><%
-            break;
-
-        case "perfil":
-        %><jsp:include page="perfil.jsp" /><%
-            break;
-        case "grupos":
-    %><jsp:include page="grupos.jsp" /><%
-            break;
-        case "chats":
-    %><jsp:include page="chats.jsp" /><%
-            break;
-        case "sugerencias":
-    %><jsp:include page="sugerencias.jsp" /><%
-            break;
-        case "publicar":
-    %><jsp:include page="publicar.jsp" /><%
-            break;
-        default:
-    %><p>Bienvenido a tu espacio personal en la red social universitaria.</p><%
+        %>
+        <jsp:include page="home.jsp" />
+        <%
                 break;
-        }
-    %>
+            case "perfil":
+        %>
+        <jsp:include page="perfil.jsp" />
+        <%
+                break;
+            case "grupos":
+        %>
+        <%
+            // 1) Invocamos el servlet para cargar misGrupos
+            request.getRequestDispatcher("/grupos").include(request, response);
+        %>
+        <jsp:include page="grupos/lista.jsp" />
+        <%
+                break;
+            case "sugerencias":
+        %>
+        <%
+            // 1) Invocamos el servlet para cargar sugeridos
+            request.getRequestDispatcher("/grupos/sugeridos").include(request, response);
+        %>
+        <jsp:include page="grupos/sugeridos.jsp" />
+        <%
+                break;
+            case "chats":
+        %>
+        <jsp:include page="chats.jsp" />
+        <%
+                break;
+            case "publicar":
+        %>
+        <jsp:include page="publicar.jsp" />
+        <%
+                break;
+            default:
+        %>
+        <p>Bienvenido a tu espacio personal en la red social universitaria.</p>
+        <%
+                    break;
+            }
+        %>
     </div>
 </div>
 

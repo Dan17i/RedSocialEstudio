@@ -4,6 +4,8 @@ import co.edu.uniquindio.redsocial.ArchivoMultimedia;
 import co.edu.uniquindio.redsocial.models.Contenido;
 import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.Enums.TipoContenido;
+import co.edu.uniquindio.redsocial.models.services.implement.GestorContenidos;
+import co.edu.uniquindio.redsocial.models.structures.ArbolBinarioBusqueda;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
 import javax.servlet.ServletException;
@@ -28,20 +30,19 @@ public class CrearPublicacionServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // 1) Obtener autor de la sesión
         Estudiante autor = (Estudiante) request.getSession().getAttribute("usuarioActual");
         if (autor == null) {
             response.sendRedirect("inicioSesion.jsp");
             return;
         }
 
-        // 2) Leer parámetros
+        // Parámetros del formulario
+        String interesSeleccionado = request.getParameter("interesSeleccionado");
         String tema        = request.getParameter("tema");
         String descripcion = request.getParameter("descripcion");
-        String tipoStr     = request.getParameter("tipo");
-        TipoContenido tipo = TipoContenido.valueOf(tipoStr.toUpperCase());
+        TipoContenido tipo = TipoContenido.valueOf(request.getParameter("tipo").toUpperCase());
 
-        // 3) Guardar archivo en webapp/archivos
+        // Guardar archivo
         String uploadPath = getServletContext().getRealPath("/" + UPLOAD_DIR);
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) uploadDir.mkdirs();
@@ -69,7 +70,7 @@ public class CrearPublicacionServlet extends HttpServlet {
             );
         }
 
-        // 4) Construir el nuevo contenido
+        // Construir contenido
         Contenido nuevoContenido = new Contenido(
                 UUID.randomUUID().toString(),
                 tema,
@@ -77,20 +78,27 @@ public class CrearPublicacionServlet extends HttpServlet {
                 autor,
                 tipo,
                 LocalDateTime.now(),
-                new ListaEnlazada<>(),   // valoraciones vacías
+                new ListaEnlazada<>(),
                 archivoMultimedia
         );
 
-        // 5) **Agrega al historial del autor**
+        // Historial del autor
         autor.getHistorialContenidos().agregar(nuevoContenido);
 
-        // 6) Agrega a la lista global
+        // Agregar al ABB global
+        @SuppressWarnings("unchecked")
+        ArbolBinarioBusqueda<Contenido> arbol =
+                (ArbolBinarioBusqueda<Contenido>) getServletContext().getAttribute("arbolContenidos");
+        arbol.insertar(nuevoContenido.getTema(), nuevoContenido);
+        // Si quieres indexar por interés:
+        // arbol.insertar(interesSeleccionado, nuevoContenido);
+
+        // Agregar a la lista global
         @SuppressWarnings("unchecked")
         ListaEnlazada<Contenido> publicaciones =
                 (ListaEnlazada<Contenido>) getServletContext().getAttribute("publicaciones");
         publicaciones.agregar(nuevoContenido);
 
-        // 7) Redirige al feed
         response.sendRedirect("inicio.jsp?seccion=home");
     }
 }

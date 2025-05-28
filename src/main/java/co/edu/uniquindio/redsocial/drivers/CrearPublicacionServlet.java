@@ -15,7 +15,26 @@ import javax.servlet.http.*;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
-
+/**
+ * Servlet encargado de procesar la creación de nuevas publicaciones por parte de los estudiantes.
+ * Recibe datos del formulario, gestiona la subida de archivos multimedia y actualiza las estructuras
+ * globales de contenido (árbol binario de búsqueda y lista enlazada).
+ * Ruta: /CrearPublicacion
+ * Requiere que el usuario esté autenticado como Estudiante.
+ * Parámetros esperados (formulario):
+ * - interesSeleccionado: Interés asociado a la publicación.
+ * - tema: Título o tema del contenido.
+ * - descripcion: Descripción textual del contenido.
+ * - tipo: Tipo de contenido (ej. TEXTO, IMAGEN, VIDEO).
+ * - archivo: Archivo multimedia adjunto (opcional).
+ * Atributos actualizados en el contexto:
+ * - "arbolContenidos": Árbol binario de búsqueda donde se indexa el contenido por tema.
+ * - "publicaciones": Lista global de contenidos publicados.
+ * Redirección final: inicio.jsp?seccion=home
+ *
+ * @author Daniel Jurado, Sebastian Torres y Juan Soto
+ * @version 1.0
+ */
 @WebServlet("/CrearPublicacion")
 @MultipartConfig(
         fileSizeThreshold = 1024*1024,
@@ -25,7 +44,17 @@ import java.util.UUID;
 public class CrearPublicacionServlet extends HttpServlet {
 
     private static final String UPLOAD_DIR = "archivos";
-
+    /**
+     * Maneja la solicitud POST para crear una nueva publicación en la red social educativa.
+     * Verifica si el usuario está autenticado, procesa los parámetros del formulario, guarda
+     * el archivo multimedia en el servidor, construye un objeto {@link Contenido} y lo añade
+     * a las estructuras de almacenamiento.
+     *
+     * @param request  solicitud HTTP con los datos del formulario
+     * @param response respuesta HTTP para redireccionar al usuario
+     * @throws ServletException si ocurre un error en el procesamiento del servlet
+     * @throws IOException      si ocurre un error de entrada/salida durante el manejo del archivo
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

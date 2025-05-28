@@ -9,10 +9,31 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
-
+/**
+ * Servlet que permite a un estudiante valorar una publicación.
+ *
+ * <p>
+ * Recibe la identificación de la publicación, la puntuación y el comentario
+ * mediante una solicitud POST, y registra la valoración asociada al estudiante
+ * y la publicación correspondiente.
+ * </p>
+ *
+ * Ruta: /Valorar
+ *
+ * @author Daniel Jurado, Sebastian Torres y Juan Soto
+ * @since 2025-05-25
+ * @version 1.0
+ */
 @WebServlet("/Valorar")
 public class ValoracionServlet extends HttpServlet {
-
+    /**
+     * Procesa solicitudes POST para agregar una valoración a una publicación.
+     *
+     * @param request  solicitud HTTP con parámetros: idContenido, puntuacion y comentario
+     * @param response respuesta HTTP que redirige a la página principal
+     * @throws ServletException en caso de error en el servlet
+     * @throws IOException      en caso de error de entrada/salida
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

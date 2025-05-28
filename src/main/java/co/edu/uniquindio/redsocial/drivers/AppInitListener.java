@@ -16,14 +16,31 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 /**
- * Listener que inicializa en el ServletContext:
- *  - El sistema de autenticación
- *  - La lista global de publicaciones
- *  - La lista global de conversaciones (vacía)
+ * Listener para la inicialización del contexto de la aplicación web.
+ * Al iniciar el contexto del servlet, crea e inicializa los objetos globales
+ * necesarios para el funcionamiento del sistema, tales como:
+ * <ul>
+ *   <li>Sistema de autenticación</li>
+ *   <li>Lista global de publicaciones</li>
+ *   <li>Lista global de conversaciones</li>
+ *   <li>Árbol binario para manejar contenidos</li>
+ *   <li>Gestor de contenidos</li>
+ *   <li>Gestor de grupos con grafo no dirigido de estudiantes</li>
+ *   <li>Lista global de grupos de estudio</li>
+ * </ul>
+ * Estos objetos se almacenan como atributos en el ServletContext para ser accesibles
+ * durante todo el ciclo de vida de la aplicación web.
+ * @author Daniel Jurado, Sebasian Torres y Juan Soto
+ * @since 2025-05-23
  */
 @WebListener
 public class AppInitListener implements ServletContextListener {
-
+    /**
+     * Método que se ejecuta al inicializar el contexto de la aplicación.
+     * Inicializa y registra en el contexto los objetos y estructuras globales.
+     *
+     * @param sce Evento que notifica la inicialización del contexto del servlet.
+     */
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         // 1) Sistema de autenticación
@@ -56,7 +73,12 @@ public class AppInitListener implements ServletContextListener {
         ListaEnlazada<GrupoEstudio> todosGrupos = new ListaEnlazada<>();
         sce.getServletContext().setAttribute("todosGrupos", todosGrupos);
     }
-
+    /**
+     * Método que se ejecuta cuando el contexto del servlet es destruido.
+     * Actualmente, no realiza ninguna acción.
+     *
+     * @param sce Evento que notifica la destrucción del contexto del servlet.
+     */
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         // No es necesario liberar nada en este caso

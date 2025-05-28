@@ -9,7 +9,19 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
-
+/**
+ * Servlet que maneja el proceso de inicio de sesión de usuarios.
+ * <p>
+ * - Verifica si las credenciales corresponden al moderador fijo y crea
+ *   un usuario moderador en sesión.
+ * - Si no, intenta autenticar un usuario normal usando el sistema de autenticación.
+ * - En caso de credenciales inválidas, muestra un mensaje de error.
+ * </p>
+ * Ruta: /login
+ *
+ * @author Daniel Jurado, Sebastian Torres y Juan Soto
+ * @version 1.0
+ */
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
@@ -27,7 +39,22 @@ public class LoginServlet extends HttpServlet {
             getServletContext().setAttribute("sistemaAutenticacion", sistemaAutenticacion);
         }
     }
-
+    /**
+     * Procesa la petición POST para iniciar sesión.
+     * <ul>
+     *   <li>Si las credenciales corresponden al moderador fijo, crea un usuario
+     *       moderador y redirige a su dashboard.</li>
+     *   <li>Si las credenciales son de usuario normal, valida con el sistema de
+     *       autenticación y redirige al inicio.</li>
+     *   <li>En caso de error de autenticación, retorna a la página de inicio de sesión
+     *       con un mensaje de error.</li>
+     * </ul>
+     *
+     * @param request  la solicitud HTTP con parámetros de correo y contraseña
+     * @param response la respuesta HTTP con redirección o forward
+     * @throws ServletException si ocurre un error en el servlet
+     * @throws IOException      si ocurre un error de entrada/salida
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

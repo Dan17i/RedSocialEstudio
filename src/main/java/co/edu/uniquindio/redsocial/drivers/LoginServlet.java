@@ -1,6 +1,5 @@
 package co.edu.uniquindio.redsocial.drivers;
 
-import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.Moderador;
 import co.edu.uniquindio.redsocial.models.Usuario;
 import co.edu.uniquindio.redsocial.models.services.implement.SistemaAutenticacion;

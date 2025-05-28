@@ -36,5 +36,12 @@ public interface IGestorUsuarios {
      * @return Lista de usuarios
      */
     ListaEnlazada<Usuario> listarUsuarios();
+
+    /**
+     * Busca un usuario por su ID.
+     * @param id El identificador único del usuario.
+     * @return El usuario encontrado o null si no existe.
+     */
+    Usuario buscarUsuarioPorId(String id);
 }
 

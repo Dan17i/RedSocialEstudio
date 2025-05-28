@@ -1,23 +1,50 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Crear Publicación</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+<%@ page import="co.edu.uniquindio.redsocial.models.Enums.TipoContenido" %>
+<%@ page import="co.edu.uniquindio.redsocial.models.Estudiante" %>
 
-<div class="container mt-4">
-    <h3>Crear Publicación</h3>
-    <form action="CrearPublicacion" method="post">
+<%
+    Estudiante usuario = (Estudiante) session.getAttribute("usuarioActual");
+%>
+<div class="container">
+    <h4 class="mb-4">Crear nueva publicación</h4>
+    <form action="CrearPublicacion" method="post" enctype="multipart/form-data">
+
         <div class="mb-3">
-            <label for="contenido" class="form-label">Contenido</label>
-            <textarea class="form-control" id="contenido" name="contenido" rows="4" required></textarea>
+            <label for="interes" class="form-label">Categoría (Interés)</label>
+            <select class="form-select" id="interes" name="interesSeleccionado" required>
+                <option value="">-- Selecciona un interés --</option>
+                <% for (int i = 0; i < usuario.getIntereses().getTamanio(); i++) {
+                    String interes = usuario.getIntereses().obtener(i);
+                %>
+                <option value="<%= interes %>"><%= interes %></option>
+                <% } %>
+            </select>
         </div>
+
+        <div class="mb-3">
+            <label for="tema" class="form-label">Título / Tema</label>
+            <input type="text" class="form-control" id="tema" name="tema" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="descripcion" class="form-label">Descripción</label>
+            <textarea class="form-control" id="descripcion" name="descripcion" rows="4" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="tipo" class="form-label">Tipo de contenido</label>
+            <select class="form-select" id="tipo" name="tipo" required>
+                <% for (TipoContenido tipo : TipoContenido.values()) { %>
+                <option value="<%= tipo.name() %>"><%= tipo.name() %></option>
+                <% } %>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="archivo" class="form-label">Archivo adjunto (opcional)</label>
+            <input type="file" class="form-control" id="archivo" name="archivo">
+        </div>
+
         <button type="submit" class="btn btn-primary">Publicar</button>
     </form>
 </div>
-</body>
-</html>

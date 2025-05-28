@@ -52,4 +52,7 @@ public interface ISistemaAutenticacion {
      * @return Lista enlazada de usuarios.
      */
     ListaEnlazada<Usuario> getUsuariosRegistrados();
+
+
 }
+

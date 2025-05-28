@@ -1,11 +1,11 @@
 package co.edu.uniquindio.redsocial.models;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Representa un registro de visualización de un {@link Contenido} por parte de un {@link Usuario},
  * en una fecha y hora específica.
- *
  * Esta clase es inmutable. Una vez creado el objeto, sus atributos no pueden modificarse.
  *
  * @author Daniel Jurado
@@ -83,7 +83,8 @@ public class RegistroVisualizacion {
      */
     @Override
     public String toString() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return usuario.getNombre() + " visualizó: " + contenido.toString() +
-                " (el " + fechaVisualizacion.toString() + ")";
+                " (el " + fechaVisualizacion.format(formatter) + ")";
     }
 }

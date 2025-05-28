@@ -70,7 +70,7 @@
     <!-- Botón para regresar -->
     <div class="text-center mt-4">
         <a href="moderador.jsp" class="btn btn-outline-primary">
-            <i class="bi bi-arrow-left-circle me-1"></i> Volver al panel del moderador
+            <i class="bi bi-arrow-left-circle me-1"></i> Volver
         </a>
     </div>
 

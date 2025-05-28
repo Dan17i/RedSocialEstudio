@@ -2,8 +2,7 @@ package co.edu.uniquindio.redsocial.models;
 
 import co.edu.uniquindio.redsocial.models.structures.ColaPrioridad;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
-import co.edu.uniquindio.redsocial.models.Mensaje;
-import co.edu.uniquindio.redsocial.models.SolicitudAyuda;
+
 
 
 import java.time.LocalDateTime;
@@ -43,7 +42,7 @@ public class GrupoEstudio {
      *
      * @param id Identificador único del grupo. No debe ser nulo ni vacío.
      * @param tema Tema principal del grupo. No debe ser nulo ni vacío.
-     * @throws IllegalArgumentException si el id o el tema son inválidos.
+     * @throws IllegalArgumentException si él, id o el tema son inválidos.
      */
     public GrupoEstudio(String id, String tema) {
         if (id == null || id.isBlank()) {
@@ -57,26 +56,47 @@ public class GrupoEstudio {
         this.miembros = new ListaEnlazada<>();
         this.publicaciones = new ListaEnlazada<>();
     }
-
-    /** Envía un mensaje de chat a todos los miembros y lo guarda. */
+    /**
+     * Envía un mensaje de chat al grupo desde el remitente especificado,
+     * registra la hora de envío y guarda el mensaje en el historial del grupo.
+     *
+     * @param remitente Estudiante que envía el mensaje.
+     * @param texto     Contenido del mensaje.
+     */
     public void enviarMensajeGrupo(Estudiante remitente, String texto) {
         Mensaje m = new Mensaje(remitente, this, texto, LocalDateTime.now());
         m.enviar();
         mensajesGrupo.agregar(m);
     }
 
-    /** Obtiene el historial de chat del grupo. */
+    /**
+     * Devuelve el historial de mensajes del grupo.
+     * Incluye todos los mensajes enviados por los integrantes del grupo.
+     *
+     * @return Lista enlazada de mensajes del grupo.
+     */
     public ListaEnlazada<Mensaje> getMensajesGrupo() {
         return mensajesGrupo;
     }
 
-    /** Encola una solicitud de ayuda en el grupo. */
+    /**
+     * Encola una solicitud de ayuda en la cola del grupo, priorizada
+     * según su nivel de urgencia.
+     *
+     * @param solicitud Solicitud de ayuda a ser encolada.
+     * @throws IllegalArgumentException si la solicitud es {@code null}.
+     */
     public void solicitarAyudaEnGrupo(SolicitudAyuda solicitud) {
         if (solicitud == null) throw new IllegalArgumentException("La solicitud no puede ser nula");
         solicitudesAyudaGrupo.encolar(solicitud, solicitud.getUrgencia());
     }
 
-    /** Obtiene la cola de solicitudes de ayuda del grupo. */
+    /**
+     * Obtiene la cola de solicitudes de ayuda del grupo, organizada por prioridad.
+     * Las solicitudes con mayor urgencia se atienden primero.
+     *
+     * @return Cola de prioridad de solicitudes de ayuda.
+     */
     public ColaPrioridad<SolicitudAyuda> getSolicitudesAyudaGrupo() {
         return solicitudesAyudaGrupo;
     }
@@ -185,7 +205,7 @@ public class GrupoEstudio {
     /**
      * Devuelve el identificador único del grupo.
      *
-     * @return ID del grupo.
+     * @return iD del grupo.
      */
     public String getId() {
         return id;

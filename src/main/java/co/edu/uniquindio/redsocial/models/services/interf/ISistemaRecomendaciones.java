@@ -5,9 +5,19 @@ import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
 /**
- * Interfaz para el sistema de recomendaciones.
- * Define los métodos necesarios para recomendar contenidos y compañeros de estudio.
+ * Interfaz que define los métodos para el sistema de recomendaciones
+ * dentro de la plataforma educativa.
+ * Proporciona funcionalidades para recomendar contenidos relevantes
+ * y compañeros de estudio afines a un estudiante según sus intereses
+ * y conexiones.
+ * Esta interfaz facilita la implementación de estrategias de recomendación
+ * personalizadas y adaptativas.
+ *
+ * @author Daniel Jurado, Sebastian Torres y Juan Soto
+ * @version 1.0
+ * @since 2025-05-27
  */
+
 public interface ISistemaRecomendaciones {
 
     /**

@@ -9,7 +9,6 @@ package co.edu.uniquindio.redsocial.models.structures;
  * @since 2025-05-12
  * @param <T> El tipo de dato que almacena el nodo. Este tipo es genérico, lo que significa que
  *            puede ser cualquier tipo de objeto.
- *
  **/
 public class Nodo<T> {
 

@@ -156,19 +156,44 @@ public class ModeradorTest {
         assertEquals(TipoReporte.INFORME,
                 moderador.generarReporteParticipacion().getTipo());
     }
-
     /**
-     * Verifica que los métodos de gestión de usuarios se ejecutan sin errores.
+     * Verifica que el método {@code darAltaUsuario} registre correctamente un nuevo usuario sin lanzar excepciones.
+     * Se asegura además de que el usuario quede almacenado en el sistema y sea accesible posteriormente.
      */
     @Test
-    void testMetodosGestionUsuarios() {
+    void testDarAltaUsuario() {
         Usuario usuario = new Usuario("2", "Ana", "ana@correo.com", "pass",
                 new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>());
-
-        assertDoesNotThrow(() -> {
-            moderador.darAltaUsuario(usuario);
-            moderador.darBajaUsuario(usuario);
-            moderador.modificarUsuario(usuario, "Ana Actualizada");
-        });
+        assertDoesNotThrow(() -> moderador.darAltaUsuario(usuario));
+        // Verifica que usuario está registrado
+        assertNotNull(gestorUsuarios.buscarUsuarioPorId("2"));
     }
+    /**
+     * Verifica que el método {@code darBajaUsuario} elimine correctamente a un usuario del sistema sin lanzar excepciones.
+     * También comprueba que, tras la eliminación, el usuario ya no esté disponible en el sistema.
+     */
+    @Test
+    void testDarBajaUsuario() {
+        Usuario usuario = new Usuario("2", "Ana", "ana@correo.com", "pass",
+                new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>());
+        moderador.darAltaUsuario(usuario);
+        assertDoesNotThrow(() -> moderador.darBajaUsuario(usuario));
+        // Verifica que usuario ya no existe
+        assertNull(gestorUsuarios.buscarUsuarioPorId("2"));
+    }
+    /**
+     * Verifica que el método {@code modificarUsuario} actualice correctamente los datos del usuario,
+     * en este caso el nombre. Se asegura de que no se lancen excepciones y de que el cambio se refleje en el sistema.
+     */
+    @Test
+    void testModificarUsuario() {
+        Usuario usuario = new Usuario("2", "Ana", "ana@correo.com", "pass",
+                new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>());
+        moderador.darAltaUsuario(usuario);
+        assertDoesNotThrow(() -> moderador.modificarUsuario(usuario, "Ana Actualizada"));
+        // Verifica que nombre fue actualizado
+        Usuario modificado = gestorUsuarios.buscarUsuarioPorId("2");
+        assertEquals("Ana Actualizada", modificado.getNombre());
+    }
+
 }

@@ -4,7 +4,7 @@ import java.util.*;
 
 /**
  * Representa un grafo no dirigido genérico.
- * @author Daniel Jurado
+ * @author Daniel Jurado Sebasstian Torres y Juan Soto
  * @param <T> Tipo del nodo en el grafo.
  */
 public class GrafoNoDirigido<T> extends GrafoImpl<T> {

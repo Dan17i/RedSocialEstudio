@@ -230,7 +230,13 @@ public class GrafoImpl<T> implements IGrafo<T> {
         }
         return adyacentes;
     }
-
+    /**
+     * Verifica si el grafo contiene un nodo con el dato especificado.
+     *
+     * @param dato El dato del nodo que se desea verificar.
+     *
+     * @return {@code true} si el grafo contiene un nodo con el dato dado; {@code false} en caso contrario.
+     */
     public boolean contieneNodo(T dato) {
         return mapaDeNodos.containsKey(dato);
     }
@@ -238,7 +244,14 @@ public class GrafoImpl<T> implements IGrafo<T> {
     public Set<T> obtenerTodosLosDatos() {
         return mapaDeNodos.keySet();
     }
-
+    /**
+     * Busca un nodo en la lista de nodos del grafo que contenga el dato especificado.
+     *
+     * @param dato El dato que se desea buscar en los nodos del grafo.
+     *
+     * @return El nodo que contiene el dato si se encuentra en la lista de nodos;
+     *         de lo contrario, retorna null.
+     */
     public NodoGrafo<T> buscarNodo(T dato) {
         for (int i = 0; i < nodos.getTamanio(); i++) {
             NodoGrafo<T> nodo = nodos.obtener(i);

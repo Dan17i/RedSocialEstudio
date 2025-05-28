@@ -4,7 +4,16 @@ import co.edu.uniquindio.redsocial.models.SolicitudAyuda;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
 /**
- * Interfaz para el manejo del sistema de ayuda por solicitudes priorizadas.
+ * Interfaz que define los métodos para gestionar un sistema de ayuda
+ * basado en solicitudes priorizadas por nivel de urgencia.
+ * Permite agregar solicitudes de ayuda, atenderlas según su prioridad,
+ * y filtrar solicitudes por tema específico.
+ * Esta interfaz abstrae la lógica de manejo de solicitudes de ayuda
+ * dentro de la plataforma, facilitando su implementación y uso.
+ *
+ * @author Daniel Jurado, Sebastian Torres y Juan Soto
+ * @version 1.0
+ * @since 2025-05-27
  */
 public interface ISistemaAyuda {
 

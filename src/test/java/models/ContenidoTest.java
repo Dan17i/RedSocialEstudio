@@ -13,7 +13,11 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * Clase de pruebas unitarias para la clase {@link Contenido}.
+ * Contiene métodos para validar la correcta creación y funcionamiento
+ * de objetos Contenido, especialmente el cálculo del promedio de valoraciones.
+ */
 public class ContenidoTest {
 
     private Contenido contenido;
@@ -21,6 +25,10 @@ public class ContenidoTest {
     private ArchivoMultimedia archivo;
     private ListaEnlazada<Valoracion> valoraciones;
 
+    /**
+     * Configura los objetos comunes a utilizar antes de cada prueba.
+     * Inicializa un contenido con su autor, archivo multimedia y lista de valoraciones vacía.
+     */
     @BeforeEach
     public void setUp() {
 
@@ -39,7 +47,9 @@ public class ContenidoTest {
                         valoraciones,
                         archivo);
     }
-
+    /**
+     * Verifica que un objeto Contenido se cree correctamente con todos sus atributos.
+     */
     @Test
     public void testCrearContenido() {
         contenido = new Contenido(
@@ -60,13 +70,19 @@ public class ContenidoTest {
         assertEquals(valoraciones, contenido.getValoraciones());
         assertEquals(archivo, contenido.getArchivoMultimedia());
     }
-
+    /**
+     * Prueba que el cálculo del promedio de valoraciones
+     * retorne 0 cuando no existen valoraciones en el contenido.
+     */
     @Test
     public void testContenidoSinValoracionesRetornaCero() {
-        float promedio = contenido.calcularValoracionPromedio();
+        double promedio = contenido.promedioValoraciones();
         assertEquals(0.0f, promedio, "El promedio debe ser 0 cuando no hay valoraciones");
     }
-
+    /**
+     * Prueba que el cálculo del promedio de valoraciones funcione correctamente
+     * cuando existe una única valoración para el contenido.
+     */
     @Test
     public void testContenidoConUnaValoracion() {
         // Crear un estudiante de prueba
@@ -98,13 +114,15 @@ public class ContenidoTest {
         // Agregar valoración al contenido (incluyendo el contenido en el constructor)
         contenido.getValoraciones().agregar(new Valoracion(estudiante, contenido, 4, "Buena explicación"));
 
-        float promedio = contenido.calcularValoracionPromedio();
+        double promedio = contenido.promedioValoraciones();
 
         assertEquals(4.0f, promedio, 0.01, "El promedio debe ser igual a la única puntuación");
     }
-
-
-
+    /**
+     * Prueba que el cálculo del promedio de valoraciones funcione correctamente
+     * cuando existen múltiples valoraciones para un contenido.
+     * Se valida que el promedio sea la media aritmética de las puntuaciones.
+     */
     @Test
     public void testContenidoConMultiplesValoraciones() {
         Estudiante estudiante1 = new Estudiante("e1", "Usuario1", "usuario1@correo.com", "1234",
@@ -118,9 +136,9 @@ public class ContenidoTest {
         valoraciones.agregar(new Valoracion(estudiante2, contenido, 5, "Excelente"));
         valoraciones.agregar(new Valoracion(estudiante3, contenido, 3, "Regular"));
 
-        float promedio = contenido.calcularValoracionPromedio();
+        double promedio = contenido.promedioValoraciones();
 
-        //assertEquals(4.0f, promedio, 0.01, "El promedio debe ser la media de las puntuaciones");
+        assertEquals(4.0f, promedio, 0.01, "El promedio debe ser la media de las puntuaciones");
     }
 
 

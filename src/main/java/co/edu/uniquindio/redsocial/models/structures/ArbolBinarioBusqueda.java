@@ -42,7 +42,17 @@ public class ArbolBinarioBusqueda<T extends Tematico> {
     public void insertar(String clave, T valor) {
         raiz = insertarRecursivo(raiz, clave, valor);
     }
-
+    /**
+     * Inserta recursivamente un nodo con la clave y valor especificados en el árbol binario de búsqueda.
+     * Si la clave ya existe, actualiza el valor asociado a esa clave.
+     *
+     * @param nodo El nodo actual desde donde se inicia o continúa la inserción.
+     *             Si es null, se crea un nuevo nodo con la clave y valor dados.
+     * @param clave La clave que identifica al nodo a insertar o actualizar.
+     * @param valor El valor asociado a la clave que se va a insertar o actualizar.
+     *
+     * @return El nodo actualizado después de la inserción o actualización.
+     */
     private NodoABB<T> insertarRecursivo(NodoABB<T> nodo, String clave, T valor) {
         if (nodo == null) {
             return new NodoABB<>(clave, valor);
@@ -70,7 +80,15 @@ public class ArbolBinarioBusqueda<T extends Tematico> {
     public T buscar(String clave) {
         return buscarRecursivo(raiz, clave);
     }
-
+    /**
+     * Busca recursivamente un valor en el árbol binario de búsqueda basado en la clave proporcionada.
+     *
+     * @param nodo El nodo actual desde donde se inicia o continúa la búsqueda. Si es null, significa que
+     *             el valor no se encontró en el árbol y se retorna null.
+     * @param clave La clave que se busca en el árbol. Se utiliza para comparar con las claves de los nodos.
+     *
+     * @return El valor asociado a la clave si se encuentra en el árbol; de lo contrario, retorna null.
+     */
     private T buscarRecursivo(NodoABB<T> nodo, String clave) {
         if (nodo == null) {
             return null;
@@ -98,7 +116,16 @@ public class ArbolBinarioBusqueda<T extends Tematico> {
         listarEnOrden(raiz, lista);
         return lista;
     }
-
+    /**
+     * Realiza un recorrido en orden (inorden) del árbol binario de búsqueda
+     * comenzando desde el nodo especificado, y agrega los valores de los nodos
+     * visitados a la lista proporcionada.
+     *
+     * @param nodo El nodo actual desde donde se inicia o continúa el recorrido en orden.
+     *             Si es null, la función no realiza ninguna acción.
+     * @param lista La lista enlazada donde se almacenan los valores de los nodos
+     *              en orden ascendente.
+     */
     private void listarEnOrden(NodoABB<T> nodo, ListaEnlazada<T> lista) {
         if (nodo != null) {
             listarEnOrden(nodo.getIzquierda(), lista);
@@ -118,7 +145,15 @@ public class ArbolBinarioBusqueda<T extends Tematico> {
         listarPorTemaRecursivo(raiz, tema, resultados);
         return resultados;
     }
-
+    /**
+     * Realiza un recorrido en orden del árbol binario de búsqueda y agrega a la lista
+     * los nodos cuyo valor coincida con el tema especificado.
+     *
+     * @param nodo El nodo actual desde donde se inicia o continúa el recorrido.
+     *             Si es null, no se realiza ninguna acción.
+     * @param tema El tema que se utiliza para filtrar los valores de los nodos.
+     * @param resultados La lista enlazada donde se almacenan los valores que coinciden con el tema.
+     */
     private void listarPorTemaRecursivo(NodoABB<T> nodo, String tema, ListaEnlazada<T> resultados) {
         if (nodo != null) {
             listarPorTemaRecursivo(nodo.getIzquierda(), tema, resultados);
@@ -137,7 +172,16 @@ public class ArbolBinarioBusqueda<T extends Tematico> {
     public void eliminar(String clave) {
         raiz = eliminarRecursivo(raiz, clave);
     }
-
+    /**
+     * Elimina recursivamente un nodo del árbol binario de búsqueda que coincide con la clave dada.
+     *
+     * @param nodo El nodo actual desde donde se inicia o continúa la eliminación.
+     *             Si es null, significa que no se encontró el nodo a eliminar y retorna null.
+     * @param clave La clave del nodo que se desea eliminar del árbol.
+     *
+     * @return El nodo actualizado después de realizar la eliminación, que puede ser un nuevo subárbol
+     *         o null si el nodo fue eliminado y no tenía hijos.
+     */
     private NodoABB<T> eliminarRecursivo(NodoABB<T> nodo, String clave) {
         if (nodo == null) {
             return null;
@@ -164,7 +208,14 @@ public class ArbolBinarioBusqueda<T extends Tematico> {
 
         return nodo;
     }
-
+    /**
+     * Busca el nodo con la clave mínima en el subárbol dado.
+     *
+     * @param nodo El nodo raíz del subárbol en el cual se buscará el nodo con la clave mínima.
+     *             Se asume que el nodo no es null.
+     *
+     * @return El nodo que contiene la clave mínima dentro del subárbol.
+     */
     private NodoABB<T> encontrarMinimo(NodoABB<T> nodo) {
         while (nodo.getIzquierda() != null) {
             nodo = nodo.getIzquierda();

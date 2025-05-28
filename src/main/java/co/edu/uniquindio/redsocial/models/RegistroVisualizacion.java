@@ -6,7 +6,6 @@ import java.time.format.DateTimeFormatter;
 /**
  * Representa un registro de visualización de un {@link Contenido} por parte de un {@link Usuario},
  * en una fecha y hora específica.
- *
  * Esta clase es inmutable. Una vez creado el objeto, sus atributos no pueden modificarse.
  *
  * @author Daniel Jurado

@@ -7,8 +7,6 @@ import co.edu.uniquindio.redsocial.models.structures.GrafoImpl;
 import co.edu.uniquindio.redsocial.models.structures.GrafoNoDirigido;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -16,6 +14,8 @@ import java.util.UUID;
  * grupos de estudio a partir de un grafo de estudiantes basado en afinidades.
  *
  * @param <T> Tipo de estudiante que conforma los grupos.
+ * @author Daniel Jurado, Sebastian Torres y Juan Soto
+ * @since 2025-05-20
  */
 public class GestorGrupos<T extends Estudiante> implements IGestorGrupos<T> {
 

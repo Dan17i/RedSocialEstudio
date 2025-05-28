@@ -13,7 +13,24 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
+/**
+ * Clase de pruebas unitarias para {@link RegistroVisualizacion}.
+ * <p>
+ * Esta clase valida el comportamiento del constructor y los métodos
+ * {@code getUsuario()}, {@code getContenido()} y {@code getFechaVisualizacion()}
+ * de la clase {@link RegistroVisualizacion}.
+ * <p>
+ * Se asegura de que los atributos sean correctamente inicializados
+ * y que los métodos de acceso devuelvan los valores esperados.
+ * <p>
+ * Las pruebas se basan en objetos de tipo {@link Estudiante}, {@link Contenido}
+ * y {@link LocalDateTime}, junto con estructuras personalizadas como
+ * {@link ListaEnlazada} y {@link ColaPrioridad}.
+ *
+ * @author Daniel Jurado, Sebastian Torres y Juan Soto
+ * @version 1.0
+ * @since 2025-05-27
+ */
 public class RegistroVisualizacionTest {
 
     private Estudiante usuario;  // Cambié el tipo aquí para evitar castings innecesarios

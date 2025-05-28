@@ -9,12 +9,22 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.format.DateTimeFormatter;
-
 /**
- * Devuelve la lista de mensajes de una conversación en JSON.
+ * Servlet que proporciona los mensajes de una conversación en formato JSON.
+ * Este servlet se accede mediante una solicitud GET a la ruta "/ChatMessages"
+ * con un parámetro de consulta "id" que identifica la conversación.
+ * Devuelve un arreglo JSON con los mensajes de la conversación, incluyendo
+ * el remitente, texto y fecha.
  */
 @WebServlet("/ChatMessages")
 public class ChatMessagesServlet extends HttpServlet {
+    /**
+     * Maneja solicitudes GET para obtener los mensajes de una conversación específica.
+     *
+     * @param req  La solicitud HTTP que contiene el parámetro "id" de la conversación.
+     * @param resp La respuesta HTTP que contendrá un JSON con los mensajes.
+     * @throws IOException Si ocurre un error de entrada/salida.
+     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String id = req.getParameter("id");

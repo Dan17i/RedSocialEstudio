@@ -1,5 +1,7 @@
 package co.edu.uniquindio.redsocial.models;
 
+import co.edu.uniquindio.redsocial.models.Enums.EstadoSolicitud;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -34,13 +36,6 @@ public class SolicitudAyuda implements Comparable<SolicitudAyuda> {
     private EstadoSolicitud estado;
 
     /**
-     * Enum que representa los estados posibles de una solicitud.
-     */
-    public enum EstadoSolicitud {
-        PENDIENTE, EN_PROGRESO, RESUELTA
-    }
-
-    /**
      * Crea una nueva solicitud de ayuda con la fecha actual.
      *
      * @param tema        Tema específico de la solicitud.
@@ -49,8 +44,9 @@ public class SolicitudAyuda implements Comparable<SolicitudAyuda> {
      * @param descripcion Descripción detallada del problema.
      * @throws IllegalArgumentException si algún parámetro es inválido.
      */
-    public SolicitudAyuda(String tema, int urgencia, Estudiante estudiante, String descripcion) {
+    public SolicitudAyuda(String tema, int urgencia, Estudiante estudiante, String descripcion, EstadoSolicitud estadoSolicitud) {
         this(tema, urgencia, estudiante, descripcion, LocalDateTime.now());
+        this.estado = estadoSolicitud;
     }
 
     /**
@@ -121,14 +117,14 @@ public class SolicitudAyuda implements Comparable<SolicitudAyuda> {
     /**
      * Cambia el estado de la solicitud.
      *
-     * @param estado Nuevo estado a asignar.
+     * @param estadoSolicitud Nuevo estado a asignar.
      * @throws IllegalArgumentException si el estado es nulo.
      */
-    public void setEstado(EstadoSolicitud estado) {
-        if (estado == null) {
+    public void setEstado(EstadoSolicitud estadoSolicitud) {
+        if (estadoSolicitud == null) {
             throw new IllegalArgumentException("El estado no puede ser nulo");
         }
-        this.estado = estado;
+        this.estado = estadoSolicitud;
     }
 
     /**

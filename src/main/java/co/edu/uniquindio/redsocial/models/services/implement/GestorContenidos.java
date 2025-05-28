@@ -8,6 +8,7 @@ import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import co.edu.uniquindio.redsocial.models.structures.NodoLista;
 
 import java.util.HashMap;
+
 /**
  * Implementación del servicio {@link IGestorContenidos} para gestionar los contenidos
  * dentro del sistema de red social educativa.
@@ -171,10 +172,12 @@ public class GestorContenidos implements IGestorContenidos {
         return contenidoDestacado;
     }
 
+
     /**
      * Devuelve una lista de los contenidos más valorados, ordenados por su promedio de valoraciones de forma descendente.
      *
      * @return Lista enlazada de contenidos más valorados.
+
      */
     @Override
     public ListaEnlazada<Contenido> obtenerContenidosMasValorados() {
@@ -182,7 +185,6 @@ public class GestorContenidos implements IGestorContenidos {
         todos.ordenar((c1, c2) -> Double.compare(c2.promedioValoraciones(), c1.promedioValoraciones()));
         return todos;
     }
-
     /**
      * Retorna todos los contenidos almacenados en el sistema.
      *
@@ -191,5 +193,5 @@ public class GestorContenidos implements IGestorContenidos {
     public ListaEnlazada<Contenido> obtenerTodosLosContenidos() {
         return listaDeContenidos; // Asegúrate de tener esta lista como atributo interno.
     }
-    
+
 }

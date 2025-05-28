@@ -189,6 +189,26 @@ public class ListaEnlazada<T> implements Iterable<T> {
     }
 
     /**
+     * Reemplaza el elemento en la posición especificada por un nuevo elemento.
+     *
+     * @param index          Índice del elemento a modificar (comenzando desde 0).
+     * @param nuevoElemento  Nuevo valor que reemplazará al existente en la posición indicada.
+     * @throws IndexOutOfBoundsException si el índice está fuera del rango de la lista.
+     */
+    public void modificar(int index, T nuevoElemento) {
+        if (index < 0 || index >= tamanio) {
+            throw new IndexOutOfBoundsException("Índice fuera de rango: " + index);
+        }
+
+        NodoLista<T> actual = cabeza;
+        for (int i = 0; i < index; i++) {
+            actual = actual.getSiguiente();
+        }
+
+        actual.setDato(nuevoElemento);
+    }
+
+    /**
      * Retorna el dato en una posición específica.
      *
      * @param posicion índice del dato

@@ -13,7 +13,18 @@ import java.io.IOException;
 @WebServlet("/ReporteServlet")
 public class ReporteServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Moderador moderador = (Moderador) req.getSession().getAttribute("usuario");
+
+        Object usuario = req.getSession().getAttribute("usuarioActual");
+
+        if(usuario ==null || !( usuario instanceof Moderador)){
+
+            resp.sendRedirect("inicioSesion.jsp");
+            return;
+        }
+
+        Moderador moderador = (Moderador)usuario;
+        moderador.generarReporteParticipacion();
+
         String tipo = req.getParameter("tipo");
 
         switch (tipo) {

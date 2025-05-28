@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
 
 @WebServlet("/grupos/detalle/ayuda")
 public class SolicitarAyudaGrupoServlet extends HttpServlet {
@@ -63,8 +64,9 @@ public class SolicitarAyudaGrupoServlet extends HttpServlet {
                 temaAyuda,
                 urgencia,
                 solicitante,
-                descripcion
-        );
+                descripcion,
+                LocalDateTime.now());
+
         grupo.solicitarAyudaEnGrupo(sol);
 
         resp.sendRedirect(req.getContextPath()

@@ -141,7 +141,7 @@
                             </div>
                             <div class="col-md-3">
                                 <input name="urgencia" type="number" class="form-control"
-                                       min="1" max="10" placeholder="Urgencia (1 baja-10 maxima)" required />
+                                       min="1" max="10" placeholder="Urgencia (1 alta-10 baja)" required />
                             </div>
                             <div class="col-md-4">
                                 <button class="btn btn-warning w-100">Solicitar</button>

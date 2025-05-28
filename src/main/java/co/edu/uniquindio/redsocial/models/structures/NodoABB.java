@@ -19,21 +19,63 @@ class NodoABB<T> {
         this.izquierda = izquierda;
         this.derecha = derecha;
     }
-
+    /**
+     * Constructor que crea un nodo ABB con la clave y valor especificados,
+     * sin hijos izquierdo ni derecho.
+     *
+     * @param clave La clave asociada al nodo.
+     * @param valor El valor almacenado en el nodo.
+     */
     public NodoABB(String clave, T valor) {
         this(clave, valor, null, null);
     }
-
+    /**
+     * Obtiene la clave asociada a este nodo.
+     *
+     * @return La clave del nodo.
+     */
     public String getClave() { return clave; }
+    /**
+     * Establece la clave asociada a este nodo.
+     *
+     * @param clave La nueva clave a asignar al nodo.
+     */
     public void setClave(String clave) { this.clave = clave; }
-
+    /**
+     * Obtiene el valor almacenado en este nodo.
+     *
+     * @return El valor del nodo.
+     */
     public T getValor() { return valor; }
+    /**
+     * Establece el valor almacenado en este nodo.
+     *
+     * @param valor El nuevo valor a asignar al nodo.
+     */
     public void setValor(T valor) { this.valor = valor; }
-
+    /**
+     * Obtiene el nodo hijo izquierdo de este nodo.
+     *
+     * @return El nodo hijo izquierdo, o null si no existe.
+     */
     public NodoABB<T> getIzquierda() { return izquierda; }
+    /**
+     * Establece el nodo hijo izquierdo de este nodo.
+     *
+     * @param izquierda El nuevo nodo hijo izquierdo.
+     */
     public void setIzquierda(NodoABB<T> izquierda) { this.izquierda = izquierda; }
-
+    /**
+     * Obtiene el nodo hijo derecho de este nodo.
+     *
+     * @return El nodo hijo derecho, o null si no existe.
+     */
     public NodoABB<T> getDerecha() { return derecha; }
+    /**
+     * Establece el nodo hijo derecho de este nodo.
+     *
+     * @param derecha El nuevo nodo hijo derecho.
+     */
     public void setDerecha(NodoABB<T> derecha) { this.derecha = derecha; }
     /**
      * Verifica si el nodo no tiene hijos.

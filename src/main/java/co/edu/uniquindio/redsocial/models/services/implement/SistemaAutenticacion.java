@@ -138,12 +138,25 @@ public class SistemaAutenticacion implements ISistemaAutenticacion {
         return eliminado;
     }
 
-    /**
-     * Obtiene la lista de usuarios registrados (lectura).
-     *
-     * @return Lista enlazada de usuarios.
-     */
+    @Override
     public ListaEnlazada<Usuario> getUsuariosRegistrados() {
         return usuariosRegistrados;
     }
+
+    /**
+     * Devuelve solo los Estudiantes (filtrando del total de usuarios).
+     */
+    public ListaEnlazada<Estudiante> getEstudiantesRegistrados() {
+        ListaEnlazada<Estudiante> lista = new ListaEnlazada<>();
+        NodoLista<Usuario> actual = usuariosRegistrados.getCabeza();
+        while (actual != null) {
+            Usuario u = actual.getDato();
+            if (u instanceof Estudiante) {
+                lista.agregar((Estudiante) u);
+            }
+            actual = actual.getSiguiente();
+        }
+        return lista;
+    }
+
 }

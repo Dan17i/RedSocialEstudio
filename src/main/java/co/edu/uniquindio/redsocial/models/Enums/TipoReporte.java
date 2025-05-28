@@ -29,3 +29,4 @@ public enum TipoReporte {
      */
     ESTUDIANTES_CONECTADOS
 }
+

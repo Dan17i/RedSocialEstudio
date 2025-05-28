@@ -10,12 +10,10 @@ import co.edu.uniquindio.redsocial.models.structures.NodoLista;
 import java.util.HashMap;
 
 /**
- * Clase que implementa la lógica de gestión de contenidos de la red social educativa.
- * Permite agregar, eliminar, buscar, y generar estadísticas de los contenidos.
- * Utiliza un árbol binario de búsqueda y una lista enlazada para la gestión eficiente.
- *
- * @author Daniel Jurado, Sebastian Torres y Juan Soto
- * @since 2025-05-20
+ * Implementación del servicio {@link IGestorContenidos} para gestionar los contenidos
+ * dentro del sistema de red social educativa.
+ * Esta clase utiliza un árbol binario de búsqueda para organizar los contenidos por tema
+ * y una lista enlazada para destacar y listar contenidos.
  */
 public class GestorContenidos implements IGestorContenidos {
 
@@ -26,11 +24,12 @@ public class GestorContenidos implements IGestorContenidos {
     private String rutaArchivo;
     private String mimeType;
     private long tamanioArchivo;
+
     /**
-     * Constructor que recibe las estructuras necesarias para gestionar contenidos.
+     * Constructor que inicializa el gestor con un árbol de contenidos y una lista de contenidos destacados.
      *
-     * @param arbolContenidos     Árbol binario de búsqueda que almacena los contenidos por tema.
-     * @param contenidoDestacado  Lista enlazada que almacena contenidos marcados como destacados.
+     * @param arbolContenidos     Árbol binario de búsqueda que almacena los contenidos.
+     * @param contenidoDestacado  Lista enlazada de contenidos destacados.
      */
     public GestorContenidos(ArbolBinarioBusqueda<Contenido> arbolContenidos,
                             ListaEnlazada<Contenido> contenidoDestacado) {
@@ -38,9 +37,9 @@ public class GestorContenidos implements IGestorContenidos {
         this.contenidoDestacado = contenidoDestacado;
     }
     /**
-     * Retorna una instancia singleton del gestor de contenidos.
+     * Devuelve la instancia única del gestor de contenidos (patrón Singleton).
      *
-     * @return Instancia única de {@code GestorContenidos}.
+     * @return Instancia única de GestorContenidos.
      */
     public static GestorContenidos getInstancia() {
         if (instancia == null) {
@@ -49,7 +48,7 @@ public class GestorContenidos implements IGestorContenidos {
         return instancia;
     }
     /**
-     * Agrega un contenido al sistema.
+     * Agrega un contenido al árbol de contenidos y a la lista general.
      *
      * @param contenido Contenido a agregar.
      */
@@ -61,10 +60,10 @@ public class GestorContenidos implements IGestorContenidos {
         }
     }
     /**
-     * Elimina un contenido del sistema dado su identificador único.
+     * Elimina un contenido del árbol por su ID.
      *
-     * @param id Identificador del contenido a eliminar.
-     * @return {@code true} si fue eliminado, {@code false} si no se encontró.
+     * @param id ID del contenido a eliminar.
+     * @return true si fue eliminado, false si no se encontró.
      */
     @Override
     public boolean eliminarContenido (String id){
@@ -81,7 +80,7 @@ public class GestorContenidos implements IGestorContenidos {
         return false;
     }
     /**
-     * Busca contenidos por tema específico.
+     * Busca contenidos por tema.
      *
      * @param tema Tema a buscar.
      * @return Lista enlazada de contenidos que coinciden con el tema.
@@ -94,7 +93,7 @@ public class GestorContenidos implements IGestorContenidos {
      * Busca contenidos por nombre del autor.
      *
      * @param autor Nombre del autor a buscar.
-     * @return Lista enlazada de contenidos que coinciden con el autor.
+     * @return Lista enlazada de contenidos del autor.
      */
     @Override
     public ListaEnlazada<Contenido> buscarPorAutor(String autor) {
@@ -111,9 +110,8 @@ public class GestorContenidos implements IGestorContenidos {
         }
         return resultados;
     }
-
     /**
-     * Marca un contenido como destacado, agregándolo a la lista especial.
+     * Marca un contenido como destacado, agregándolo a la lista correspondiente.
      *
      * @param contenido Contenido a destacar.
      */
@@ -124,7 +122,7 @@ public class GestorContenidos implements IGestorContenidos {
     /**
      * Genera estadísticas del número de contenidos por tipo.
      *
-     * @return Mapa con claves como el nombre del tipo y valores como la cantidad.
+     * @return Mapa con tipo de contenido como clave y cantidad como valor.
      */
     @Override
     public HashMap<String, Integer> generarEstadisticas() {
@@ -139,12 +137,12 @@ public class GestorContenidos implements IGestorContenidos {
         return stats;
     }
     /**
-     * Busca contenidos por tema, autor y tipo simultáneamente.
+     * Busca contenidos que coincidan con un tema, autor y tipo específicos.
      *
      * @param tema Tema del contenido.
      * @param autor Nombre del autor.
-     * @param tipo Tipo de contenido.
-     * @return Lista enlazada de contenidos que coincidan con todos los criterios.
+     * @param tipo Tipo de contenido (en formato nombre de enum).
+     * @return Lista enlazada de contenidos que cumplen todos los criterios.
      */
     @Override
     public ListaEnlazada<Contenido> buscarPorTemaAutorTipo(String tema, String autor, String tipo) {
@@ -162,19 +160,24 @@ public class GestorContenidos implements IGestorContenidos {
         }
         return resultados;
     }
+
     /**
-     * Retorna la lista de contenidos marcados como destacados.
+     * Devuelve la lista de contenidos marcados como destacados.
      *
      * @return Lista enlazada de contenidos destacados.
      */
+
     @Override
     public ListaEnlazada<Contenido> getContenidoDestacado() {
         return contenidoDestacado;
     }
+
+
     /**
-     * Obtiene la lista de contenidos ordenados por su promedio de valoraciones, de mayor a menor.
+     * Devuelve una lista de los contenidos más valorados, ordenados por su promedio de valoraciones de forma descendente.
      *
-     * @return Lista enlazada con los contenidos más valorados primero.
+     * @return Lista enlazada de contenidos más valorados.
+
      */
     @Override
     public ListaEnlazada<Contenido> obtenerContenidosMasValorados() {

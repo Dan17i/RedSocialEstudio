@@ -1,5 +1,5 @@
 package co.edu.uniquindio.redsocial.models.Enums;
-/**
+/*
  * Enumeración que representa los diferentes tipos de contenido que pueden existir
  * dentro del sistema de red social educativa.
  * Cada tipo de contenido puede representar una forma distinta en la que se presenta

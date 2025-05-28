@@ -10,7 +10,7 @@ import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
  *
  * Utiliza una estructura de datos personalizada (ListaEnlazada).
  *
- * @author ---
+ * @author Daniel Jurado, Sebastian Torres y Juan Soto
  * @since 2025-05-27
  */
 public class GestorUsuarios implements IGestorUsuarios {

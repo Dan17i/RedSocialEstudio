@@ -1,7 +1,6 @@
 package co.edu.uniquindio.redsocial.models.services.implement;
 
 import co.edu.uniquindio.redsocial.models.services.interf.IGestorArchivos;
-import co.edu.uniquindio.redsocial.models.services.interf.IGestorContenidos;
 import jakarta.servlet.http.Part;
 
 import java.io.File;
@@ -12,11 +11,29 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
+/**
+ * Implementación del servicio {@link IGestorArchivos} que permite gestionar operaciones
+ * relacionadas con archivos como guardar, eliminar, validar tipos MIME, y obtener información
+ * como el tamaño o tipo de contenido.
+ * Este servicio es utilizado para el manejo de archivos en el contexto de una red social educativa.
+ *
+ * @author Daniel Jurado, Sebastian Torres y Juan Soto
+ * @since 2025-05-20
+ */
 public class GestorArchivos implements IGestorArchivos {
-
+    /**
+     * Ruta base donde se almacenan los archivos por defecto.
+     */
     private static final String RUTA_BASE= "archivos";
+    /**
+     * Guarda un archivo recibido como parte de una solicitud HTTP (multipart) en una ruta específica.
+     *
+     * @param archivo   Parte del archivo a guardar.
+     * @param rutaBase  Ruta base donde se almacenará el archivo.
+     * @return Ruta absoluta del archivo guardado o {@code null} si no se guarda.
+     * @throws IOException sí ocurre un error durante la escritura del archivo.
+     */
     public String guardarArchivo(Part archivo, String rutaBase) throws IOException{
         if(archivo==null || archivo.getSize()==0)
             return null;
@@ -34,8 +51,13 @@ public class GestorArchivos implements IGestorArchivos {
         }
         return archivoDestino.getAbsolutePath();
     }
-
-
+    /**
+     * Válida si el tipo MIME del archivo corresponde al tipo esperado.
+     *
+     * @param archivo       Parte del archivo a validar.
+     * @param tipoEsperado  Tipo esperado (ej. "imagen", "video", "pdf", etc.).
+     * @return {@code true} si el tipo coincide, {@code false} en caso contrario.
+     */
     public static boolean validarTipo(Part archivo, String tipoEsperado){
         String mime = archivo.getContentType();
         switch (tipoEsperado.toLowerCase()){
@@ -47,7 +69,12 @@ public class GestorArchivos implements IGestorArchivos {
             default: return false;
         }
     }
-
+    /**
+     * Extrae el nombre original del archivo desde el encabezado "content-disposition".
+     *
+     * @param part Parte del archivo.
+     * @return Nombre original del archivo o {@code null} si no se encuentra.
+     */
     public static String obtenerNombreArchivo(Part part){
         String contenDisposicion= part.getHeader("contenido-disponible");
         for(String contenido : contenDisposicion.split(";")){
@@ -58,13 +85,26 @@ public class GestorArchivos implements IGestorArchivos {
         return null;
     }
 
+    /**
+     * Obtiene la extensión de un nombre de archivo.
+     *
+     * @param nombreArchivo Nombre del archivo.
+     * @return Extensión del archivo (incluyendo el punto) o cadena vacía si no tiene.
+     */
     @Override
     public  String obtenerExtension(String nombreArchivo) {
         if (nombreArchivo == null) return "";
         int i = nombreArchivo.lastIndexOf(".");
         return (i > 0) ? nombreArchivo.substring(i) : "";
     }
-
+    /**
+     * Guarda un archivo a partir de un {@link InputStream} y un nombre de archivo.
+     *
+     * @param inputStream   Flujo de entrada del archivo.
+     * @param nombreArchivo Nombre del archivo destino.
+     * @return Ruta relativa del archivo guardado.
+     * @throws IOException sí ocurre un error durante la escritura del archivo.
+     */
     @Override
     public String guardarArchivo(InputStream inputStream, String nombreArchivo) throws IOException {
         File carpeta = new File(RUTA_BASE);
@@ -81,6 +121,12 @@ public class GestorArchivos implements IGestorArchivos {
         return rutaRelativa;
     }
 
+    /**
+     * Elimina un archivo de la ruta especificada.
+     *
+     * @param rutaRelativa Ruta relativa del archivo a eliminar.
+     * @return {@code true} si el archivo fue eliminado, {@code false} si no existe o falla la eliminación.
+     */
     @Override
     public boolean eliminarArchivo(String rutaRelativa) {
         File archivo = new File(rutaRelativa);
@@ -89,7 +135,12 @@ public class GestorArchivos implements IGestorArchivos {
         }
         return false;
     }
-
+    /**
+     * Obtiene el tipo MIME de un archivo según su ruta.
+     *
+     * @param nombreArchivo Ruta del archivo.
+     * @return Tipo MIME detectado o {@code application/octet-stream} si falla la detección.
+     */
     @Override
     public String obtenerMimeType(String nombreArchivo) {
         try {
@@ -99,7 +150,12 @@ public class GestorArchivos implements IGestorArchivos {
             return "application/octet-stream"; // tipo genérico si falla
         }
     }
-
+    /**
+     * Obtiene el tamaño en bytes de un archivo.
+     *
+     * @param rutaArchivo Ruta del archivo.
+     * @return Tamaño en bytes o 0 si el archivo no existe.
+     */
     @Override
     public long obtenerTamanio(String rutaArchivo){
         File archivo = new File(rutaArchivo);

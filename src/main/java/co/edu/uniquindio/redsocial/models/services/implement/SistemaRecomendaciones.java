@@ -8,7 +8,7 @@ import co.edu.uniquindio.redsocial.models.structures.NodoLista;
 /**
  * Clase encargada de gestionar el sistema de recomendaciones para los estudiantes.
  * Ofrece recomendaciones personalizadas de contenidos educativos y posibles compañeros
- * de estudio, en base a los intereses del estudiante y su red de afinidad.
+ * de estudio, con base en los intereses del estudiante y su red de afinidad.
  *
  * Utiliza como soporte las clases RedAfinidad y GestorContenidos.
  *

@@ -12,7 +12,6 @@ import java.util.UUID;
 /**
  * Clase encargada del registro e inicio de sesión de usuarios dentro del sistema.
  * Administra una lista enlazada de usuarios registrados.
- *
  * Esta implementación permite registrar estudiantes y validar credenciales para iniciar sesión.
  *
  * @author Daniel Jurado

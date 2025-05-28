@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet("/GestionContenidosServlet")
+
 public class GestionContenidosServlet extends HttpServlet {
     private GestorContenidos gestorContenidos;
 
@@ -27,19 +28,28 @@ public class GestionContenidosServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Moderador moderador = (Moderador) request.getSession().getAttribute("usuario");
+        Moderador moderador = null;
+        Object usuario = request.getSession().getAttribute("usuarioActual");
+        if (usuario instanceof Moderador) {
+            moderador = (Moderador) usuario;
+        }
         if (moderador == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No se ha iniciado sesión como moderador");
             return;
         }
         ListaEnlazada<Contenido> contenidos = gestorContenidos.obtenerTodosLosContenidos();
         request.setAttribute("contenidos", contenidos);
-        request.getRequestDispatcher("/gestionContenidos.jsp").forward(request, response);
+        request.getRequestDispatcher("/gestionContenido.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Moderador moderador = (Moderador) request.getSession().getAttribute("usuario");
+        Moderador moderador = null;
+        Object usuario = request.getSession().getAttribute("usuarioActual");
+        if (usuario instanceof Moderador) {
+            moderador = (Moderador) usuario;
+        }
+
         if (moderador == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No se ha iniciado sesión como moderador");
             return;

@@ -40,7 +40,7 @@ public class LoginModeradorServlet extends HttpServlet {
                     null                              // gestorRedSocial (puedes inyectarlo después)
             ); // Ajusta según tu clase Moderador
             moderador.setNombre("Administrador"); // Ejemplo
-            session.setAttribute("usuario", moderador);
+            session.setAttribute("usuarioActual", moderador);
             response.sendRedirect(request.getContextPath() + "/panelModerador.jsp");
         } else {
             response.sendRedirect(request.getContextPath() + "/loginModerador.jsp?error=Credenciales inválidas");

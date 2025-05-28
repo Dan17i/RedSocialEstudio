@@ -12,21 +12,12 @@ import co.edu.uniquindio.redsocial.models.services.interf.IGestorUsuarios;
 import co.edu.uniquindio.redsocial.models.structures.ArbolBinarioBusqueda;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import javax.servlet.annotation.WebServlet;
-
-
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-<<<<<<< Updated upstream
-=======
 
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 @WebServlet("/GestionUsuariosServlet")
 public class GestionUsuariosServlet extends HttpServlet {
     private IGestorUsuarios gestorUsuarios;

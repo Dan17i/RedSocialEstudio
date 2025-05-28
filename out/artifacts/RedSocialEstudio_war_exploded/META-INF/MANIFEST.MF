@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 Created-By: IntelliJ IDEA
-Built-By: JURADO_CE
-Build-Jdk: 21.0.1
+Built-By: 15-FA000la
+Build-Jdk: Eclipse Temurin 21.0.2
 

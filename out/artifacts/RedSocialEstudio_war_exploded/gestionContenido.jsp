@@ -88,7 +88,7 @@
     <!-- Botón de regreso -->
     <div class="text-center">
         <a href="moderador.jsp" class="btn btn-primary">
-            <i class="bi bi-arrow-left-circle"></i> Volver
+            <i class="bi bi-arrow-left-circle"></i> Volver a Moderador
         </a>
     </div>
 </div>

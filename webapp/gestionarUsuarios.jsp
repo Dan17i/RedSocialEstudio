@@ -15,7 +15,6 @@
     <title>Gestión de Usuarios</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<<<<<<< Updated upstream
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -28,12 +27,6 @@
 <body>
 
 <div class="container">
-=======
-</head>
-<body style="background-color: #f4f6fa;">
-
-<div class="container mt-5">
->>>>>>> Stashed changes
     <div class="card shadow rounded-3">
         <div class="card-header bg-primary text-white">
             <h4 class="mb-0">Gestión de Usuarios</h4>
@@ -45,11 +38,7 @@
                 if (mensaje != null) {
             %>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
-<<<<<<< Updated upstream
                 <i class="bi bi-check-circle-fill"></i> <%= mensaje %>
-=======
-                <%= mensaje %>
->>>>>>> Stashed changes
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
             <%
@@ -57,11 +46,7 @@
                 if (error != null && !error.trim().isEmpty()) {
             %>
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-<<<<<<< Updated upstream
                 <i class="bi bi-exclamation-triangle-fill"></i> <strong>Error:</strong> <%= error %>
-=======
-                <strong>Error:</strong> <%= error %>
->>>>>>> Stashed changes
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
             <%
@@ -117,7 +102,6 @@
                     </tbody>
                 </table>
             </div>
-<<<<<<< Updated upstream
 
             <!-- Botón de regreso -->
             <div class="text-center mt-4">
@@ -125,18 +109,11 @@
                     <i class="bi bi-arrow-left-circle"></i> Volver a Moderador
                 </a>
             </div>
-=======
->>>>>>> Stashed changes
         </div>
     </div>
 </div>
 
 <!-- Bootstrap JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<<<<<<< Updated upstream
-=======
-<!-- Bootstrap Icons -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
->>>>>>> Stashed changes
 </body>
 </html>

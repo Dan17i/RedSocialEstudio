@@ -15,18 +15,25 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 /**
- * Pruebas unitarias para la clase Estudiante.
+ * Clase de pruebas unitarias para la clase {@link Estudiante}.
+ * <p>
+ * Se realizan tests para verificar funcionalidades como publicar contenido,
+ * valorar contenido, unirse a grupos, buscar contenido y verificar igualdad
+ * entre objetos {@code Estudiante}.
+ * </p>
  */
 public class EstudianteTest {
 
     private Estudiante estudiante;
     private Contenido contenidoEjemplo;
     private ArchivoMultimedia archivo;
-
     /**
-     * Configuración inicial antes de cada prueba.
+     * Configura el escenario inicial antes de cada prueba.
+     * <p>
+     * Crea un estudiante con intereses y otros atributos inicializados.
+     * También crea un contenido de ejemplo asociado a otro estudiante.
+     * </p>
      */
     @BeforeEach
     public void setUp() {
@@ -50,12 +57,9 @@ public class EstudianteTest {
 
         contenidoEjemplo = new Contenido("001", "Matemáticas", "trata de matematicas", Juanes, TipoContenido.VIDEO, LocalDateTime.now(), valoracionesContenido, archivo);
     }
-
-
     /**
-     * Verifica que el contenido publicado se agrega al historial del estudiante.
+     * Verifica que al publicar un contenido, este se agregue al historial del estudiante.
      */
-
     @Test
     public void testPublicarContenido() {
         LocalDateTime ahora = LocalDateTime.now();
@@ -65,9 +69,9 @@ public class EstudianteTest {
         estudiante.publicarContenido(contenidoEjemplo, gestorContenidos);
         assertTrue(estudiante.getHistorialContenidos().buscar(contenidoEjemplo));
     }
-
     /**
-     * Verifica que una valoración se registra tanto en el estudiante como en el contenido.
+     * Verifica que al valorar un contenido, la valoración se registre
+     * tanto en el estudiante como en el contenido.
      */
     @Test
     public void testValorarContenido() {
@@ -75,9 +79,9 @@ public class EstudianteTest {
         assertEquals(1, contenidoEjemplo.getValoraciones().getTamanio());
         assertEquals(1, estudiante.getValoraciones().getTamanio());
     }
-
     /**
-     * Verifica que el estudiante pueda unirse a un grupo y que se actualicen ambos lados.
+     * Verifica que el estudiante pueda unirse a un grupo de estudio,
+     * y que el grupo refleje la adición del estudiante.
      */
     @Test
     public void testUnirseAGrupo() {
@@ -94,9 +98,9 @@ public class EstudianteTest {
         assertEquals(miembrosAntes + 1, grupo.getMiembros().getTamanio(), "El grupo no tiene un miembro más");
         assertTrue(grupo.getMiembros().buscar(estudiante), "El estudiante no fue encontrado en los miembros del grupo");
     }
-
     /**
-     * Verifica que el estudiante pueda buscar contenido en su historial según criterios.
+     * Verifica que el estudiante pueda buscar contenido en su historial
+     * aplicando filtros como tema, autor y tipo de contenido.
      */
     @Test
     public void testBuscarContenido() {
@@ -135,10 +139,9 @@ public class EstudianteTest {
         assertEquals(c1, resultados.obtener(0));
     }
 
-
-
     /**
-     * Verifica que dos estudiantes con la misma cédula sean considerados iguales.
+     * Verifica que dos estudiantes con la misma cédula (ID) sean considerados iguales
+     * y tengan el mismo código hash.
      */
     @Test
     public void testEqualsYHashCode() {

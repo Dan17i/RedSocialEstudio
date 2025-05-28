@@ -6,7 +6,8 @@ import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 /**
  * Interfaz para la gestión de operaciones relacionadas con la red social.
  * Incluye análisis de afinidades, caminos mínimos, comunidades y participación.
- *
+ * @author Daniel Jurado, Sebastia Torres y juan Soto
+ * @since 2025-05-27
  */
 public interface IGestorRedSocial {
     /**

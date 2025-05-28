@@ -14,7 +14,14 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * Clase de prueba para la clase {@link Estudiante}.
+ * Contiene pruebas unitarias para validar las funcionalidades relacionadas con
+ * valorar contenidos, unirse a grupos de estudio y publicar contenidos.
+ *
+ * @author Daniel Juraro, Sebastian Torres y Juan Soto
+ * @version 1.0
+ */
 public class UsuarioTest {
 
     private Estudiante estudiante;
@@ -25,7 +32,9 @@ public class UsuarioTest {
     private ListaEnlazada<GrupoEstudio> gruposEstudio;
     private ListaEnlazada<Mensaje> bandejaEntrada;
     private ArchivoMultimedia archivo;
-
+    /**
+     * Inicializa los objetos necesarios antes de cada prueba.
+     */
     @BeforeEach
     public void setUp() {
         intereses = new ListaEnlazada<>();
@@ -49,7 +58,10 @@ public class UsuarioTest {
 
         );
     }
-
+    /**
+     * Verifica que un estudiante pueda valorar correctamente un contenido.
+     * Se valida que la valoración se agregue tanto al contenido como al estudiante.
+     */
     @Test
     public void testValorarContenido() {
         ListaEnlazada<Valoracion> valoracionesContenido = new ListaEnlazada<>();
@@ -90,7 +102,10 @@ public class UsuarioTest {
         assertEquals("Excelente contenido", valEstudiante.getComentario());
         assertEquals(estudiante, valEstudiante.getEstudiante());
     }
-
+    /**
+     * Verifica que un estudiante pueda ser agregado a un grupo de estudio correctamente.
+     * También válida que el grupo se agregue a la lista de grupos del estudiante.
+     */
     @Test
     public void testAgregarMiembroAlGrupo() {
         GrupoEstudio grupo = new GrupoEstudio("001", "Matemáticas Avanzadas");
@@ -103,7 +118,10 @@ public class UsuarioTest {
         assertEquals(1, estudiante.getGruposEstudio().getTamanio());
         assertEquals(grupo, estudiante.getGruposEstudio().obtener(0));
     }
-
+    /**
+     * Verifica que un estudiante pueda publicar contenido correctamente,
+     * agregándolo a su historial de contenidos.
+     */
     @Test
     public void testPublicarContenido() {
         Estudiante ana = new Estudiante(

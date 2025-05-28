@@ -2,7 +2,17 @@ package co.edu.uniquindio.redsocial.models.services.interf;
 
 import java.io.InputStream;
 import java.io.IOException;
-
+/**
+ * Interfaz que define las operaciones básicas para la gestión de archivos multimedia
+ * en el servidor, tales como guardar, eliminar y obtener información sobre archivos.
+ * <p>
+ * Implementaciones concretas pueden manejar archivos físicos, almacenamiento en la nube,
+ * o cualquier sistema de archivos personalizado.
+ * </p>
+ *
+ * @author Daniel Jurado, Sebastian Torres y Juan Soto
+ * @since 2025-05-27
+ */
 public interface IGestorArchivos {
 
     /**
@@ -30,7 +40,6 @@ public interface IGestorArchivos {
      * @return tipo MIME como string (ej. "image/jpeg").
      */
     String obtenerMimeType(String nombreArchivo);
-
     /**
      * Obtiene el tamaño en bytes del archivo dado su nombre o ruta.
      *
@@ -38,6 +47,12 @@ public interface IGestorArchivos {
      * @return tamaño del archivo en bytes.
      */
     long obtenerTamanio(String rutaRelativa);
-
+    /**
+     * Obtiene la extensión del archivo a partir de su nombre.
+     * Por ejemplo, para "foto.jpg" retorna "jpg".
+     *
+     * @param nombreArchivo nombre del archivo a analizar.
+     * @return extensión del archivo sin el punto.
+     */
     String obtenerExtension(String nombreArchivo);
 }

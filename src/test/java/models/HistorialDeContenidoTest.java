@@ -12,6 +12,22 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
+/**
+ * Clase de prueba unitaria para la clase {@link HistorialDeContenido}.
+ * <p>
+ * Esta clase valida el correcto funcionamiento de los métodos de la clase
+ * {@code HistorialDeContenido}, incluyendo operaciones de adición, filtrado,
+ * inversión y clonación del historial de contenidos accedidos por un estudiante.
+ * </p>
+ * <p>
+ * Se utiliza JUnit 5 para realizar las pruebas automatizadas.
+ * </p>
+ *
+ * @author Tú
+ * @version 1.0
+ * @since 2025-05-20
+ */
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -22,17 +38,37 @@ import static org.junit.jupiter.api.Assertions.*;
  * @since 2025-05-20
  */
 public class HistorialDeContenidoTest {
-
+    /**
+     * Instancia del historial a ser utilizada en las pruebas.
+     */
     private HistorialDeContenido historial;
+    /**
+     * Contenido de ejemplo para pruebas.
+     */
     private Contenido contenido1;
+    /**
+     * Segundo contenido de ejemplo para pruebas.
+     */
     private Contenido contenido2;
+    /**
+     * Tercer contenido de ejemplo para pruebas.
+     */
     private Contenido contenido3;
+    /**
+     * Fecha y hora usada como referencia de acceso.
+     */
     private LocalDateTime ahora;
+    /**
+     * Estudiante que actúa como autor de los contenidos.
+     */
     private Estudiante autor;
+    /**
+     * Archivo multimedia asociado a los contenidos.
+     */
     private ArchivoMultimedia archivo;
 
     /**
-     * Inicializa los datos antes de cada prueba.
+     * Inicializa los objetos necesarios antes de cada prueba.
      */
     @BeforeEach
     public void setUp() {
@@ -40,7 +76,7 @@ public class HistorialDeContenidoTest {
                 new ListaEnlazada<>(), new ListaEnlazada<>(), new ListaEnlazada<>(),
                 new ColaPrioridad<>(), new ListaEnlazada<>(), new ListaEnlazada<>());
 
-// Supongamos que 'autor' ya está definido antes
+        // Supongamos que 'autor' ya está definido antes
         contenido1 = new Contenido(
                 "c1",
                 "Integrales",
@@ -80,9 +116,9 @@ public class HistorialDeContenidoTest {
 
         historial = new HistorialDeContenido("e1", new ListaEnlazada<>(), new ListaEnlazada<>());
     }
-
     /**
-     * Verifica que agregar contenido y fecha al historial sea exitoso.
+     * Verifica que el método {@link HistorialDeContenido#agregarContenido(Contenido, LocalDateTime)}
+     * agregue correctamente un contenido al historial junto con su fecha de acceso.
      */
     @Test
     public void testAgregarContenido() {
@@ -91,9 +127,9 @@ public class HistorialDeContenidoTest {
         assertEquals(contenido1, historial.getContenidos().obtener(0));
         assertEquals(ahora, historial.getFechasAcceso().obtener(0));
     }
-
     /**
-     * Verifica que se filtren correctamente los contenidos por tema.
+     * Verifica que el método {@link HistorialDeContenido#filtrarPorTema(String)}
+     * retorne una lista de contenidos que coincidan con el tema especificado.
      */
     @Test
     public void testFiltrarPorTema() {
@@ -103,9 +139,9 @@ public class HistorialDeContenidoTest {
         assertEquals(1, filtrados.getTamanio());
         assertEquals("Integrales", filtrados.obtener(0).getTema());
     }
-
     /**
-     * Verifica que se obtengan los últimos N contenidos correctamente.
+     * Verifica que el método {@link HistorialDeContenido#obtenerUltimos(int)}
+     * retorne los últimos N contenidos accedidos en orden correcto.
      */
     @Test
     public void testObtenerUltimos() {
@@ -119,7 +155,8 @@ public class HistorialDeContenidoTest {
     }
 
     /**
-     * Verifica que se invierta correctamente el historial de contenidos y fechas.
+     * Verifica que el método {@link HistorialDeContenido#obtenerUltimos(int)}
+     * retorne los últimos N contenidos accedidos en orden correcto.
      */
     @Test
     public void testInvertirHistorial() {
@@ -129,9 +166,9 @@ public class HistorialDeContenidoTest {
         assertEquals(contenido2, historial.getContenidos().obtener(0));
         assertEquals(contenido1, historial.getContenidos().obtener(1));
     }
-
     /**
-     * Verifica que se clone correctamente el historial.
+     * Verifica que el método {@link HistorialDeContenido#clonarHistorial()}
+     * realice una copia independiente del historial actual.
      */
     @Test
     public void testClonarHistorial() {
@@ -141,9 +178,9 @@ public class HistorialDeContenidoTest {
         assertEquals(historial.getContenidos().getTamanio(), clon.getContenidos().getTamanio());
         assertEquals(historial.getFechasAcceso().obtener(0), clon.getFechasAcceso().obtener(0));
     }
-
     /**
-     * Verifica que se obtenga una sublista válida del historial de contenidos.
+     * Verifica que el método {@link HistorialDeContenido#obtenerContenidosRecientes(int)}
+     * retorne una sublista con los últimos contenidos hasta un número máximo especificado.
      */
     @Test
     public void testObtenerContenidosRecientes() {

@@ -74,6 +74,7 @@ public class GestorArchivos implements IGestorArchivos {
         }
     }
 
+
     /**
      * Extrae el nombre original del archivo desde el encabezado del formulario.
      *
@@ -102,6 +103,7 @@ public class GestorArchivos implements IGestorArchivos {
         int i = nombreArchivo.lastIndexOf(".");
         return (i > 0) ? nombreArchivo.substring(i) : "";
     }
+
 
     /**
      * Guarda un archivo recibido como flujo de entrada.

@@ -17,6 +17,13 @@ public class ComunidadesServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Moderador moderador = (Moderador) request.getSession().getAttribute("usuarioActual");
+
+        if (moderador == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
         ListaEnlazada<ListaEnlazada<Estudiante>> comunidades = moderador.generarReporteComunidades();
         request.setAttribute("comunidades", comunidades);
         request.getRequestDispatcher("/comunidades.jsp").forward(request, response);

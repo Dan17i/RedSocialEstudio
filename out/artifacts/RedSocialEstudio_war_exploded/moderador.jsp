@@ -111,10 +111,10 @@
     <div class="actions">
         <a href="GestionUsuariosServlet">Gestionar Usuarios</a>
         <a href="GestionContenidosServlet">Gestionar Contenidos</a>
-        <a href="ReporteServlet?tipo=comunidades">Comunidades</a>
-        <a href="ReporteServlet?tipo=contenidosMasValorados">Contenidos Más Valorados</a>
-        <a href="ReporteServlet?tipo=estudiantesMasConectados">Estudiantes Más Conectados</a>
-        <a href="ReporteServlet?tipo=nivelesParticipacion">Participación</a>
+        <a href="ComunidadesServlet">Comunidades</a>
+        <a href="ContenidosValoradosServlet">Contenidos Más Valorados</a>
+        <a href="EstudiantesConectadosServlet">Estudiantes Más Conectados</a>
+        <a href="ParticipacionServlet">Participación</a>
     </div>
 
     <% if ("true".equals(request.getParameter("datosGenerados"))) { %>

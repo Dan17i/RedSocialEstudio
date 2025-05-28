@@ -23,6 +23,9 @@ import java.io.IOException;
 <<<<<<< Updated upstream
 =======
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 @WebServlet("/GestionUsuariosServlet")
 public class GestionUsuariosServlet extends HttpServlet {

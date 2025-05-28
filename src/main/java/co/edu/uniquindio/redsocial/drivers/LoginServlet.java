@@ -1,89 +1,60 @@
-package co.edu.uniquindio.redsocial.drivers;
+package co.edu.uniquindio.redsocial.drivers; // Ajusta el paquete según tu estructura
 
-import co.edu.uniquindio.redsocial.models.Estudiante;
+import co.edu.uniquindio.redsocial.models.Moderador;
 import co.edu.uniquindio.redsocial.models.Usuario;
-import co.edu.uniquindio.redsocial.models.services.implement.SistemaAutenticacion;
+import co.edu.uniquindio.redsocial.models.Valoracion;
+import co.edu.uniquindio.redsocial.models.services.implement.GestorContenidos;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+import co.edu.uniquindio.redsocial.models.services.implement.SistemaAutenticacion;
+import co.edu.uniquindio.redsocial.models.Contenido;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-/**
- * Servlet que maneja el proceso de inicio de sesión de usuarios.
- * <p>
- * - Verifica si las credenciales corresponden al moderador fijo y crea
- *   un usuario moderador en sesión.
- * - Si no, intenta autenticar un usuario normal usando el sistema de autenticación.
- * - En caso de credenciales inválidas, muestra un mensaje de error.
- * </p>
- * Ruta: /login
- *
- * @author Daniel Jurado, Sebastian Torres y Juan Soto
- * @version 1.0
- */
-@WebServlet("/login")
+
+// Define las constantes (ajústalas según necesites)
 public class LoginServlet extends HttpServlet {
-
-    private SistemaAutenticacion sistemaAutenticacion;
-
-    // Credenciales fijas del moderador
     private static final String MODERADOR_EMAIL = "moderador@redsocial.com";
     private static final String MODERADOR_PASS = "moderador123";
+    private SistemaAutenticacion sistemaAutenticacion; // Asegúrate de inyectar esto
 
     @Override
     public void init() throws ServletException {
-        sistemaAutenticacion = (SistemaAutenticacion) getServletContext().getAttribute("sistemaAutenticacion");
-        if (sistemaAutenticacion == null) {
-            sistemaAutenticacion = new SistemaAutenticacion();
-            getServletContext().setAttribute("sistemaAutenticacion", sistemaAutenticacion);
-        }
+        super.init();
+        // Inicializa sistemaAutenticacion si es necesario (puede ser un Singleton)
+        sistemaAutenticacion = /* tu implementación */ null; // Ajusta según tu código
     }
-    /**
-     * Procesa la petición POST para iniciar sesión.
-     * <ul>
-     *   <li>Si las credenciales corresponden al moderador fijo, crea un usuario
-     *       moderador y redirige a su dashboard.</li>
-     *   <li>Si las credenciales son de usuario normal, valida con el sistema de
-     *       autenticación y redirige al inicio.</li>
-     *   <li>En caso de error de autenticación, retorna a la página de inicio de sesión
-     *       con un mensaje de error.</li>
-     * </ul>
-     *
-     * @param request  la solicitud HTTP con parámetros de correo y contraseña
-     * @param response la respuesta HTTP con redirección o forward
-     * @throws ServletException si ocurre un error en el servlet
-     * @throws IOException      si ocurre un error de entrada/salida
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
 
-        String email = request.getParameter("correo");
-        String password = request.getParameter("contrasena");
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
 
         try {
             // Verificar primero si es moderador fijo
             if (MODERADOR_EMAIL.equalsIgnoreCase(email) && MODERADOR_PASS.equals(password)) {
-                // Creamos un Usuario para moderador
-                Estudiante moderador = new Estudiante(
-                        "MOD-0001",                    // id (puedes asignar un id fijo)
-                        "Moderador Principal",            // nombre
-                        "moderador@redsocial.com",        // email
-                        "moderador123",                   // contraseña
-                        new ListaEnlazada<>(),            // intereses (vacío)
-                        new ListaEnlazada<>(),            // historial (vacío)
-                        new ListaEnlazada<>(),            // valoraciones (vacío)
-                        null,                             // cola de solicitudes (según constructor Estudiante)
-                        new ListaEnlazada<>(),            // grupos (vacío)
-                        new ListaEnlazada<>()
+                Moderador moderador = new Moderador(
+                        "MOD-0001",
+                        "Moderador Principal",
+                        "moderador@redsocial.com",
+                        "moderador123",
+                        new ListaEnlazada<String>(),
+                        new ListaEnlazada<Contenido>(),
+                        new ListaEnlazada<Valoracion>(),
+                        true,
+                        new ListaEnlazada<String>(),
+                        null, // gestorUsuarios (puedes inyectarlo)
+                        GestorContenidos.getInstancia(),
+                        null  // gestorRedSocial (puedes inyectarlo)
                 );
 
                 // Guardamos en sesión
-                request.getSession().setAttribute("usuarioActual", moderador);
+                request.getSession().setAttribute("usuario", moderador);
 
                 // Redirigimos a página especial del moderador
-                response.sendRedirect("moderador.jsp");
+                response.sendRedirect(request.getContextPath() + "/panelModerador.jsp");
                 return;
             }
 
@@ -91,10 +62,10 @@ public class LoginServlet extends HttpServlet {
             Usuario usuario = sistemaAutenticacion.iniciarSesion(email, password);
 
             // Guardar usuario en sesión
-            request.getSession().setAttribute("usuarioActual", usuario);
+            request.getSession().setAttribute("usuario", usuario);
 
             // Redirigir al perfil normal
-            response.sendRedirect("inicio.jsp");
+            response.sendRedirect(request.getContextPath() + "/inicio.jsp");
 
         } catch (SecurityException e) {
             request.setAttribute("error", "Credenciales inválidas");

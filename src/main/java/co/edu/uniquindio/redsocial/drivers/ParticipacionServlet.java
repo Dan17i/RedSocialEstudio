@@ -2,6 +2,7 @@ package co.edu.uniquindio.redsocial.drivers;
 
 import co.edu.uniquindio.redsocial.models.Moderador;
 import co.edu.uniquindio.redsocial.models.Reporte;
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,11 +16,17 @@ public class ParticipacionServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Reporte<String> reporte = moderador.generarReporteParticipacion();
-        request.setAttribute("reporte", reporte);
+        Moderador moderador = (Moderador) request.getSession().getAttribute("usuarioActual");
+
+        if (moderador == null) {
+            response.sendRedirect("inicioSesion.jsp"); //  redirige a moderador.jsp con un mensaje
+            return;
+        }
+
+        ListaEnlazada participacion = moderador.generarReporteParticipacion().getDatos();
+        request.setAttribute("participacion", participacion);
         request.getRequestDispatcher("/participacion.jsp").forward(request, response);
     }
-
     public void setModerador(Moderador moderador) {
         this.moderador = moderador;
     }

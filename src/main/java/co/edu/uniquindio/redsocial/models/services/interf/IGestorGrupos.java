@@ -15,6 +15,8 @@ import java.util.UUID;
  * Interfaz que define las operaciones básicas para un gestor de grupos de estudio.
  *
  * @param <T> Tipo de estudiante que conforma los grupos.
+ *@author Daniel Jurado, Sebastia Torres y juan Soto
+ * @since 2025-05-27
  */
 public interface IGestorGrupos<T extends Estudiante> {
 

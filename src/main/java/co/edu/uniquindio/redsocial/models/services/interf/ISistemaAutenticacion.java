@@ -5,7 +5,17 @@ import co.edu.uniquindio.redsocial.models.Usuario;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
 /**
- * Interfaz que define los métodos para el manejo de autenticación y registro de usuarios.
+ * Interfaz que define los métodos para la gestión de la autenticación
+ * y el registro de usuarios en el sistema.
+ * Proporciona funcionalidades para registrar nuevos estudiantes,
+ * iniciar sesión, verificar la existencia de usuarios,
+ * eliminar usuarios y obtener la lista de usuarios registrados.
+ * Esta interfaz está diseñada para abstraer la lógica de autenticación
+ * y manejo de usuarios en la plataforma de red social educativa.
+ *
+ * @author Daniel Jurado, Sebastian Torres y juan Soto
+ * @version 1.0
+ * @since 2025-05-27
  */
 public interface ISistemaAutenticacion {
 

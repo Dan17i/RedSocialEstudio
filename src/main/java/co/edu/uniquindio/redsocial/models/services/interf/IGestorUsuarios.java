@@ -6,6 +6,8 @@ import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 /**
  * Interfaz para la gestión de usuarios dentro del sistema de red social.
  * Define las operaciones básicas de CRUD sobre usuarios.
+ * @author Daniel Jurado, Sebastia Torres y juan Soto
+ * @since 2025-05-27
  */
 public interface IGestorUsuarios {
 

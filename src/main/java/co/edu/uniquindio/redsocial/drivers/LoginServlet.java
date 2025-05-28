@@ -1,6 +1,7 @@
 package co.edu.uniquindio.redsocial.drivers;
 
 import co.edu.uniquindio.redsocial.models.Estudiante;
+import co.edu.uniquindio.redsocial.models.Moderador;
 import co.edu.uniquindio.redsocial.models.Usuario;
 import co.edu.uniquindio.redsocial.models.services.implement.SistemaAutenticacion;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
@@ -66,17 +67,22 @@ public class LoginServlet extends HttpServlet {
             // Verificar primero si es moderador fijo
             if (MODERADOR_EMAIL.equalsIgnoreCase(email) && MODERADOR_PASS.equals(password)) {
                 // Creamos un Usuario para moderador
-                Estudiante moderador = new Estudiante(
-                        "MOD-0001",                    // id (puedes asignar un id fijo)
-                        "Moderador Principal",            // nombre
-                        "moderador@redsocial.com",        // email
-                        "moderador123",                   // contraseña
-                        new ListaEnlazada<>(),            // intereses (vacío)
-                        new ListaEnlazada<>(),            // historial (vacío)
-                        new ListaEnlazada<>(),            // valoraciones (vacío)
-                        null,                             // cola de solicitudes (según constructor Estudiante)
-                        new ListaEnlazada<>(),            // grupos (vacío)
-                        new ListaEnlazada<>()
+                Moderador moderador = new Moderador(
+
+                        "MOD-0001",                          // id
+                        "Moderador Principal",              // nombre
+                        MODERADOR_EMAIL,                    // email
+                        MODERADOR_PASS,                     // contraseña
+                        new ListaEnlazada<>(),              // intereses
+                        new ListaEnlazada<>(),              // historial de contenidos
+                        new ListaEnlazada<>(),              // valoraciones
+                        true,                               // acceso completo
+                        new ListaEnlazada<>(),              // áreas de responsabilidad
+                        sistemaAutenticacion.getGestorUsuarios(),      // gestorUsuarios
+                        sistemaAutenticacion.getGestorContenidos(),    // gestorContenidos
+                        sistemaAutenticacion.getGestorRedSocial()      // gestorRedSocial
+
+
                 );
 
                 // Guardamos en sesión

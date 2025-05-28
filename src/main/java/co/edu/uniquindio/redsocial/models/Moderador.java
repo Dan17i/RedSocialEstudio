@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 /**
  * Clase que representa un moderador en la red social.
  * Un moderador tiene acceso a gestionar usuarios, eliminar contenido y generar reportes.
- *
  * Aplica principios de separación de responsabilidades, acoplamiento controlado y eficiencia en generación de reportes.
  *
  * @author Daniel Jurado, Sebastian Torres y Juan Soto
@@ -30,7 +29,7 @@ public class Moderador extends Usuario {
     /**
      * Constructor del moderador con inyección de gestores.
      *
-     * @param id                    ID del moderador
+     * @param id                    iD del moderador
      * @param nombre                Nombre del moderador
      * @param email                 Correo electrónico
      * @param contraseña            Contraseña

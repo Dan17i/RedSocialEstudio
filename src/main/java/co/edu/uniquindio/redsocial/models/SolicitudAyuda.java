@@ -3,6 +3,7 @@ package co.edu.uniquindio.redsocial.models;
 import co.edu.uniquindio.redsocial.models.Enums.EstadoSolicitud;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -146,9 +147,10 @@ public class SolicitudAyuda implements Comparable<SolicitudAyuda> {
      */
     @Override
     public String toString() {
+        DateTimeFormatter formatter= DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return String.format(
                 "SolicitudAyuda{id='%s', tema='%s', urgencia=%d, estudiante='%s', estado=%s, fecha=%s, descripcion='%s'}",
-                id, tema, urgencia, estudiante.getNombre(), estado, fechaSolicitud, descripcion
+                id, tema, urgencia, estudiante.getNombre(), estado, fechaSolicitud.format(formatter), descripcion
         );
     }
 

@@ -1,9 +1,18 @@
 package co.edu.uniquindio.redsocial.drivers;
 
+import co.edu.uniquindio.redsocial.models.Contenido;
 import co.edu.uniquindio.redsocial.models.Moderador;
 import co.edu.uniquindio.redsocial.models.Usuario;
+import co.edu.uniquindio.redsocial.models.Valoracion;
+import co.edu.uniquindio.redsocial.models.services.implement.GestorContenidos;
+import co.edu.uniquindio.redsocial.models.services.implement.GestorRedSocial;
+import co.edu.uniquindio.redsocial.models.services.implement.GestorUsuarios;
+import co.edu.uniquindio.redsocial.models.services.interf.IGestorRedSocial;
 import co.edu.uniquindio.redsocial.models.services.interf.IGestorUsuarios;
+import co.edu.uniquindio.redsocial.models.structures.ArbolBinarioBusqueda;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+import javax.servlet.annotation.WebServlet;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,6 +20,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 @WebServlet("/GestionUsuariosServlet")
 public class GestionUsuariosServlet extends HttpServlet {
     private IGestorUsuarios gestorUsuarios;
@@ -20,7 +33,7 @@ public class GestionUsuariosServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ListaEnlazada<Usuario> usuarios = gestorUsuarios.listarUsuarios();
         request.setAttribute("usuarios", usuarios);
-        request.getRequestDispatcher("/gestionUsuarios.jsp").forward(request, response);
+        request.getRequestDispatcher("/gestionarUsuarios.jsp").forward(request, response);
     }
 
     @Override
@@ -45,6 +58,39 @@ public class GestionUsuariosServlet extends HttpServlet {
             }
         }
     }
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+
+        // Inicializaciones mínimas para pruebas
+        gestorUsuarios = new GestorUsuarios();
+        ArbolBinarioBusqueda<Contenido> arbolContenidos = new ArbolBinarioBusqueda<>();
+        ListaEnlazada<Contenido> contenidoDestacado = new ListaEnlazada<>();
+        GestorContenidos gestorContenidos = new GestorContenidos(arbolContenidos, contenidoDestacado);
+        IGestorRedSocial gestorRedSocial = new GestorRedSocial();
+        ListaEnlazada<String> intereses = new ListaEnlazada<>();
+        ListaEnlazada<Contenido> historial = new ListaEnlazada<>();
+        ListaEnlazada<Valoracion> valoraciones = new ListaEnlazada<>();
+        ListaEnlazada<String> areas = new ListaEnlazada<>();
+
+        moderador = new Moderador(
+                "mod001",
+                "Moderador",
+                "moderador@redsocial.com",
+                "moderador123",
+                intereses,
+                historial,
+                valoraciones,
+                true,
+                areas,
+                gestorUsuarios,
+                gestorContenidos,
+                gestorRedSocial
+        );
+    }
+
+
 
     // Métodos para inyección de dependencias
     public void setGestorUsuarios(IGestorUsuarios gestorUsuarios) {

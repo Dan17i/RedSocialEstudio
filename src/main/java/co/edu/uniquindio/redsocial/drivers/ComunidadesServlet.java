@@ -5,11 +5,13 @@ import co.edu.uniquindio.redsocial.models.Moderador;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@WebServlet ("/ComunidadesServlet")
 public class ComunidadesServlet extends HttpServlet {
     private Moderador moderador;
 

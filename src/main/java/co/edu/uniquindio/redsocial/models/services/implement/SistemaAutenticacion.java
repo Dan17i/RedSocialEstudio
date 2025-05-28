@@ -1,8 +1,12 @@
 package co.edu.uniquindio.redsocial.models.services.implement;
 
+import co.edu.uniquindio.redsocial.models.Contenido;
 import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.Usuario;
+import co.edu.uniquindio.redsocial.models.services.interf.IGestorRedSocial;
+import co.edu.uniquindio.redsocial.models.services.interf.IGestorUsuarios;
 import co.edu.uniquindio.redsocial.models.services.interf.ISistemaAutenticacion;
+import co.edu.uniquindio.redsocial.models.structures.ArbolBinarioBusqueda;
 import co.edu.uniquindio.redsocial.models.structures.ColaPrioridad;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import co.edu.uniquindio.redsocial.models.structures.NodoLista;
@@ -21,6 +25,20 @@ import java.util.UUID;
  */
 public class SistemaAutenticacion implements ISistemaAutenticacion {
     private ListaEnlazada<Usuario> usuariosRegistrados = new ListaEnlazada<>();
+    private GestorContenidos gestorContenidos;
+    private IGestorUsuarios gestorUsuarios;
+    private IGestorRedSocial gestorRedSocial;
+
+
+    public SistemaAutenticacion() {
+        this.gestorUsuarios = new GestorUsuarios();
+        this.gestorRedSocial = new GestorRedSocial();
+
+        ArbolBinarioBusqueda<Contenido> arbolContenidos = new ArbolBinarioBusqueda<>();
+        ListaEnlazada<Contenido> contenidoDestacado = new ListaEnlazada<>();
+
+        this.gestorContenidos = new GestorContenidos(arbolContenidos, contenidoDestacado);
+    }
 
     /**
      * Registra un nuevo estudiante en el sistema.
@@ -159,4 +177,15 @@ public class SistemaAutenticacion implements ISistemaAutenticacion {
         return lista;
     }
 
+    public GestorContenidos getGestorContenidos() {
+        return gestorContenidos;
+    }
+
+    public IGestorUsuarios getGestorUsuarios() {
+        return gestorUsuarios;
+    }
+
+    public IGestorRedSocial getGestorRedSocial() {
+        return gestorRedSocial;
+    }
 }

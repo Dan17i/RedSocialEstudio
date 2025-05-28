@@ -9,9 +9,29 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
-
+/**
+ * Servlet que permite a un estudiante unirse a un grupo de estudio.
+ *
+ * <p>
+ * Recibe el ID del grupo mediante una solicitud POST, busca el grupo
+ * en la lista de grupos disponibles y agrega al estudiante al grupo.
+ * </p>
+ *
+ * Ruta: /grupos/unirse
+ *
+ * @author Daniel Jurado, Sebastian Torres y Juan Soto
+ * @version 1.0
+ */
 @WebServlet("/grupos/unirse")
 public class UnirseGrupoServlet extends HttpServlet {
+    /**
+     * Procesa solicitudes POST para que un estudiante se una a un grupo específico.
+     *
+     * @param req  solicitud HTTP con parámetro "grupoId"
+     * @param resp respuesta HTTP que redirige a la página principal con mensaje
+     * @throws ServletException en caso de error en el servlet
+     * @throws IOException      en caso de error de entrada/salida
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {

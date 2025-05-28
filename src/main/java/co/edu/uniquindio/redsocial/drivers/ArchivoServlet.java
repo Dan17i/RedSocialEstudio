@@ -3,12 +3,28 @@ package co.edu.uniquindio.redsocial.drivers;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.*;
-
+/**
+ * Servlet para servir archivos multimedia almacenados en el servidor.
+ *
+ * Recibe peticiones GET en la ruta "/archivo/*", donde el path especifica
+ * el nombre del archivo a descargar.
+ * Funciona leyendo el archivo desde el sistema de archivos local bajo la
+ * carpeta "archivos" y enviándolo como respuesta HTTP con el tipo MIME adecuado.
+ * Si el archivo no existe o no se especifica un nombre válido, devuelve un error HTTP.
+ * @author Daniel Jurado, Sebastian Torre y Juan Soto
+ * @since 2025-05-24
+ */
 @WebServlet("/archivo/*")
 public class ArchivoServlet extends HttpServlet {
 
     private static final String UPLOAD_DIR = "archivos";
-
+    /**
+     * Procesa las peticiones GET para entregar un archivo solicitado.
+     *
+     * @param request La petición HTTP del cliente.
+     * @param response La respuesta HTTP que contendrá el archivo solicitado.
+     * @throws IOException En caso de error de entrada/salida al leer el archivo.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {

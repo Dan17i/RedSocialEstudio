@@ -8,10 +8,40 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
-
+/**
+ * Servlet encargado de manejar las interacciones relacionadas con el chat entre estudiantes.
+ * Este servlet permite:
+ * <ul>
+ *     <li>Buscar estudiantes por nombre o email para iniciar nuevas conversaciones.</li>
+ *     <li>Iniciar una nueva conversación entre dos estudiantes.</li>
+ *     <li>Seleccionar y visualizar una conversación existente.</li>
+ * </ul>
+ *
+ * La lógica utiliza atributos compartidos en el ServletContext para manejar la lista global
+ * de conversaciones y el sistema de autenticación de usuarios.
+ * URL de acceso: <code>/Chat</code>
+ *
+ * @author Daniel Jurado, Sebastian Torres y Juan Soto
+ * @since 2025-05-24
+ */
 @WebServlet("/Chat")
 public class ChatServlet extends HttpServlet {
-
+    /**
+     * Maneja solicitudes GET para mostrar la interfaz de chat.
+     * Realiza las siguientes acciones:
+     * <ol>
+     *     <li>Obtiene el sistema de autenticación y la lista de conversaciones del contexto.</li>
+     *     <li>Filtra usuarios según el parámetro "buscar" para iniciar un nuevo chat.</li>
+     *     <li>Inicia una conversación si se proporcionan los parámetros "startId" y "usuarioActual".</li>
+     *     <li>Selecciona una conversación existente según su "id".</li>
+     *     <li>Redirige a la vista JSP <code>chats.jsp</code> con los datos necesarios.</li>
+     * </ol>
+     *
+     * @param req  la solicitud HTTP con los parámetros para búsqueda, inicio o selección de conversaciones.
+     * @param resp la respuesta HTTP que será redirigida a la vista correspondiente.
+     * @throws ServletException si ocurre un error de lógica del servlet.
+     * @throws IOException si ocurre un error de entrada/salida.
+     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {

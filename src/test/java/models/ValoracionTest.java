@@ -12,19 +12,42 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
-
+/**
+ * Clase de prueba para la clase {@link Valoracion}.
+ * <p>
+ * Esta clase contiene una serie de pruebas unitarias para verificar el correcto funcionamiento
+ * de la clase {@code Valoracion}, incluyendo la validación de su constructor, métodos getters,
+ * comportamiento inmutable y el método {@code toString}.
+ * </p>
+ *
+ * <p>Se utilizan objetos auxiliares como {@link Estudiante} y {@link Contenido}, así como
+ * estructuras de datos personalizadas como {@link co.edu.uniquindio.redsocial.models.structures.ListaEnlazada}
+ * y {@link co.edu.uniquindio.redsocial.models.structures.ColaPrioridad}.</p>
+ *
+ * @author
+ * @version 1.0
+ */
 public class ValoracionTest {
-
+    /**
+     * Instancia de {@link Estudiante} utilizada para las pruebas.
+     */
     private Estudiante estudiante;
+    /**
+     * Instancia de {@link Contenido} utilizada para las pruebas.
+     */
     private Contenido contenido;
+    /**
+     * Instancia de {@link Valoracion} a ser evaluada en las pruebas.
+     */
     private Valoracion valoracion;
+    /**
+     * Instancia de {@link ArchivoMultimedia} asociada al contenido.
+     */
     private ArchivoMultimedia archivo;
-
     /**
      * Método ejecutado antes de cada prueba.
-     * Inicializa objetos comunes necesarios para los tests.
+     * Inicializa los objetos necesarios como {@link Estudiante}, {@link Contenido} y {@link Valoracion}.
      */
-
     @BeforeEach
     public void setUp() {
         // Crear listas vacías para inicializar parámetros que requieren listas
@@ -72,10 +95,9 @@ public class ValoracionTest {
                 "Buen contenido"
         );
     }
-
-
     /**
-     * Verifica que el constructor crea correctamente una Valoracion con valores válidos.
+     * Prueba que verifica la correcta inicialización de una {@link Valoracion} con valores válidos.
+     * Se asegura de que todos los campos estén correctamente asignados.
      */
     @Test
     public void testConstructorValido() {
@@ -86,9 +108,9 @@ public class ValoracionTest {
         assertNotNull(valoracion.getFechaValoracion());
         assertNotNull(valoracion.getId());
     }
-
     /**
-     * Verifica que el constructor lanza excepción si la puntuación está fuera del rango permitido.
+     * Prueba que verifica que el constructor de {@link Valoracion} lanza una excepción
+     * cuando la puntuación es menor a 1 o mayor a 5.
      */
     @Test
     public void testConstructorPuntuacionInvalida() {
@@ -99,9 +121,9 @@ public class ValoracionTest {
             new Valoracion(estudiante, contenido, 6, "Excelente");
         });
     }
-
     /**
-     * Verifica que el constructor lanza excepción si el estudiante es nulo.
+     * Prueba que verifica que el constructor de {@link Valoracion} lanza una excepción
+     * cuando el estudiante es {@code null}.
      */
     @Test
     public void testConstructorEstudianteNulo() {
@@ -109,9 +131,9 @@ public class ValoracionTest {
             new Valoracion(null, contenido, 3, "Comentario");
         });
     }
-
     /**
-     * Verifica que el constructor lanza excepción si el contenido es nulo.
+     * Prueba que verifica que el constructor de {@link Valoracion} lanza una excepción
+     * cuando el contenido es {@code null}.
      */
     @Test
     public void testConstructorContenidoNulo() {
@@ -119,9 +141,9 @@ public class ValoracionTest {
             new Valoracion(estudiante, null, 3, "Comentario");
         });
     }
-
     /**
-     * Verifica que el método setComentario actualiza correctamente el comentario.
+     * Prueba que verifica que el método {@code setComentario} actualiza correctamente el comentario,
+     * y reemplaza valores nulos o vacíos con el texto "Sin comentario".
      */
     @Test
     public void testSetComentario() {
@@ -134,9 +156,10 @@ public class ValoracionTest {
         valoracion.setComentario("   ");
         assertEquals("Sin comentario", valoracion.getComentario());
     }
-
     /**
-     * Verifica que los campos inmutables no cambian tras la creación.
+     * Prueba que verifica que los campos inmutables de la clase {@link Valoracion}
+     * (como estudiante, contenido, puntuación, ID y fecha de valoración)
+     * no pueden ser modificados después de la construcción del objeto.
      */
     @Test
     public void testCamposInmutables() {
@@ -155,9 +178,9 @@ public class ValoracionTest {
         assertEquals(idAntes, valoracion.getId());
         assertEquals(fechaAntes, valoracion.getFechaValoracion());
     }
-
     /**
-     * Verifica que el método toString contiene información relevante.
+     * Prueba que verifica que el método {@code toString} de {@link Valoracion}
+     * devuelve una representación textual que incluye la información relevante del objeto.
      */
     @Test
     public void testToString() {

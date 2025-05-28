@@ -16,36 +16,9 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Servlet que se encarga de formar grupos de estudio automáticamente basados en
- * la afinidad de intereses entre estudiantes. Para ello:
- * <ul>
- *   <li>Obtiene la lista de todos los usuarios registrados.</li>
- *   <li>Construye un grafo no dirigido con nodos representando estudiantes.</li>
- *   <li>Conecta nodos cuyos estudiantes comparten intereses en común.</li>
- *   <li>Utiliza un gestor de grupos para crear grupos de estudio basados en la
- *       conectividad del grafo.</li>
- *   <li>Almacena los grupos formados en el contexto de la aplicación para uso global.</li>
- *   <li>Redirige al usuario a la página de sugerencias con un mensaje de éxito.</li>
- * </ul>
- *
- * Ruta: /grupos/formar
- *
- * Este servlet procesa peticiones POST para formar los grupos.
- *
- * @author Daniel Jurado, Sebastian Torres y Juan Soto
- * @since 2025-05-25
- * @version 1.0
- */
 @WebServlet("/grupos/formar")
 public class FormarGruposServlet extends HttpServlet {
-    /**
-     * Verifica si dos listas de intereses tienen al menos un elemento en común.
-     *
-     * @param i1 Lista de intereses del primer estudiante.
-     * @param i2 Lista de intereses del segundo estudiante.
-     * @return true si hay al menos un interés en común; false en caso contrario.
-     */
+
     private boolean interesesSeCruzan(ListaEnlazada<String> i1, ListaEnlazada<String> i2) {
         for (int x = 0; x < i1.getTamanio(); x++) {
             String v = i1.obtener(x);
@@ -57,17 +30,7 @@ public class FormarGruposServlet extends HttpServlet {
         }
         return false;
     }
-    /**
-     * Procesa la petición POST para formar grupos de estudio. Construye un grafo
-     * con estudiantes conectados si comparten intereses, y utiliza un gestor de grupos
-     * para crear automáticamente los grupos basados en esa afinidad.
-     * Finalmente, almacena los grupos en el contexto y redirige a la página de sugerencias.
-     *
-     * @param req  solicitud HTTP POST
-     * @param resp respuesta HTTP con redirección
-     * @throws ServletException si ocurre un error en el servlet
-     * @throws IOException      si ocurre un error de entrada/salida
-     */
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {

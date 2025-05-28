@@ -76,7 +76,7 @@ public class ContenidoTest {
      */
     @Test
     public void testContenidoSinValoracionesRetornaCero() {
-        float promedio = contenido.calcularValoracionPromedio();
+        double promedio = contenido.promedioValoraciones();
         assertEquals(0.0f, promedio, "El promedio debe ser 0 cuando no hay valoraciones");
     }
     /**
@@ -114,7 +114,7 @@ public class ContenidoTest {
         // Agregar valoración al contenido (incluyendo el contenido en el constructor)
         contenido.getValoraciones().agregar(new Valoracion(estudiante, contenido, 4, "Buena explicación"));
 
-        float promedio = contenido.calcularValoracionPromedio();
+        double promedio = contenido.promedioValoraciones();
 
         assertEquals(4.0f, promedio, 0.01, "El promedio debe ser igual a la única puntuación");
     }
@@ -136,7 +136,7 @@ public class ContenidoTest {
         valoraciones.agregar(new Valoracion(estudiante2, contenido, 5, "Excelente"));
         valoraciones.agregar(new Valoracion(estudiante3, contenido, 3, "Regular"));
 
-        float promedio = contenido.calcularValoracionPromedio();
+        double promedio = contenido.promedioValoraciones();
 
         assertEquals(4.0f, promedio, 0.01, "El promedio debe ser la media de las puntuaciones");
     }

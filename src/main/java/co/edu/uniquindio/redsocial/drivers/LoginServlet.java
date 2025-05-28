@@ -56,7 +56,7 @@ public class LoginServlet extends HttpServlet {
                 request.getSession().setAttribute("usuarioActual", moderador);
 
                 // Redirigimos a página especial del moderador
-                response.sendRedirect("dashboardModerador.jsp");
+                response.sendRedirect("moderador.jsp");
                 return;
             }
 

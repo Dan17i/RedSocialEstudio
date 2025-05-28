@@ -29,7 +29,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Grafo de Afinidad Avanzado</title>
+    <title>Grafo de Afinidad</title>
     <style>
         body { margin:0; font-family:Arial,sans-serif; }
         svg { background:#f9faff; display:block; }
@@ -37,7 +37,6 @@
         .node circle { fill:#6c8eff; stroke:#fff; stroke-width:2; cursor:pointer; }
         .node text { fill:#fff; font-size:10px; pointer-events:none; }
 
-        /* Panel de información */
         #infoPanel {
             position:absolute; top:0; right:0;
             width:300px; height:100%; padding:15px;
@@ -60,7 +59,6 @@
 <body>
 <div style="position:relative;">
     <svg width="800" height="600">
-        <!-- Dibujar enlaces de afinidad -->
         <g class="links">
             <% for (int i = 0; i < n; i++) {
                 Estudiante e1 = todos.obtener(i);
@@ -74,11 +72,9 @@
                   x1="<%=p1[0]%>" y1="<%=p1[1]%>"
                   x2="<%=p2[0]%>" y2="<%=p2[1]%>" />
             <%   }
-            }
-            %>
+            } %>
         </g>
 
-        <!-- Dibujar nodos clicables -->
         <g class="nodes">
             <% for (int i = 0; i < n; i++) {
                 Estudiante e = todos.obtener(i);
@@ -95,7 +91,6 @@
         </g>
     </svg>
 
-    <!-- Panel de información -->
     <div id="infoPanel">
         <button class="close-btn">&times;</button>
         <h3 id="infoName"></h3>
@@ -104,29 +99,25 @@
 </div>
 
 <script>
-    const panel = document.getElementById('infoPanel');
-    const infoName = document.getElementById('infoName');
-    const sugList = document.getElementById('suggestionsList');
+    const panel = document.getElementById('infoPanel'),
+        infoName = document.getElementById('infoName'),
+        sugList = document.getElementById('suggestionsList');
 
     panel.querySelector('.close-btn').onclick = () => panel.classList.remove('active');
 
     document.querySelectorAll('g.node').forEach(node => {
         node.addEventListener('click', () => {
-            const id = node.getAttribute('data-id');
-            const name = node.getAttribute('data-name');
+            const id   = node.getAttribute('data-id'),
+                name = node.getAttribute('data-name');
             infoName.textContent = name;
             sugList.innerHTML = '<li>Cargando...</li>';
             panel.classList.add('active');
 
             fetch('SugerenciasServlet?id=' + encodeURIComponent(id))
-                .then(res => {
-                    if (!res.ok) throw new Error('HTTP error ' + res.status);
-                    return res.json();
-                })
+                .then(res => res.ok ? res.json() : Promise.reject(res.status))
                 .then(arr => {
-                    console.log('Respuesta JSON:', arr); // Para depurar claramente
                     sugList.innerHTML = '';
-                    if (arr.length === 0) {
+                    if (!arr.length) {
                         sugList.innerHTML = '<li>No hay sugerencias</li>';
                     } else {
                         arr.forEach(o => {
@@ -140,14 +131,11 @@
                         });
                     }
                 })
-                .catch(err => {
-                    console.error(err);
+                .catch(() => {
                     sugList.innerHTML = '<li>Error cargando sugerencias</li>';
                 });
         });
     });
 </script>
-
-
 </body>
 </html>

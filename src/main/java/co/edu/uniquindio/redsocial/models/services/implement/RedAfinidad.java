@@ -218,6 +218,7 @@ public class RedAfinidad implements IRedAfinidad {
         }
         return sugerencias;
     }
+    
 
 }
 

@@ -127,7 +127,6 @@ public class SolicitudAyuda implements Comparable<SolicitudAyuda> {
         this.estado = estadoSolicitud;
     }
 
-
     /**
      * Compara esta solicitud con otra según el nivel de urgencia
      * (orden descendente: mayor urgencia primero).

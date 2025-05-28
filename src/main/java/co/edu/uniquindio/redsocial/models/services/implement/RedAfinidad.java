@@ -5,6 +5,14 @@ import co.edu.uniquindio.redsocial.models.structures.GrafoImpl;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import co.edu.uniquindio.redsocial.models.structures.NodoGrafo;
 import co.edu.uniquindio.redsocial.models.services.interf.IRedAfinidad;
+import java.util.Set;
+import java.util.HashSet;
+
+import co.edu.uniquindio.redsocial.models.Valoracion;
+import co.edu.uniquindio.redsocial.models.GrupoEstudio;
+import co.edu.uniquindio.redsocial.models.Contenido;
+import co.edu.uniquindio.redsocial.models.Estudiante;
+
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +33,7 @@ import java.util.Set;
  */
 
 public class RedAfinidad implements IRedAfinidad {
-    private final GrafoImpl<Estudiante> grafoEstudiantes;
+    public final GrafoImpl<Estudiante> grafoEstudiantes;
     private static RedAfinidad instancia;
 
     /**
@@ -124,7 +132,96 @@ public class RedAfinidad implements IRedAfinidad {
 
         return contador;
     }
+    /**
+     * Cuenta cuántos contenidos han sido valorados por ambos estudiantes.
+     * @param e1 primer estudiante
+     * @param e2 segundo estudiante
+     * @return número de contenidos comunes valorados
+     */
+    private int contarValoracionesSimilares(Estudiante e1, Estudiante e2) {
+        // Obtener ids de contenidos valorados por e1
+        Set<String> contenidosE1 = new HashSet<>();
+        for (Valoracion v : e1.getValoraciones()) {
+            contenidosE1.add(v.getContenido().getId());
+        }
+        // Contar cuántos de e2 están en ese set
+        int contador = 0;
+        for (Valoracion v : e2.getValoraciones()) {
+            if (contenidosE1.contains(v.getContenido().getId())) {
+                contador++;
+            }
+        }
+        return contador;
+    }
+
+    /**
+     * Cuenta en cuántos grupos de estudio coinciden ambos estudiantes.
+     * @param e1 primer estudiante
+     * @param e2 segundo estudiante
+     * @return número de grupos en común
+     */
+    private int contarGruposCompartidos(Estudiante e1, Estudiante e2) {
+        Set<String> gruposE1 = new HashSet<>();
+        for (GrupoEstudio g : e1.getGruposEstudio()) {
+            gruposE1.add(g.getId());  // asume que GrupoEstudio tiene getId()
+        }
+        int contador = 0;
+        for (GrupoEstudio g : e2.getGruposEstudio()) {
+            if (gruposE1.contains(g.getId())) {
+                contador++;
+            }
+        }
+        return contador;
+    }
+
+    /**
+     * Versión ampliada de afinidad que combina:
+     *   - intereses en común (umbralIntereses)
+     *   - valoraciones similares (umbralValoraciones)
+     *   - grupos compartidos (umbralGrupos)
+     *
+     * @return true si se cumplen al menos dos de los tres criterios
+     */
+    private boolean tieneAfinidadAvanzada(Estudiante e1, Estudiante e2,
+                                          int umbralIntereses,
+                                          int umbralValoraciones,
+                                          int umbralGrupos) {
+        boolean interesOK = contarCoincidencias(e1.getIntereses(), e2.getIntereses()) >= umbralIntereses;
+        boolean valoracionOK = contarValoracionesSimilares(e1, e2) >= umbralValoraciones;
+        boolean grupoOK = contarGruposCompartidos(e1, e2) >= umbralGrupos;
+
+        // Por ejemplo, al menos 2 de los 3 criterios deben cumplirse:
+        int cumplidos = 0;
+        if (interesOK)       cumplidos++;
+        if (valoracionOK)     cumplidos++;
+        if (grupoOK)          cumplidos++;
+
+        return cumplidos >= 2;
+    }
+
+    /**
+     * Modifica tu método sugerirCompaneros para usar la versión avanzada:
+     */
+    public ListaEnlazada<Estudiante> sugerirCompanerosAvanzado(Estudiante estudiante) {
+        ListaEnlazada<Estudiante> sugerencias = new ListaEnlazada<>();
+        NodoGrafo<Estudiante> nodoEst = grafoEstudiantes.buscarNodo(estudiante);
+        for (NodoGrafo<Estudiante> nodo : grafoEstudiantes.getNodos()) {
+            Estudiante candidato = nodo.getDato();
+            if (!candidato.equals(estudiante)
+                    && tieneAfinidadAvanzada(estudiante, candidato,
+                    2, // intereses
+                    1, // valoraciones
+                    1  // grupos
+            )) {
+                sugerencias.agregar(candidato);
+            }
+        }
+        return sugerencias;
+    }
+    
+
 }
+
 
 
 

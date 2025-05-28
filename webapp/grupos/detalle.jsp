@@ -6,7 +6,27 @@
     GrupoEstudio grupo = (GrupoEstudio) request.getAttribute("grupo");
 %>
 
+<% if (grupo == null) { %>
 <div class="container mt-4">
+    <div class="alert alert-danger">
+        No se encontró el grupo especificado.
+    </div>
+    <a href="<%= request.getContextPath() %>/inicio.jsp?seccion=grupos" class="btn btn-link">
+        &larr; Volver a Mis Grupos
+    </a>
+</div>
+<% } else { %>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle Grupo: <%= grupo.getTema() %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container py-4">
     <!-- Cabecera -->
     <div class="card mb-4 shadow-sm">
         <div class="card-header bg-primary text-white">
@@ -39,13 +59,16 @@
                 <div class="card-body">
                     <form action="<%= request.getContextPath() %>/grupos/detalle/publicar"
                           method="post" enctype="multipart/form-data">
+
                         <input type="hidden" name="grupoId" value="<%= grupo.getId() %>" />
+
+
                         <div class="mb-3">
                             <input name="tema" class="form-control" placeholder="Título" required />
                         </div>
                         <div class="mb-3">
-              <textarea name="descripcion" class="form-control"
-                        rows="2" placeholder="Descripción" required></textarea>
+                            <textarea name="descripcion" class="form-control"
+                                      rows="2" placeholder="Descripción" required></textarea>
                         </div>
                         <div class="mb-3">
                             <input type="file" name="archivo" class="form-control" />
@@ -80,7 +103,7 @@
                 <div class="card-body">
                     <form action="<%= request.getContextPath() %>/grupos/detalle/mensaje"
                           method="post" class="mb-3">
-                        <input type="hidden" name="grupoId" value="<%= grupo.getId() %>" />
+                        <input type="hidden" name="grupoId" value="${grupo.id}" />
                         <div class="input-group">
                             <input name="texto" type="text" class="form-control"
                                    placeholder="Mensaje..." required />
@@ -110,7 +133,7 @@
                 <div class="card-body">
                     <form action="<%= request.getContextPath() %>/grupos/detalle/ayuda"
                           method="post" class="mb-3">
-                        <input type="hidden" name="grupoId" value="<%= grupo.getId() %>" />
+                        <input type="hidden" name="grupoId" value="${grupo.id}" />
                         <div class="row g-2">
                             <div class="col-md-5">
                                 <input name="temaAyuda" type="text" class="form-control"
@@ -118,15 +141,15 @@
                             </div>
                             <div class="col-md-3">
                                 <input name="urgencia" type="number" class="form-control"
-                                       min="1" max="10" placeholder="Urgencia" required />
+                                       min="1" max="10" placeholder="Urgencia (1 baja-10 maxima)" required />
                             </div>
                             <div class="col-md-4">
                                 <button class="btn btn-warning w-100">Solicitar</button>
                             </div>
                         </div>
                         <div class="mt-3">
-              <textarea name="descripcionAyuda" class="form-control" rows="2"
-                        placeholder="Describe el problema" required></textarea>
+                            <textarea name="descripcionAyuda" class="form-control" rows="2"
+                                      placeholder="Describe el problema" required></textarea>
                         </div>
                     </form>
                     <%
@@ -147,15 +170,22 @@
                             <p><%= s.getDescripcion() %></p>
                         </div>
                     </div>
-                    <% nodo = nodo.getSiguiente(); } %>
+                    <%   nodo = nodo.getSiguiente();
+                    } %>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="mt-3">
-        <a href="inicio.jsp?seccion=grupos" class="btn btn-link">
+        <a href="<%= request.getContextPath() %>/inicio.jsp?seccion=grupos" class="btn btn-link">
             <i class="bi bi-arrow-left"></i> Volver a Mis Grupos
         </a>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+<% } /* fin del else */ %>

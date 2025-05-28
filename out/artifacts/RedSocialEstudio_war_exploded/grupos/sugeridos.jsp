@@ -3,43 +3,41 @@
 <%@ page import="co.edu.uniquindio.redsocial.models.structures.ListaEnlazada" %>
 
 <div class="container mt-4">
-    <h3>Grupos Sugeridos</h3>
+    <h3 class="mb-4">Grupos Sugeridos</h3>
+    <div class="row">
+        <%
+            @SuppressWarnings("unchecked")
+            ListaEnlazada<GrupoEstudio> sugeridos =
+                    (ListaEnlazada<GrupoEstudio>) request.getAttribute("sugeridos");
 
-    <%
-        @SuppressWarnings("unchecked")
-        ListaEnlazada<GrupoEstudio> sugeridos =
-                (ListaEnlazada<GrupoEstudio>) request.getAttribute("sugeridos");
-
-        if (sugeridos != null && sugeridos.getTamanio() > 0) {
-            for (int i = 0; i < sugeridos.getTamanio(); i++) {
-                GrupoEstudio g = sugeridos.obtener(i);
-    %>
-    <div class="card mb-3 shadow-sm">
-        <div class="card-body d-flex justify-content-between align-items-center">
-            <div>
-                <h5 class="card-title mb-1"><%= g.getTema() %></h5>
-                <small class="text-muted">Miembros: <%= g.getMiembros().getTamanio() %></small>
-            </div>
-            <div>
-                <form action="<%= request.getContextPath() %>/grupos/unirse" method="post" class="d-inline">
-                    <input type="hidden" name="grupoId" value="<%= g.getId() %>" />
-                    <button class="btn btn-success btn-sm">Unirse</button>
-                </form>
-                <a href="<%= request.getContextPath() %>/inicio.jsp?seccion=gruposDetalle&id=<%= g.getId() %>"
-                   class="btn btn-outline-primary btn-sm ms-2">
-                    Ver detalle
-                </a>
+            if (sugeridos != null && sugeridos.getTamanio() > 0) {
+                for (int i = 0; i < sugeridos.getTamanio(); i++) {
+                    GrupoEstudio g = sugeridos.obtener(i);
+        %>
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title"><%= g.getTema() %></h5>
+                    <p class="card-text mb-4">
+                        Miembros: <%= g.getMiembros().getTamanio() %>
+                    </p>
+                    <form action="<%= request.getContextPath() %>/grupos/unirse"
+                          method="post" class="mt-auto">
+                        <input type="hidden" name="grupoId" value="<%= g.getId() %>"/>
+                        <button type="submit" class="btn btn-success w-100">
+                            Unirse
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-    <% }
-    } else { %>
-    <p class="text-muted">No hay grupos sugeridos.</p>
-    <% } %>
-
-    <div class="mt-4">
-        <a href="inicio.jsp?seccion=grupos" class="btn btn-secondary">
-            Volver a mis grupos
-        </a>
+        <%    }
+        } else { %>
+        <div class="col-12">
+            <p class="text-muted">
+                No hay grupos sugeridos para tus intereses.
+            </p>
+        </div>
+        <% } %>
     </div>
 </div>

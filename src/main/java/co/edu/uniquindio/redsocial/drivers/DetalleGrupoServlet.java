@@ -1,4 +1,3 @@
-// src/main/java/co/edu/uniquindio/redsocial/drivers/DetalleGrupoServlet.java
 package co.edu.uniquindio.redsocial.drivers;
 
 import co.edu.uniquindio.redsocial.models.GrupoEstudio;
@@ -15,44 +14,38 @@ public class DetalleGrupoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-
-        // 1) Leer el parámetro "id" de la URL
-        String id = req.getParameter("id");
+        String id = req.getParameter("grupoId");
         if (id == null || id.isBlank()) {
-            // No hay id → no seteamos nada y el JSP puede mostrar mensaje
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Falta parámetro grupoId");
             return;
         }
 
-        // 2) Recuperar la lista donde guardaste tus grupos (sugeridos o misGrupos)
-        HttpSession session = req.getSession(false);
         @SuppressWarnings("unchecked")
-        ListaEnlazada<GrupoEstudio> grupos =
-                session != null
-                        ? (ListaEnlazada<GrupoEstudio>) session.getAttribute("sugeridos")
-                        : null;
-
-        // Si no viene por sugeridos, tal vez lo guardaste en "misGrupos"
-        if (grupos == null && session != null) {
-            @SuppressWarnings("unchecked")
-            ListaEnlazada<GrupoEstudio> otro =
-                    (ListaEnlazada<GrupoEstudio>) session.getAttribute("misGrupos");
-            grupos = otro;
+        ListaEnlazada<GrupoEstudio> todosGrupos =
+                (ListaEnlazada<GrupoEstudio>) getServletContext().getAttribute("todosGrupos");
+        if (todosGrupos == null) {
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "No se configuró la lista de grupos");
+            return;
         }
 
-        // 3) Buscar el grupo con ese id
         GrupoEstudio encontrado = null;
-        if (grupos != null) {
-            for (int i = 0; i < grupos.getTamanio(); i++) {
-                GrupoEstudio g = grupos.obtener(i);
-                if (id.equals(g.getId())) {
-                    encontrado = g;
-                    break;
-                }
+        for (int i = 0; i < todosGrupos.getTamanio(); i++) {
+            GrupoEstudio g = todosGrupos.obtener(i);
+            if (g.getId().equals(id)) {
+                encontrado = g;
+                break;
             }
         }
 
-        // 4) Poner en request para que detalle.jsp lo use
+        if (encontrado == null) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND,
+                    "No se encontró el grupo especificado");
+            return;
+        }
+
         req.setAttribute("grupo", encontrado);
-        // no forward aquí: como usamos .include en inicio.jsp, basta con setearlo
+        req.getRequestDispatcher("/grupos/detalle.jsp")
+                .forward(req, resp);
     }
 }

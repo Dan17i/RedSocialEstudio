@@ -89,28 +89,6 @@ public class Contenido implements Tematico {
         this.archivomultimedia = archivomultimedia;
     }
 
-    /**
-     * Calcula el promedio de las valoraciones del contenido.
-     * Recorre la lista enlazada de valoraciones, suma los puntajes y devuelve el promedio.
-     *
-     * @return El promedio de los puntajes de las valoraciones como un valor float. Devuelve 0.0f si no hay valoraciones.
-     */
-    public float calcularValoracionPromedio() {
-        if (valoraciones == null || valoraciones.getTamanio() == 0) {
-            return 0.0f;
-        }
-
-        float suma = 0;
-        NodoLista<Valoracion> actual = valoraciones.getCabeza();
-
-        while (actual != null) {
-            suma += actual.getDato().getPuntuacion();
-            actual = actual.getSiguiente();
-        }
-
-        float promedio= suma / valoraciones.getTamanio();
-        return Math.round(promedio*100f)/100f;
-    }
 
     /** @return Identificador único del contenido. */
     public String getId() {

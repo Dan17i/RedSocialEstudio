@@ -4,7 +4,7 @@
 <%
     Moderador moderador = (Moderador) session.getAttribute("usuario");
     GestorContenidos gestorContenidos = GestorContenidos.getInstancia();
-    RedAfinidad    redAfinidad        = RedAfinidad.getInstancia();
+    RedAfinidad redAfinidad = RedAfinidad.getInstancia();
 %>
 <!DOCTYPE html>
 <html lang="es">
@@ -98,13 +98,13 @@
            target="contentFrame" class="action-btn">Gestionar Usuarios</a>
         <a href="<%=request.getContextPath()%>/GestionContenidosServlet"
            target="contentFrame" class="action-btn">Gestionar Contenidos</a>
-        <a href="<%=request.getContextPath()%>/ReporteServlet?tipo=comunidades"
+        <a href="<%=request.getContextPath()%>/ComunidadesServlet"
            target="contentFrame" class="action-btn">Comunidades</a>
-        <a href="<%=request.getContextPath()%>/ReporteServlet?tipo=contenidosMasValorados"
+        <a href="<%=request.getContextPath()%>/ContenidosValoradosServlet"
            target="contentFrame" class="action-btn">Contenidos Más Valorados</a>
-        <a href="<%=request.getContextPath()%>/ReporteServlet?tipo=estudiantesMasConectados"
+        <a href="<%=request.getContextPath()%>/EstudiantesConectadosServlet"
            target="contentFrame" class="action-btn">Estudiantes Más Conectados</a>
-        <a href="<%=request.getContextPath()%>/ReporteServlet?tipo=nivelesParticipacion"
+        <a href="<%=request.getContextPath()%>/ParticipacionServlet"
            target="contentFrame" class="action-btn">Participación</a>
         <a href="<%=request.getContextPath()%>/GrafoAfinidadServlet"
            target="contentFrame" class="action-btn">Grafo de Afinidad</a>

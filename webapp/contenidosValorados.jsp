@@ -1,0 +1,14 @@
+
+<%@ page import="co.edu.uniquindio.redsocial.models.Contenido" %>
+<%@ page import="co.edu.uniquindio.redsocial.models.Reporte" %>
+<%@ page import="co.edu.uniquindio.redsocial.models.structures.ListaEnlazada" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%
+    Reporte<Contenido> reporte = (Reporte<Contenido>) request.getAttribute("reporte");
+%>
+<h3>${reporte.resumen}</h3>
+<ul>
+    <c:forEach var="contenido" items="${reporte.datos}">
+        <li>${contenido.tema} (Promedio: ${contenido.promedioValoraciones()})</li>
+    </c:forEach>
+</ul>

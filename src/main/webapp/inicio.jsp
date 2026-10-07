@@ -61,7 +61,7 @@
     <div class="profile">
         <div class="rounded-circle bg-secondary"
              style="width:80px;height:80px;margin:auto;"></div>
-        <h6><%= nombreUsuario %></h6>
+        <h6><%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(nombreUsuario)) %></h6>
         <small>Página principal</small>
     </div>
     <nav class="nav flex-column mt-3">
@@ -94,7 +94,7 @@
 <!-- MAIN CONTENT -->
 <div class="main-content">
     <div class="header">
-        <h4>Hola, <%= nombreUsuario %></h4>
+        <h4>Hola, <%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(nombreUsuario)) %></h4>
         <p>Bienvenido a tu espacio personal en la red social universitaria</p>
     </div>
 

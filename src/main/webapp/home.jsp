@@ -57,19 +57,19 @@
     <input type="hidden" name="seccion" value="home"/>
     <div class="col-md-3">
         <input type="text" name="tema" class="form-control"
-               placeholder="Filtrar por tema" value="<%= temaParam %>"/>
+               placeholder="Filtrar por tema" value="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(temaParam)) %>"/>
     </div>
     <div class="col-md-3">
         <input type="text" name="autor" class="form-control"
-               placeholder="Filtrar por autor" value="<%= autorParam %>"/>
+               placeholder="Filtrar por autor" value="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(autorParam)) %>"/>
     </div>
     <div class="col-md-3">
         <select name="tipo" class="form-select">
             <option value="">Todos los tipos</option>
-            <option value="IMAGEN"    <%= "IMAGEN".equalsIgnoreCase(tipoParam)    ? "selected" : "" %>>Imagen</option>
-            <option value="VIDEO"     <%= "VIDEO".equalsIgnoreCase(tipoParam)     ? "selected" : "" %>>Video</option>
-            <option value="AUDIO"     <%= "AUDIO".equalsIgnoreCase(tipoParam)     ? "selected" : "" %>>Audio</option>
-            <option value="DOCUMENTO" <%= "DOCUMENTO".equalsIgnoreCase(tipoParam) ? "selected" : "" %>>Documento</option>
+            <option value="IMAGEN"    <%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf("IMAGEN".equalsIgnoreCase(tipoParam)    ? "selected" : "")) %>>Imagen</option>
+            <option value="VIDEO"     <%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf("VIDEO".equalsIgnoreCase(tipoParam)     ? "selected" : "")) %>>Video</option>
+            <option value="AUDIO"     <%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf("AUDIO".equalsIgnoreCase(tipoParam)     ? "selected" : "")) %>>Audio</option>
+            <option value="DOCUMENTO" <%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf("DOCUMENTO".equalsIgnoreCase(tipoParam) ? "selected" : "")) %>>Documento</option>
         </select>
     </div>
     <div class="col-md-3">
@@ -85,38 +85,38 @@
 %>
 <div class="card mb-4 shadow-sm">
     <div class="card-header bg-light">
-        <strong><%= p.getTema() %></strong><br>
-        <small class="text-muted"><%= p.getAutor().getNombre() %> | <%= p.getFechaCreacion().toLocalDate() %></small>
+        <strong><%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(p.getTema())) %></strong><br>
+        <small class="text-muted"><%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(p.getAutor().getNombre())) %> | <%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(p.getFechaCreacion().toLocalDate())) %></small>
     </div>
     <div class="card-body">
-        <p><%= p.getDescripcion() %></p>
+        <p><%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(p.getDescripcion())) %></p>
         <% if (a != null) {
             String raw = a.getRutaRelativa();
             String nombre = raw.startsWith("/archivos/") ? raw.substring("/archivos/".length()) : raw;
             String ruta   = ctx + "/archivo/" + nombre;
             String mime   = a.getTipoMime();
             if (mime.startsWith("image")) { %>
-        <img src="<%= ruta %>" class="img-fluid rounded mt-2" alt="imagen"/>
+        <img src="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(ruta)) %>" class="img-fluid rounded mt-2" alt="imagen"/>
         <% } else if ("application/pdf".equals(mime)) { %>
-        <embed src="<%= ruta %>" type="application/pdf" width="100%" height="300px" class="mt-2"/>
+        <embed src="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(ruta)) %>" type="application/pdf" width="100%" height="300px" class="mt-2"/>
         <% } else if (mime.startsWith("video")) { %>
-        <video controls class="w-100 mt-2"><source src="<%= ruta %>" type="<%= mime %>"/></video>
+        <video controls class="w-100 mt-2"><source src="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(ruta)) %>" type="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(mime)) %>"/></video>
         <% } else if (mime.startsWith("audio")) { %>
-        <audio controls class="mt-2"><source src="<%= ruta %>" type="<%= mime %>"/></audio>
+        <audio controls class="mt-2"><source src="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(ruta)) %>" type="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(mime)) %>"/></audio>
         <% } else { %>
-        <a href="<%= ruta %>" class="btn btn-outline-secondary mt-2" target="_blank">Descargar archivo</a>
+        <a href="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(ruta)) %>" class="btn btn-outline-secondary mt-2" target="_blank">Descargar archivo</a>
         <% } } %>
-        <div class="mt-3"><strong>Valoración promedio:</strong> <%= p.promedioValoraciones() %> / 5</div>
+        <div class="mt-3"><strong>Valoración promedio:</strong> <%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(p.promedioValoraciones())) %> / 5</div>
         <% ListaEnlazada<Valoracion> vs = p.getValoraciones(); if (vs != null && !vs.isEmpty()) { %>
         <ul class="list-group mb-3">
             <% for (int j = 0; j < vs.getTamanio(); j++) { Valoracion v = vs.obtener(j); %>
-            <li class="list-group-item"><strong><%= v.getEstudiante().getNombre() %>:</strong> <%= v.getComentario() %> (<%= v.getPuntuacion() %>/5)</li>
+            <li class="list-group-item"><strong><%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(v.getEstudiante().getNombre())) %>:</strong> <%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(v.getComentario())) %> (<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(v.getPuntuacion())) %>/5)</li>
             <% } %>
         </ul>
         <% } %>
         <% if (user != null) { %>
         <form action="Valorar" method="post">
-            <input type="hidden" name="idContenido" value="<%= p.getId() %>"/>
+            <input type="hidden" name="idContenido" value="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(p.getId())) %>"/>
             <div class="row g-2 align-items-center">
                 <div class="col-2">
                     <select name="puntuacion" class="form-select" required><option value="">Pts</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
@@ -143,39 +143,39 @@
 <!-- Repetir card como arriba -->
 <div class="card mb-4 shadow-sm">
     <div class="card-header bg-light">
-        <strong><%= p.getTema() %></strong><br>
-        <small class="text-muted"><%= p.getAutor().getNombre() %> | <%= p.getFechaCreacion().toLocalDate() %></small>
+        <strong><%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(p.getTema())) %></strong><br>
+        <small class="text-muted"><%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(p.getAutor().getNombre())) %> | <%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(p.getFechaCreacion().toLocalDate())) %></small>
     </div>
     <div class="card-body">
         <!-- Mismo bloque de contenido, archivos, valoraciones y formulario Valorar -->
-        <p><%= p.getDescripcion() %></p>
+        <p><%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(p.getDescripcion())) %></p>
         <% if (a != null) {
             String raw = a.getRutaRelativa();
             String nombre = raw.startsWith("/archivos/") ? raw.substring("/archivos/".length()) : raw;
             String ruta   = ctx + "/archivo/" + nombre;
             String mime   = a.getTipoMime();
             if (mime.startsWith("image")) { %>
-        <img src="<%= ruta %>" class="img-fluid rounded mt-2" alt="imagen"/>
+        <img src="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(ruta)) %>" class="img-fluid rounded mt-2" alt="imagen"/>
         <% } else if ("application/pdf".equals(mime)) { %>
-        <embed src="<%= ruta %>" type="application/pdf" width="100%" height="300px" class="mt-2"/>
+        <embed src="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(ruta)) %>" type="application/pdf" width="100%" height="300px" class="mt-2"/>
         <% } else if (mime.startsWith("video")) { %>
-        <video controls class="w-100 mt-2"><source src="<%= ruta %>" type="<%= mime %>"/></video>
+        <video controls class="w-100 mt-2"><source src="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(ruta)) %>" type="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(mime)) %>"/></video>
         <% } else if (mime.startsWith("audio")) { %>
-        <audio controls class="mt-2"><source src="<%= ruta %>" type="<%= mime %>"/></audio>
+        <audio controls class="mt-2"><source src="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(ruta)) %>" type="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(mime)) %>"/></audio>
         <% } else { %>
-        <a href="<%= ruta %>" class="btn btn-outline-secondary mt-2" target="_blank">Descargar archivo</a>
+        <a href="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(ruta)) %>" class="btn btn-outline-secondary mt-2" target="_blank">Descargar archivo</a>
         <% } } %>
-        <div class="mt-3"><strong>Valoración promedio:</strong> <%= p.promedioValoraciones() %> / 5</div>
+        <div class="mt-3"><strong>Valoración promedio:</strong> <%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(p.promedioValoraciones())) %> / 5</div>
         <% ListaEnlazada<Valoracion> vs = p.getValoraciones(); if (vs != null && !vs.isEmpty()) { %>
         <ul class="list-group mb-3">
             <% for (int j = 0; j < vs.getTamanio(); j++) { Valoracion v = vs.obtener(j); %>
-            <li class="list-group-item"><strong><%= v.getEstudiante().getNombre() %>:</strong> <%= v.getComentario() %> (<%= v.getPuntuacion() %>/5)</li>
+            <li class="list-group-item"><strong><%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(v.getEstudiante().getNombre())) %>:</strong> <%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(v.getComentario())) %> (<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(v.getPuntuacion())) %>/5)</li>
             <% } %>
         </ul>
         <% } %>
         <% if (user != null) { %>
         <form action="Valorar" method="post">
-            <input type="hidden" name="idContenido" value="<%= p.getId() %>"/>
+            <input type="hidden" name="idContenido" value="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(p.getId())) %>"/>
             <div class="row g-2 align-items-center">
                 <div class="col-2">
                     <select name="puntuacion" class="form-select" required><option value="">Pts</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>

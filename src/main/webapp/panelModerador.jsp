@@ -23,7 +23,7 @@
 <div class="container">
     <div class="header">
         <h1>Panel de Moderador</h1>
-        <form method="post" action="<%=request.getContextPath()%>/GenerarDatosServlet">
+        <form method="post" action="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(request.getContextPath())) %>/GenerarDatosServlet">
             <button type="submit">Generar Datos de Prueba</button>
         </form>
     </div>
@@ -33,18 +33,18 @@
     <% } %>
 
     <div class="actions">
-        <a href="<%=request.getContextPath()%>/GestionUsuariosServlet" target="contentFrame" class="action-btn">Gestionar Usuarios</a>
-        <a href="<%=request.getContextPath()%>/GestionContenidosServlet" target="contentFrame" class="action-btn">Gestionar Contenidos</a>
-        <a href="<%=request.getContextPath()%>/ComunidadesServlet" target="contentFrame" class="action-btn">Comunidades</a>
-        <a href="<%=request.getContextPath()%>/ContenidosValoradosServlet" target="contentFrame" class="action-btn">Contenidos Más Valorados</a>
-        <a href="<%=request.getContextPath()%>/EstudiantesConectadosServlet" target="contentFrame" class="action-btn">Estudiantes Más Conectados</a>
-        <a href="<%=request.getContextPath()%>/ParticipacionServlet" target="contentFrame" class="action-btn">Participación</a>
-        <a href="<%=request.getContextPath()%>/GrafoAfinidadServlet" target="contentFrame" class="action-btn">Grafo de Afinidad</a>
+        <a href="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(request.getContextPath())) %>/GestionUsuariosServlet" target="contentFrame" class="action-btn">Gestionar Usuarios</a>
+        <a href="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(request.getContextPath())) %>/GestionContenidosServlet" target="contentFrame" class="action-btn">Gestionar Contenidos</a>
+        <a href="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(request.getContextPath())) %>/ComunidadesServlet" target="contentFrame" class="action-btn">Comunidades</a>
+        <a href="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(request.getContextPath())) %>/ContenidosValoradosServlet" target="contentFrame" class="action-btn">Contenidos Más Valorados</a>
+        <a href="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(request.getContextPath())) %>/EstudiantesConectadosServlet" target="contentFrame" class="action-btn">Estudiantes Más Conectados</a>
+        <a href="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(request.getContextPath())) %>/ParticipacionServlet" target="contentFrame" class="action-btn">Participación</a>
+        <a href="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(request.getContextPath())) %>/GrafoAfinidadServlet" target="contentFrame" class="action-btn">Grafo de Afinidad</a>
     </div>
 
     <div class="graph-card">
         <header>Vista</header>
-        <iframe id="contentFrame" name="contentFrame" src="<%=request.getContextPath()%>/GrafoAfinidadServlet"></iframe>
+        <iframe id="contentFrame" name="contentFrame" src="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(request.getContextPath())) %>/GrafoAfinidadServlet"></iframe>
     </div>
 </div>
 </body>

@@ -18,9 +18,9 @@
             <div class="card mb-4 shadow-sm">
                 <div class="card-header bg-primary text-white">Información personal</div>
                 <div class="card-body">
-                    <p><strong>Nombre:</strong> <%= estudiante.getNombre() %></p>
-                    <p><strong>ID:</strong> <%= estudiante.getId() %></p>
-                    <p><strong>Correo:</strong> <%= estudiante.getEmail() %></p>
+                    <p><strong>Nombre:</strong> <%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(estudiante.getNombre())) %></p>
+                    <p><strong>ID:</strong> <%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(estudiante.getId())) %></p>
+                    <p><strong>Correo:</strong> <%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(estudiante.getEmail())) %></p>
                 </div>
             </div>
         </div>
@@ -39,9 +39,9 @@
                             for (int i = 0; i < intereses.getTamanio(); i++) {
                         %>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <%= intereses.obtener(i) %>
+                            <%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(intereses.obtener(i))) %>
                             <form action="EliminarInteresServlet" method="post" style="margin: 0;">
-                                <input type="hidden" name="interes" value="<%= intereses.obtener(i) %>">
+                                <input type="hidden" name="interes" value="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(intereses.obtener(i))) %>">
                                 <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
                             </form>
                         </li>
@@ -115,38 +115,38 @@
                     %>
                     <div class="card mb-4">
                         <div class="card-header bg-light">
-                            <strong><%= c.getTema() %></strong>
-                            <small class="text-muted float-end"><%= c.getFechaCreacion().toLocalDate() %></small>
+                            <strong><%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(c.getTema())) %></strong>
+                            <small class="text-muted float-end"><%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(c.getFechaCreacion().toLocalDate())) %></small>
                         </div>
                         <div class="card-body">
-                            <p><%= c.getDescripcion() %></p>
+                            <p><%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(c.getDescripcion())) %></p>
                             <%
                                 if (storedName != null) {
                                     String mime = a.getTipoMime();
                                     String url  = ctx + "/archivo/" + storedName;
                                     if (mime.startsWith("image")) {
                             %>
-                            <img src="<%= url %>" class="img-fluid rounded mt-2" alt="imagen publicación"/>
+                            <img src="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(url)) %>" class="img-fluid rounded mt-2" alt="imagen publicación"/>
                             <%
                             } else if ("application/pdf".equals(mime)) {
                             %>
-                            <embed src="<%= url %>" type="application/pdf" width="100%" height="300px" class="mt-2"/>
+                            <embed src="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(url)) %>" type="application/pdf" width="100%" height="300px" class="mt-2"/>
                             <%
                             } else if (mime.startsWith("video")) {
                             %>
                             <video controls class="w-100 mt-2">
-                                <source src="<%= url %>" type="<%= mime %>"/>
+                                <source src="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(url)) %>" type="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(mime)) %>"/>
                             </video>
                             <%
                             } else if (mime.startsWith("audio")) {
                             %>
                             <audio controls class="mt-2">
-                                <source src="<%= url %>" type="<%= mime %>"/>
+                                <source src="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(url)) %>" type="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(mime)) %>"/>
                             </audio>
                             <%
                             } else {
                             %>
-                            <a href="<%= url %>" target="_blank" class="btn btn-outline-secondary mt-2">
+                            <a href="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(url)) %>" target="_blank" class="btn btn-outline-secondary mt-2">
                                 Descargar archivo
                             </a>
                             <%

@@ -72,8 +72,8 @@
                     if (p2 == null || e1.getId().compareTo(e2.getId()) >= 0) continue;
             %>
             <line class="link"
-                  x1="<%=p1[0]%>" y1="<%=p1[1]%>"
-                  x2="<%=p2[0]%>" y2="<%=p2[1]%>" />
+                  x1="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(p1[0])) %>" y1="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(p1[1])) %>"
+                  x2="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(p2[0])) %>" y2="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(p2[1])) %>" />
             <%   }
             } %>
         </g>
@@ -84,11 +84,11 @@
                 int[] p = pos.obtener(e.getId());
             %>
             <g class="node"
-               data-id="<%=e.getId()%>"
-               data-name="<%=e.getNombre()%>"
-               transform="translate(<%=p[0]%>,<%=p[1]%>)">
+               data-id="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(e.getId())) %>"
+               data-name="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(e.getNombre())) %>"
+               transform="translate(<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(p[0])) %>,<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(p[1])) %>)">
                 <circle r="20"></circle>
-                <text><%=e.getNombre().substring(0,2).toUpperCase()%></text>
+                <text><%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(e.getNombre().substring(0,2).toUpperCase())) %></text>
             </g>
             <% } %>
         </g>

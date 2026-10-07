@@ -15,13 +15,13 @@
     <!-- Columna del formulario -->
     <% if (request.getAttribute("mensaje") != null) { %>
     <div class="alert alert-success" role="alert">
-      <%= request.getAttribute("mensaje") %>
+      <%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(request.getAttribute("mensaje"))) %>
     </div>
     <% } %>
 
     <% if (request.getAttribute("error") != null) { %>
     <div class="alert alert-danger" role="alert">
-      <%= request.getAttribute("error") %>
+      <%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(request.getAttribute("error"))) %>
     </div>
     <% } %>
 

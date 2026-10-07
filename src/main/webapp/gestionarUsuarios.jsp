@@ -38,7 +38,7 @@
                 if (mensaje != null) {
             %>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="bi bi-check-circle-fill"></i> <%= mensaje %>
+                <i class="bi bi-check-circle-fill"></i> <%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(mensaje)) %>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
             <%
@@ -46,7 +46,7 @@
                 if (error != null && !error.trim().isEmpty()) {
             %>
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="bi bi-exclamation-triangle-fill"></i> <strong>Error:</strong> <%= error %>
+                <i class="bi bi-exclamation-triangle-fill"></i> <strong>Error:</strong> <%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(error)) %>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
             <%
@@ -70,19 +70,19 @@
                             for (Estudiante u : usuarios) {
                     %>
                     <tr>
-                        <td><%= u.getId() %></td>
-                        <td><%= u.getNombre() %></td>
-                        <td><%= u.getEmail() %></td>
+                        <td><%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(u.getId())) %></td>
+                        <td><%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(u.getNombre())) %></td>
+                        <td><%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(u.getEmail())) %></td>
                         <td>
                             <form action="GestionUsuariosServlet" method="post" class="d-inline">
                                 <input type="hidden" name="accion" value="eliminar">
-                                <input type="hidden" name="codigo" value="<%= u.getId() %>">
+                                <input type="hidden" name="codigo" value="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(u.getId())) %>">
                                 <button type="submit" class="btn btn-danger btn-sm">
                                     <i class="bi bi-trash"></i> Eliminar
                                 </button>
                             </form>
                             <form action="ModificarUsuarioServlet" method="get" class="d-inline">
-                                <input type="hidden" name="codigo" value="<%= u.getId() %>">
+                                <input type="hidden" name="codigo" value="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(u.getId())) %>">
                                 <button type="submit" class="btn btn-warning btn-sm">
                                     <i class="bi bi-pencil"></i> Modificar
                                 </button>

@@ -17,13 +17,13 @@
         <div class="col-md-4 mb-3">
             <div class="card h-100 shadow-sm">
                 <div class="card-body d-flex flex-column">
-                    <h5 class="card-title"><%= g.getTema() %></h5>
+                    <h5 class="card-title"><%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(g.getTema())) %></h5>
                     <p class="card-text mb-4">
-                        Miembros: <%= g.getMiembros().getTamanio() %>
+                        Miembros: <%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(g.getMiembros().getTamanio())) %>
                     </p>
-                    <form action="<%= request.getContextPath() %>/grupos/unirse"
+                    <form action="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(request.getContextPath())) %>/grupos/unirse"
                           method="post" class="mt-auto">
-                        <input type="hidden" name="grupoId" value="<%= g.getId() %>"/>
+                        <input type="hidden" name="grupoId" value="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(g.getId())) %>"/>
                         <button type="submit" class="btn btn-success w-100">
                             Unirse
                         </button>

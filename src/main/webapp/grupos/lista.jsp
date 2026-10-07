@@ -14,10 +14,10 @@
     <div class="card mb-3 shadow-sm">
         <div class="card-body d-flex justify-content-between align-items-center">
             <div>
-                <h5 class="card-title"><%= g.getTema() %></h5>
-                <p class="card-text">Miembros: <%= g.getMiembros().getTamanio() %></p>
+                <h5 class="card-title"><%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(g.getTema())) %></h5>
+                <p class="card-text">Miembros: <%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(g.getMiembros().getTamanio())) %></p>
             </div>
-            <a href="<%= request.getContextPath() %>/inicio.jsp?seccion=gruposDetalle&grupoId=<%= g.getId() %>"
+            <a href="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(request.getContextPath())) %>/inicio.jsp?seccion=gruposDetalle&grupoId=<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(g.getId())) %>"
                class="btn btn-outline-primary btn-sm">
                 Ver detalle
             </a>
@@ -29,7 +29,7 @@
     } else { %>
     <p class="text-muted">No perteneces a ningún grupo.</p>
     <% } %>
-    <form action="<%= request.getContextPath() %>/grupos/formar" method="post">
+    <form action="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(request.getContextPath())) %>/grupos/formar" method="post">
         <button class="btn btn-primary">Formar grupos automáticos</button>
     </form>
 </div>

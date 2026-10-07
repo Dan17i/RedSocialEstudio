@@ -57,7 +57,7 @@
                 <% for (Object dato : datos) { %>
                 <li class="list-group-item">
                     <i class="bi bi-chevron-right text-primary"></i>
-                    <%= dato.toString() %>
+                    <%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(dato.toString())) %>
                 </li>
                 <% } %>
             </ul>

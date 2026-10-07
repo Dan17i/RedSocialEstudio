@@ -16,7 +16,7 @@
                 <% for (int i = 0; i < usuario.getIntereses().getTamanio(); i++) {
                     String interes = usuario.getIntereses().obtener(i);
                 %>
-                <option value="<%= interes %>"><%= interes %></option>
+                <option value="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(interes)) %>"><%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(interes)) %></option>
                 <% } %>
             </select>
         </div>
@@ -35,7 +35,7 @@
             <label for="tipo" class="form-label">Tipo de contenido</label>
             <select class="form-select" id="tipo" name="tipo" required>
                 <% for (TipoContenido tipo : TipoContenido.values()) { %>
-                <option value="<%= tipo.name() %>"><%= tipo.name() %></option>
+                <option value="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(tipo.name())) %>"><%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(tipo.name())) %></option>
                 <% } %>
             </select>
         </div>

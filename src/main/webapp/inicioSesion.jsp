@@ -39,7 +39,7 @@
 
             <% String error = (String) request.getAttribute("error"); %>
             <% if (error != null) { %>
-            <div class="alert alert-danger mt-2"><%= error %></div>
+            <div class="alert alert-danger mt-2"><%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(error)) %></div>
             <% } %>
 
             <div class="d-grid">

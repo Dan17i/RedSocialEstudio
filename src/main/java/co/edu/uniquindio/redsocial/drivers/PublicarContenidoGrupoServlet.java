@@ -85,9 +85,7 @@ public class PublicarContenidoGrupoServlet extends HttpServlet {
                 desc,
                 autor,
                 // inferir tipo según mime
-                TipoContenido.valueOf(am != null
-                        ? am.getTipoMime().split("/")[0].toUpperCase()
-                        : "TEXTO"),
+                tipoSegunMime(am),
                 LocalDateTime.now(),
                 new ListaEnlazada<>(),
                 am
@@ -97,5 +95,15 @@ public class PublicarContenidoGrupoServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath()
                 + "/inicio.jsp?seccion=gruposDetalle&grupoId="
                 + URLEncoder.encode(grupoId,"UTF-8"));
+    }
+
+    /** Deduce el tipo de contenido por el tipo MIME del archivo; cualquier otro (texto, pdf...) es TEXTO. */
+    private TipoContenido tipoSegunMime(ArchivoMultimedia archivo) {
+        if (archivo == null || archivo.getTipoMime() == null) return TipoContenido.TEXTO;
+        String mime = archivo.getTipoMime().toLowerCase();
+        if (mime.startsWith("image/")) return TipoContenido.IMAGEN;
+        if (mime.startsWith("video/")) return TipoContenido.VIDEO;
+        if (mime.startsWith("audio/")) return TipoContenido.AUDIO;
+        return TipoContenido.TEXTO;
     }
 }

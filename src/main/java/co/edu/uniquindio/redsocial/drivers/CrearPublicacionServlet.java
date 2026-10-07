@@ -68,14 +68,30 @@ public class CrearPublicacionServlet extends HttpServlet {
         String interesSeleccionado = request.getParameter("interesSeleccionado");
         String tema        = request.getParameter("tema");
         String descripcion = request.getParameter("descripcion");
-        TipoContenido tipo = TipoContenido.valueOf(request.getParameter("tipo").toUpperCase());
+        TipoContenido tipo;
+        try {
+            tipo = TipoContenido.valueOf(request.getParameter("tipo").toUpperCase());
+        } catch (NullPointerException | IllegalArgumentException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Tipo de contenido no válido");
+            return;
+        }
+        if (tema == null || tema.isBlank() || descripcion == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Faltan el tema o la descripción");
+            return;
+        }
 
         // Guardar archivo
         String uploadPath = getServletContext().getRealPath("/" + UPLOAD_DIR);
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) uploadDir.mkdirs();
 
-        Part filePart = request.getPart("archivo");
+        Part filePart;
+        try {
+            filePart = request.getPart("archivo");
+        } catch (ServletException | IllegalStateException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "El formulario debe enviarse con un archivo (multipart)");
+            return;
+        }
         ArchivoMultimedia archivoMultimedia = null;
         if (filePart != null && filePart.getSize() > 0) {
             String original = filePart.getSubmittedFileName();

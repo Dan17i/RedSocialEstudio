@@ -65,16 +65,45 @@ public class FormarGruposServlet extends HttpServlet {
         ListaEnlazada<GrupoEstudio> creados =
                 gestor.crearGruposPorAfinidadConObjetos("Grupo de Estudio");
 
-        // 5) Convierto a ListaEnlazada y guardo en contexto
-        ListaEnlazada<GrupoEstudio> todosGrupos = new ListaEnlazada<>();
+        // 5) Se añaden al contexto SIN reemplazar los grupos que ya existen; se omiten las
+        //    comunidades de un solo estudiante y las que ya coinciden con un grupo existente
+        @SuppressWarnings("unchecked")
+        ListaEnlazada<GrupoEstudio> todosGrupos =
+                (ListaEnlazada<GrupoEstudio>) getServletContext().getAttribute("todosGrupos");
+        if (todosGrupos == null) {
+            todosGrupos = new ListaEnlazada<>();
+            getServletContext().setAttribute("todosGrupos", todosGrupos);
+        }
         for (GrupoEstudio g : creados) {
+            if (g.getMiembros().getTamanio() < 2 || existeGrupoConLosMismosMiembros(todosGrupos, g)) {
+                // El grupo se descarta: se desvincula de sus miembros para no dejar referencias huérfanas
+                for (Estudiante e : g.getMiembros().clonar()) {
+                    g.eliminarMiembro(e);
+                }
+                continue;
+            }
             todosGrupos.agregar(g);
         }
-        getServletContext().setAttribute("todosGrupos", todosGrupos);
 
         // 6) Redirijo a "Grupos sugeridos" para que se vean inmediatamente
         String ctx = req.getContextPath();
         resp.sendRedirect(ctx + "/inicio.jsp?seccion=sugerencias"
                 + "&message=Grupos formados automáticamente");
+    }
+
+    /** @return true si ya hay un grupo con exactamente los mismos miembros (evita duplicados al repetir). */
+    private boolean existeGrupoConLosMismosMiembros(ListaEnlazada<GrupoEstudio> existentes, GrupoEstudio nuevo) {
+        for (GrupoEstudio g : existentes) {
+            if (g.getMiembros().getTamanio() != nuevo.getMiembros().getTamanio()) continue;
+            boolean iguales = true;
+            for (Estudiante e : nuevo.getMiembros()) {
+                if (!g.getMiembros().contiene(e)) {
+                    iguales = false;
+                    break;
+                }
+            }
+            if (iguales) return true;
+        }
+        return false;
     }
 }

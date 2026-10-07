@@ -31,7 +31,11 @@ public class GenerarDatosServlet extends HttpServlet {
         SistemaAutenticacion sistemaAuth = (SistemaAutenticacion)
                 getServletContext().getAttribute("sistemaAutenticacion");
         // Evita fallar con "Email ya registrado" si el botón se pulsa más de una vez
-        if (sistemaAuth.existeUsuario("est1@correo.com")) {
+        boolean yaGenerado = false;
+        for (int i = 1; i <= 10; i++) {
+            yaGenerado |= sistemaAuth.existeUsuario("est" + i + "@correo.com");
+        }
+        if (yaGenerado) {
             resp.sendRedirect("moderador.jsp?datosGenerados=ya");
             return;
         }
@@ -94,8 +98,17 @@ public class GenerarDatosServlet extends HttpServlet {
         }
 
         // 3) Crear un grupo por cada tema y añadir a todos los que lo comparten
+        @SuppressWarnings("unchecked")
+        ListaEnlazada<GrupoEstudio> todosGrupos =
+                (ListaEnlazada<GrupoEstudio>) getServletContext().getAttribute("todosGrupos");
+        if (todosGrupos == null) {
+            todosGrupos = new ListaEnlazada<>();
+            getServletContext().setAttribute("todosGrupos", todosGrupos);
+        }
         for (String tema : TEMAS) {
             GrupoEstudio grupo = new GrupoEstudio("Grupo " + tema, tema);
+            // Se registra en el contexto para que el detalle, el chat y la ayuda del grupo lo encuentren
+            todosGrupos.agregar(grupo);
             // recorro todos y los uno si comparten el tema
             for (int i = 0; i < listaEstudiantes.getTamanio(); i++) {
                 Estudiante est = listaEstudiantes.obtener(i);

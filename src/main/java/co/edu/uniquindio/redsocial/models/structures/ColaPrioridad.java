@@ -99,6 +99,36 @@ public class ColaPrioridad<T> {
     }
 
     /**
+     * Elimina de la cola el primer elemento igual (equals) al indicado, sin importar su posición.
+     *
+     * @param dato Elemento a quitar.
+     * @return true si se encontró y se eliminó; false si no estaba en la cola.
+     */
+    public boolean eliminar(T dato) {
+        for (int i = 0; i < elementos.getTamanio(); i++) {
+            if (elementos.obtener(i).getDato().equals(dato)) {
+                elementos.eliminarEn(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Devuelve los elementos en el orden en que serían atendidos (mayor prioridad primero),
+     * sin modificar la cola.
+     *
+     * @return Nueva lista con los datos de la cola.
+     */
+    public ListaEnlazada<T> aLista() {
+        ListaEnlazada<T> lista = new ListaEnlazada<>();
+        for (NodoPrioridad<T> nodo : elementos) {
+            lista.agregar(nodo.getDato());
+        }
+        return lista;
+    }
+
+    /**
      * Retorna la lista enlazada interna de nodos con prioridad.
      *
      * @return Lista enlazada de NodoPrioridad<T>.

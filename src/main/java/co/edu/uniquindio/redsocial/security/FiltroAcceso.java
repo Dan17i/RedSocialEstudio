@@ -40,10 +40,10 @@ public class FiltroAcceso implements Filter {
     private static final String[] PREFIJOS_PUBLICOS = {"/css/", "/images/"};
 
     private static final String[] RUTAS_MODERADOR = {
-            "/moderador.jsp", "/panelModerador.jsp", "/gestionarUsuarios.jsp", "/gestionContenido.jsp",
+            "/moderador.jsp", "/rutaMasCorta.jsp", "/gestionarUsuarios.jsp", "/gestionContenido.jsp",
             "/grafoAfinidad.jsp", "/comunidades.jsp", "/contenidosValorados.jsp", "/participacion.jsp",
-            "/reporte.jsp", "/estudiantesConectados.jsp",
-            "/ComunidadesServlet", "/ContenidosValoradosServlet", "/ParticipacionServlet", "/ReporteServlet",
+            "/estudiantesConectados.jsp",
+            "/ComunidadesServlet", "/ContenidosValoradosServlet", "/ParticipacionServlet", "/RutaMasCortaServlet",
             "/GestionContenidosServlet", "/GestionUsuariosServlet", "/GrafoAfinidadServlet",
             "/GenerarDatosServlet", "/EstudiantesConectadosServlet"
     };

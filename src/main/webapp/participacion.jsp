@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="co.edu.uniquindio.redsocial.models.Reporte" %>
+<%@ page import="co.edu.uniquindio.redsocial.security.Html" %>
 
 
 <%
@@ -34,14 +35,16 @@
             <h4 class="mb-0">Reporte de Participación</h4>
         </div>
         <div class="card-body">
-            <h5 class="text-muted mb-4">${reporte.resumen}</h5>
+            <% if (reporte != null) { %>
+            <h5 class="text-muted mb-4"><%= Html.esc(reporte.getResumen()) %></h5>
             <ul class="list-group">
-                <c:forEach var="nivel" items="${reporte.datos}">
+                <% for (String nivel : reporte.getDatos()) { %>
                     <li class="list-group-item">
-                        <i class="bi bi-graph-up"></i> ${nivel}
+                        <i class="bi bi-graph-up"></i> <%= Html.esc(nivel) %>
                     </li>
-                </c:forEach>
+                <% } %>
             </ul>
+            <% } %>
         </div>
     </div>
 

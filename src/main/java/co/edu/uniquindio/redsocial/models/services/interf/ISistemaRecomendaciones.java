@@ -26,7 +26,7 @@ public interface ISistemaRecomendaciones {
      * @param estudiante Estudiante que recibirá recomendaciones.
      * @return Lista enlazada de contenidos recomendados.
      */
-    ListaEnlazada<Contenido> recomendarCOntenidos(Estudiante estudiante);
+    ListaEnlazada<Contenido> recomendarContenidos(Estudiante estudiante);
 
     /**
      * Recomienda compañeros de estudio utilizando la red de afinidad.

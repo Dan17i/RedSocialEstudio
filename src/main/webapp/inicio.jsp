@@ -80,6 +80,12 @@
         <a class="nav-link" href="inicio.jsp?seccion=sugerencias">
             <i class="bi bi-lightbulb"></i> Grupos sugeridos
         </a>
+        <a class="nav-link" href="inicio.jsp?seccion=companeros">
+            <i class="bi bi-compass"></i> Descubrir
+        </a>
+        <a class="nav-link" href="inicio.jsp?seccion=ayuda">
+            <i class="bi bi-life-preserver"></i> Ayuda
+        </a>
         <a class="nav-link" href="inicio.jsp?seccion=publicar">
             <i class="bi bi-pencil-square"></i> Crear publicación
         </a>
@@ -136,6 +142,18 @@
             case "chats":
         %>
         <jsp:include page="chats.jsp" />
+        <%
+                break;
+            case "companeros":
+                request.getRequestDispatcher("/companeros").include(request, response);
+        %>
+        <jsp:include page="companeros.jsp" />
+        <%
+                break;
+            case "ayuda":
+                request.getRequestDispatcher("/ayuda").include(request, response);
+        %>
+        <jsp:include page="ayuda.jsp" />
         <%
                 break;
             case "publicar":

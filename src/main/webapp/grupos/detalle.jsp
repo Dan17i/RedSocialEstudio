@@ -103,7 +103,7 @@
                 <div class="card-body">
                     <form action="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(request.getContextPath())) %>/grupos/detalle/mensaje"
                           method="post" class="mb-3">
-                        <input type="hidden" name="grupoId" value="${grupo.id}" />
+                        <input type="hidden" name="grupoId" value="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(grupo.getId())) %>" />
                         <div class="input-group">
                             <input name="texto" type="text" class="form-control"
                                    placeholder="Mensaje..." required />
@@ -133,7 +133,7 @@
                 <div class="card-body">
                     <form action="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(request.getContextPath())) %>/grupos/detalle/ayuda"
                           method="post" class="mb-3">
-                        <input type="hidden" name="grupoId" value="${grupo.id}" />
+                        <input type="hidden" name="grupoId" value="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(grupo.getId())) %>" />
                         <div class="row g-2">
                             <div class="col-md-5">
                                 <input name="temaAyuda" type="text" class="form-control"

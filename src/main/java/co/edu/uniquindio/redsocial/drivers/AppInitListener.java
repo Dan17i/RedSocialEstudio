@@ -6,6 +6,7 @@ import co.edu.uniquindio.redsocial.models.GrupoEstudio;
 import co.edu.uniquindio.redsocial.models.services.implement.GestorContenidos;
 import co.edu.uniquindio.redsocial.models.services.implement.GestorGrupos;
 import co.edu.uniquindio.redsocial.models.services.implement.RedAfinidad;
+import co.edu.uniquindio.redsocial.models.services.implement.SistemaAyuda;
 import co.edu.uniquindio.redsocial.models.services.implement.SistemaAutenticacion;
 import co.edu.uniquindio.redsocial.models.structures.GrafoNoDirigido;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
@@ -68,7 +69,10 @@ public class AppInitListener implements ServletContextListener {
         gestorGrupos.setGrafo(grafoEstudiantes);
         sce.getServletContext().setAttribute("gestorGrupos", gestorGrupos);
 
-        // 7) Lista global de grupos
+        // 7) Cola global de solicitudes de ayuda (por urgencia)
+        sce.getServletContext().setAttribute("sistemaAyuda", new SistemaAyuda());
+
+        // 8) Lista global de grupos
         ListaEnlazada<GrupoEstudio> todosGrupos = new ListaEnlazada<>();
         sce.getServletContext().setAttribute("todosGrupos", todosGrupos);
     }

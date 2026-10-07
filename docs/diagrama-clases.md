@@ -221,6 +221,8 @@ classDiagram
         -ListaEnlazada~NodoPrioridad~ elementos
         +encolar(T, int)
         +desencolar() T
+        +eliminar(T) boolean
+        +aLista() ListaEnlazada
         +estaVacia() boolean
         +tamanio() int
     }
@@ -355,14 +357,16 @@ classDiagram
     class ISistemaAyuda { <<interface>> }
     class SistemaAyuda {
         +agregarSolicitud(SolicitudAyuda)
-        +atenderSolicitud() SolicitudAyuda
+        +obtenerSolicitudesPendientes()
+        +atenderSolicitud(String, Estudiante)
     }
 
     class IGestorUsuarios { <<interface>> }
     class GestorUsuarios
 
+    class ISistemaRecomendaciones { <<interface>> }
     class SistemaRecomendaciones {
-        +recomendarCOntenidos(Estudiante)
+        +recomendarContenidos(Estudiante)
         +recomendarCompanieros(Estudiante)
     }
 
@@ -373,6 +377,7 @@ classDiagram
     IGestorGrupos <|.. GestorGrupos
     IGestorSugerencias <|.. GestorSugerencias
     ISistemaAyuda <|.. SistemaAyuda
+    ISistemaRecomendaciones <|.. SistemaRecomendaciones
     IGestorUsuarios <|.. GestorUsuarios
 
     SistemaAutenticacion ..> ClaveHash
@@ -401,7 +406,8 @@ Los principales:
 | Perfil e intereses | `PerfilServlet`, `DashboardServlet`, `AgregarInteresServlet`, `EliminarInteresServlet` |
 | Grupos | `MostrarGruposServlet`, `FormarGruposServlet`, `SugerirGruposServlet`, `UnirseGrupoServlet`, `DetalleGrupoServlet`, `ChatGrupoServlet`, `EnviarMensajeGrupoServlet`, `PublicarContenidoGrupoServlet`, `SolicitarAyudaGrupoServlet` |
 | Mensajería | `ChatServlet`, `ChatMessagesServlet`, `EnviarMensajeServlet` |
-| Moderador | `GestionUsuariosServlet`, `GestionContenidosServlet`, `GrafoAfinidadServlet`, `SugerenciasServlet`, `ReporteServlet`, `ComunidadesServlet`, `ContenidosValoradosServlet`, `ParticipacionServlet`, `EstudiantesConectadosServlet`, `GenerarDatosServlet` |
+| Red y ayuda del estudiante | `CompanerosServlet` (sección Descubrir), `AyudaServlet` (solicitudes por urgencia) |
+| Moderador | `GestionUsuariosServlet`, `GestionContenidosServlet`, `GrafoAfinidadServlet`, `SugerenciasServlet`, `ReporteServlet`, `ComunidadesServlet`, `ContenidosValoradosServlet`, `ParticipacionServlet`, `EstudiantesConectadosServlet`, `RutaMasCortaServlet`, `GenerarDatosServlet` |
 
 `AppInitListener` crea al arrancar el contexto el sistema de autenticación, las colecciones globales y
 publica en el `ServletContext` las mismas estructuras que mantiene `GestorContenidos`.

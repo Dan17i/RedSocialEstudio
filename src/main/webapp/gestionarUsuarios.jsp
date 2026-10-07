@@ -81,10 +81,13 @@
                                     <i class="bi bi-trash"></i> Eliminar
                                 </button>
                             </form>
-                            <form action="ModificarUsuarioServlet" method="get" class="d-inline">
+                            <form action="GestionUsuariosServlet" method="post" class="d-inline-flex gap-1">
+                                <input type="hidden" name="accion" value="modificar">
                                 <input type="hidden" name="codigo" value="<%= co.edu.uniquindio.redsocial.security.Html.esc(String.valueOf(u.getId())) %>">
+                                <input type="text" name="nombre" class="form-control form-control-sm" style="width:150px"
+                                       placeholder="Nuevo nombre" maxlength="60" required>
                                 <button type="submit" class="btn btn-warning btn-sm">
-                                    <i class="bi bi-pencil"></i> Modificar
+                                    <i class="bi bi-pencil"></i> Renombrar
                                 </button>
                             </form>
                         </td>

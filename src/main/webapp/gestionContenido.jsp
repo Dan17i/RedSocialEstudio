@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="co.edu.uniquindio.redsocial.models.Contenido" %>
 <%@ page import="co.edu.uniquindio.redsocial.models.structures.ListaEnlazada" %>
+<%@ page import="co.edu.uniquindio.redsocial.security.Html" %>
 
 
 <%
@@ -40,19 +41,19 @@
         <p class="mb-0">Visualiza y administra los contenidos compartidos por los estudiantes</p>
     </div>
 
-    <c:if test="${param.success == 'contenido_eliminado'}">
+    <% if ("contenido_eliminado".equals(request.getParameter("success"))) { %>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <i class="bi bi-check-circle-fill"></i> Contenido eliminado correctamente.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
         </div>
-    </c:if>
+    <% } %>
 
-    <c:if test="${param.error != null}">
+    <% if (request.getParameter("error") != null) { %>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="bi bi-exclamation-triangle-fill"></i> Error: ${param.error}
+            <i class="bi bi-exclamation-triangle-fill"></i> Error: <%= Html.esc(request.getParameter("error")) %>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
         </div>
-    </c:if>
+    <% } %>
 
     <div class="table-responsive mb-4">
         <table class="table table-bordered table-hover align-middle text-center">
@@ -65,22 +66,24 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach var="contenido" items="${contenidos}">
+            <% if (contenidos == null || contenidos.isEmpty()) { %>
+                <tr><td colspan="4" class="text-muted">No hay contenidos publicados.</td></tr>
+            <% } else { for (Contenido contenido : contenidos) { %>
                 <tr>
-                    <td>${contenido.id}</td>
-                    <td>${contenido.tema}</td>
-                    <td>${contenido.autor.nombre}</td>
+                    <td><%= Html.esc(contenido.getId()) %></td>
+                    <td><%= Html.esc(contenido.getTema()) %></td>
+                    <td><%= Html.esc(contenido.getAutor().getNombre()) %></td>
                     <td>
                         <form method="post" action="GestionContenidosServlet" onsubmit="return confirm('¿Estás seguro de eliminar este contenido?');">
                             <input type="hidden" name="accion" value="eliminar" />
-                            <input type="hidden" name="contenidoId" value="${contenido.id}" />
+                            <input type="hidden" name="contenidoId" value="<%= Html.esc(contenido.getId()) %>" />
                             <button type="submit" class="btn btn-sm btn-outline-danger">
                                 <i class="bi bi-trash"></i> Eliminar
                             </button>
                         </form>
                     </td>
                 </tr>
-            </c:forEach>
+            <% } } %>
             </tbody>
         </table>
     </div>

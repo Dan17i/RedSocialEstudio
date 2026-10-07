@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="co.edu.uniquindio.redsocial.security.Html" %>
 <%@ page import="co.edu.uniquindio.redsocial.models.Estudiante" %>
 <%@ page import="co.edu.uniquindio.redsocial.models.structures.ListaEnlazada" %>
 
@@ -50,22 +51,24 @@
     </div>
 
     <!-- Lista de comunidades -->
-    <c:forEach var="comunidad" items="${comunidades}" varStatus="loop">
+    <% if (comunidades == null || comunidades.isEmpty()) { %>
+    <p class="text-center text-muted">No hay comunidades todavía. Genera datos de prueba o conecta estudiantes.</p>
+    <% } else { int n = 0; for (ListaEnlazada<Estudiante> comunidad : comunidades) { n++; %>
         <div class="card">
             <div class="card-header">
-                Comunidad ${loop.count}
+                Comunidad <%= n %> (<%= comunidad.getTamanio() %> estudiante(s))
             </div>
             <div class="card-body p-0">
                 <ul class="list-group list-group-flush">
-                    <c:forEach var="estudiante" items="${comunidad}">
+                    <% for (Estudiante estudiante : comunidad) { %>
                         <li class="list-group-item">
-                            <i class="bi bi-person-circle text-primary me-2"></i> ${estudiante.nombre}
+                            <i class="bi bi-person-circle text-primary me-2"></i> <%= Html.esc(estudiante.getNombre()) %>
                         </li>
-                    </c:forEach>
+                    <% } %>
                 </ul>
             </div>
         </div>
-    </c:forEach>
+    <% } } %>
 
     <!-- Botón para regresar -->
     <div class="text-center mt-4">

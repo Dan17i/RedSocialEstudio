@@ -24,7 +24,8 @@ import java.util.UUID;
  * @since 2025-05-13
  */
 public class SistemaAutenticacion implements ISistemaAutenticacion {
-    private ListaEnlazada<Usuario> usuariosRegistrados = new ListaEnlazada<>();
+    /** Misma lista que mantiene el gestor de usuarios (una sola fuente de verdad). */
+    private final ListaEnlazada<Usuario> usuariosRegistrados;
     private GestorContenidos gestorContenidos;
     private IGestorUsuarios gestorUsuarios;
     private IGestorRedSocial gestorRedSocial;
@@ -32,6 +33,7 @@ public class SistemaAutenticacion implements ISistemaAutenticacion {
 
     public SistemaAutenticacion() {
         this.gestorUsuarios = new GestorUsuarios();
+        this.usuariosRegistrados = gestorUsuarios.listarUsuarios();
         this.gestorRedSocial = new GestorRedSocial();
 
         // Un único gestor de contenidos para toda la aplicación (el mismo que usan los servlets)
@@ -63,7 +65,7 @@ public class SistemaAutenticacion implements ISistemaAutenticacion {
                 new ListaEnlazada<>()
         );
 
-        usuariosRegistrados.agregar(nuevo);
+        gestorUsuarios.registrarUsuario(nuevo);
         RedAfinidad.getInstancia().agregarEstudiante(nuevo);
         return nuevo;
     }
@@ -137,25 +139,23 @@ public class SistemaAutenticacion implements ISistemaAutenticacion {
      * @return true si se eliminó, false si no se encontró.
      */
     public boolean eliminarUsuario(String email) {
-        ListaEnlazada<Usuario> nuevaLista = new ListaEnlazada<>();
-        boolean eliminado = false;
-
+        Usuario encontrado = null;
         NodoLista<Usuario> actual = usuariosRegistrados.getCabeza();
         while (actual != null) {
-            Usuario usuario = actual.getDato();
-            if (!usuario.getEmail().equalsIgnoreCase(email)) {
-                nuevaLista.agregar(usuario);
-            } else {
-                eliminado = true;
-                if (usuario instanceof Estudiante) {
-                    RedAfinidad.getInstancia().eliminarEstudiante((Estudiante) usuario);
-                }
+            if (actual.getDato().getEmail().equalsIgnoreCase(email)) {
+                encontrado = actual.getDato();
+                break;
             }
             actual = actual.getSiguiente();
         }
-
-        usuariosRegistrados = nuevaLista;
-        return eliminado;
+        if (encontrado == null) {
+            return false;
+        }
+        gestorUsuarios.eliminarUsuario(encontrado.getId());
+        if (encontrado instanceof Estudiante) {
+            RedAfinidad.getInstancia().eliminarEstudiante((Estudiante) encontrado);
+        }
+        return true;
     }
 
     @Override

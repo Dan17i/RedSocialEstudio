@@ -69,7 +69,7 @@ public class GenerarDatosServlet extends HttpServlet {
 
             Contenido contenido = new Contenido(
                     UUID.randomUUID().toString(),
-                    "Tema de prueba " + (i+1),
+                    TEMAS[i % TEMAS.length] + " (prueba " + (i+1) + ")",
                     "Descripción de ejemplo " + (i+1),
                     autor,
                     tipo,

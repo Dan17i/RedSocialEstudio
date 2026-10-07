@@ -4,7 +4,6 @@
 <%@ page import="co.edu.uniquindio.redsocial.models.structures.ListaEnlazada" %>
 <%@ page import="co.edu.uniquindio.redsocial.models.Estudiante" %>
 <%
-    Moderador moderador = (Moderador) session.getAttribute("usuario");
     GestorContenidos gestorContenidos = GestorContenidos.getInstancia();
     RedAfinidad redAfinidad = RedAfinidad.getInstancia();
 %>
@@ -115,6 +114,8 @@
         <a href="ContenidosValoradosServlet">Contenidos Más Valorados</a>
         <a href="EstudiantesConectadosServlet">Estudiantes Más Conectados</a>
         <a href="ParticipacionServlet">Participación</a>
+        <a href="RutaMasCortaServlet">Ruta más corta</a>
+        <a href="CerrarSesionServlet">Cerrar sesión</a>
     </div>
 
     <% if ("true".equals(request.getParameter("datosGenerados"))) { %>

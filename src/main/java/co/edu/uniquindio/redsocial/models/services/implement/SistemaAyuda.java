@@ -1,5 +1,7 @@
 package co.edu.uniquindio.redsocial.models.services.implement;
 
+import co.edu.uniquindio.redsocial.models.Enums.EstadoSolicitud;
+import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.SolicitudAyuda;
 import co.edu.uniquindio.redsocial.models.services.interf.ISistemaAyuda;
 import co.edu.uniquindio.redsocial.models.structures.ColaPrioridad;
@@ -42,7 +44,7 @@ public class SistemaAyuda implements ISistemaAyuda {
      *
      * @param solicitud La solicitud de ayuda a registrar en el sistema.
      */
-    public void agregarSolicitud(SolicitudAyuda solicitud) {
+    public synchronized void agregarSolicitud(SolicitudAyuda solicitud) {
         solicitudesGlobales.encolar(solicitud, solicitud.getUrgencia());
     }
     /**
@@ -51,8 +53,43 @@ public class SistemaAyuda implements ISistemaAyuda {
      *
      * @return La solicitud de ayuda más urgente, o {@code null} si no hay solicitudes en la cola.
      */
-    public SolicitudAyuda atenderSolicitud() {
+    public synchronized SolicitudAyuda atenderSolicitud() {
         return solicitudesGlobales.desencolar();
+    }
+
+    /**
+     * Lista las solicitudes pendientes en el orden en que se atenderían (la más urgente primero).
+     *
+     * @return Nueva lista con las solicitudes pendientes.
+     */
+    public synchronized ListaEnlazada<SolicitudAyuda> obtenerSolicitudesPendientes() {
+        return solicitudesGlobales.aLista();
+    }
+
+    /**
+     * Un estudiante toma una solicitud concreta para ayudar. La solicitud sale de la cola global
+     * (en la cola personal de quien la pidió sigue visible, con su nuevo estado) y queda en estado {@code EN_PROGRESO}.
+     *
+     * @param idSolicitud Identificador de la solicitud a atender.
+     * @param ayudante    Estudiante que ofrece la ayuda (no puede ser quien la solicitó).
+     * @return La solicitud atendida, o {@code null} si ya no estaba pendiente.
+     * @throws IllegalArgumentException si el ayudante es nulo o es el mismo solicitante.
+     */
+    public synchronized SolicitudAyuda atenderSolicitud(String idSolicitud, Estudiante ayudante) {
+        if (ayudante == null) {
+            throw new IllegalArgumentException("El estudiante que ayuda no puede ser nulo");
+        }
+        for (SolicitudAyuda solicitud : solicitudesGlobales.aLista()) {
+            if (solicitud.getId().equals(idSolicitud)) {
+                if (solicitud.getEstudiante().equals(ayudante)) {
+                    throw new IllegalArgumentException("No puedes atender tu propia solicitud");
+                }
+                solicitudesGlobales.eliminar(solicitud);
+                solicitud.setEstado(EstadoSolicitud.EN_PROGRESO);
+                return solicitud;
+            }
+        }
+        return null;
     }
 
     /**

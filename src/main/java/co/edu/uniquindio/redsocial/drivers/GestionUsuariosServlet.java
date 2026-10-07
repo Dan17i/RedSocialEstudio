@@ -1,94 +1,86 @@
 package co.edu.uniquindio.redsocial.drivers;
 
-import co.edu.uniquindio.redsocial.models.Contenido;
 import co.edu.uniquindio.redsocial.models.Moderador;
 import co.edu.uniquindio.redsocial.models.Usuario;
-import co.edu.uniquindio.redsocial.models.Valoracion;
-import co.edu.uniquindio.redsocial.models.services.implement.GestorContenidos;
-import co.edu.uniquindio.redsocial.models.services.implement.GestorRedSocial;
-import co.edu.uniquindio.redsocial.models.services.implement.GestorUsuarios;
-import co.edu.uniquindio.redsocial.models.services.interf.IGestorRedSocial;
-import co.edu.uniquindio.redsocial.models.services.interf.IGestorUsuarios;
-import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
-import javax.servlet.annotation.WebServlet;
+import co.edu.uniquindio.redsocial.models.services.implement.SistemaAutenticacion;
+
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Gestión de usuarios por parte del moderador: listar, dar de baja y renombrar estudiantes.
+ * Trabaja sobre los usuarios realmente registrados en el {@link SistemaAutenticacion} de la aplicación.
+ */
 @WebServlet("/GestionUsuariosServlet")
 public class GestionUsuariosServlet extends HttpServlet {
-    private IGestorUsuarios gestorUsuarios;
-    private Moderador moderador;
+
+    private SistemaAutenticacion autenticacion() {
+        return (SistemaAutenticacion) getServletContext().getAttribute("sistemaAutenticacion");
+    }
+
+    private Moderador moderadorEnSesion(HttpServletRequest request) {
+        Object actual = request.getSession().getAttribute("usuarioActual");
+        return (actual instanceof Moderador) ? (Moderador) actual : null;
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ListaEnlazada<Usuario> usuarios = gestorUsuarios.listarUsuarios();
-        request.setAttribute("usuarios", usuarios);
+        if (moderadorEnSesion(request) == null) {
+            response.sendRedirect(request.getContextPath() + "/inicioSesion.jsp");
+            return;
+        }
+        request.setAttribute("usuarios", autenticacion().getEstudiantesRegistrados());
+
+        String exito = request.getParameter("success");
+        if ("usuario_eliminado".equals(exito)) {
+            request.setAttribute("mensaje", "Usuario dado de baja correctamente.");
+        } else if ("usuario_modificado".equals(exito)) {
+            request.setAttribute("mensaje", "Nombre actualizado correctamente.");
+        }
+        String error = request.getParameter("error");
+        if ("usuario_no_encontrado".equals(error)) {
+            request.setAttribute("error", "No se encontró el usuario.");
+        } else if ("nombre_invalido".equals(error)) {
+            request.setAttribute("error", "El nombre no puede estar vacío.");
+        }
         request.getRequestDispatcher("/gestionarUsuarios.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        Moderador moderador = moderadorEnSesion(request);
+        if (moderador == null) {
+            response.sendRedirect(request.getContextPath() + "/inicioSesion.jsp");
+            return;
+        }
+
         String accion = request.getParameter("accion");
-        String usuarioId = request.getParameter("usuarioId");
+        String usuarioId = request.getParameter("codigo");
+        Usuario usuario = (usuarioId == null) ? null : autenticacion().getGestorUsuarios().buscarUsuarioPorId(usuarioId);
+        if (usuario == null) {
+            response.sendRedirect("GestionUsuariosServlet?error=usuario_no_encontrado");
+            return;
+        }
 
         if ("eliminar".equals(accion)) {
-            Usuario usuario = gestorUsuarios.buscarUsuarioPorId(usuarioId);
-            if (usuario != null) {
-                moderador.darBajaUsuario(usuario);
-                response.sendRedirect("GestionUsuariosServlet?success=usuario_eliminado");
-            } else {
-                response.sendRedirect("GestionUsuariosServlet?error=usuario_no_encontrado");
-            }
+            // Se da de baja desde el sistema de autenticación para limpiar también la red de afinidad
+            autenticacion().eliminarUsuario(usuario.getEmail());
+            response.sendRedirect("GestionUsuariosServlet?success=usuario_eliminado");
         } else if ("modificar".equals(accion)) {
-            // Implementar lógica para modificar (por ejemplo, redirigir a un formulario)
-            Usuario usuario = gestorUsuarios.buscarUsuarioPorId(usuarioId);
-            if (usuario != null) {
-                request.setAttribute("usuario", usuario);
-                request.getRequestDispatcher("/modificarUsuario.jsp").forward(request, response);
+            String nombre = request.getParameter("nombre");
+            if (nombre == null || nombre.isBlank()) {
+                response.sendRedirect("GestionUsuariosServlet?error=nombre_invalido");
+                return;
             }
+            moderador.modificarUsuario(usuario, nombre.trim());
+            response.sendRedirect("GestionUsuariosServlet?success=usuario_modificado");
+        } else {
+            response.sendRedirect("GestionUsuariosServlet");
         }
-    }
-
-    @Override
-    public void init() throws ServletException {
-        super.init();
-
-        // Inicializaciones mínimas para pruebas
-        gestorUsuarios = new GestorUsuarios();
-        GestorContenidos gestorContenidos = GestorContenidos.getInstancia();
-        IGestorRedSocial gestorRedSocial = new GestorRedSocial();
-        ListaEnlazada<String> intereses = new ListaEnlazada<>();
-        ListaEnlazada<Contenido> historial = new ListaEnlazada<>();
-        ListaEnlazada<Valoracion> valoraciones = new ListaEnlazada<>();
-        ListaEnlazada<String> areas = new ListaEnlazada<>();
-
-        moderador = new Moderador(
-                "mod001",
-                "Moderador",
-                "moderador@redsocial.com",
-                null,
-                intereses,
-                historial,
-                valoraciones,
-                true,
-                areas,
-                gestorUsuarios,
-                gestorContenidos,
-                gestorRedSocial
-        );
-    }
-
-
-
-    // Métodos para inyección de dependencias
-    public void setGestorUsuarios(IGestorUsuarios gestorUsuarios) {
-        this.gestorUsuarios = gestorUsuarios;
-    }
-
-    public void setModerador(Moderador moderador) {
-        this.moderador = moderador;
     }
 }

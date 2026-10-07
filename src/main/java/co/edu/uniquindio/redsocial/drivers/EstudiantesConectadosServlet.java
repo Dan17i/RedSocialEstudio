@@ -10,18 +10,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+/**
+ * Reporte del moderador: estudiantes con más conexiones en el grafo de afinidad.
+ */
 @WebServlet("/EstudiantesConectadosServlet")
 public class EstudiantesConectadosServlet extends HttpServlet {
-    private Moderador moderador;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Object actual = request.getSession().getAttribute("usuarioActual");
+        if (!(actual instanceof Moderador)) {
+            response.sendRedirect(request.getContextPath() + "/inicioSesion.jsp");
+            return;
+        }
+        Moderador moderador = (Moderador) actual;
         Reporte<Estudiante> reporte = moderador.generarReporteEstudiantesMasConectados();
         request.setAttribute("reporte", reporte);
         request.getRequestDispatcher("/estudiantesConectados.jsp").forward(request, response);
-    }
-
-    public void setModerador(Moderador moderador) {
-        this.moderador = moderador;
     }
 }

@@ -116,4 +116,21 @@ class RedAfinidadTest {
         assertEquals(3, camino.getTamanio());
         assertEquals("Beto", camino.obtener(1));
     }
+
+    @Test
+    void el_camino_mas_corto_acepta_el_id_del_estudiante() {
+        GrupoEstudio g1 = new GrupoEstudio("G1", "ciencia");
+        GrupoEstudio g2 = new GrupoEstudio("G2", "arte");
+        ana.unirseAGrupo(g1);
+        beto.unirseAGrupo(g1);
+        beto.unirseAGrupo(g2);
+        carla.unirseAGrupo(g2);
+
+        ListaEnlazada<String> camino = sistema.getGestorRedSocial()
+                .calcularCaminosMasCortos(ana.getId(), carla.getId());
+
+        assertEquals(3, camino.getTamanio());
+        assertEquals("Ana", camino.obtener(0));
+        assertEquals("Carla", camino.obtener(2));
+    }
 }

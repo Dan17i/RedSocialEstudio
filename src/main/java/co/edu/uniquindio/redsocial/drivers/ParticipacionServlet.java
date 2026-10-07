@@ -22,8 +22,7 @@ public class ParticipacionServlet extends HttpServlet {
             return;
         }
 
-        ListaEnlazada participacion = moderador.generarReporteParticipacion().getDatos();
-        request.setAttribute("participacion", participacion);
+        request.setAttribute("reporte", moderador.generarReporteParticipacion());
         request.getRequestDispatcher("/participacion.jsp").forward(request, response);
     }
     public void setModerador(Moderador moderador) {

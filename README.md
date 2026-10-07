@@ -54,6 +54,24 @@ Las credenciales se leen de variables de entorno:
 
 Define ambas variables antes de iniciar Tomcat en cualquier entorno que no sea tu equipo local.
 
+## Qué puede hacer cada rol
+
+**Estudiante** (menú lateral de `inicio.jsp`):
+
+| Sección | Qué ofrece |
+|---|---|
+| Home | Explorar contenidos, filtrar por tema, autor o tipo, y valorarlos |
+| Perfil | Intereses, contenidos publicados y valoraciones |
+| Mis Grupos / Grupos sugeridos | Grupos de estudio formados automáticamente por intereses; detalle con chat, publicaciones y ayuda del grupo |
+| Chats | Mensajería entre estudiantes |
+| **Descubrir** | Tus conexiones, "amigos de amigos", compañeros con intereses afines, contenidos recomendados y la **ruta más corta** hacia otro estudiante |
+| **Ayuda** | Pedir ayuda en un tema con nivel de urgencia (1 = más urgente), ver la cola de la comunidad ordenada por urgencia y ayudar a otros |
+| Crear publicación | Publicar archivos, imágenes, videos o enlaces |
+
+**Moderador** (`moderador.jsp`): gestión de usuarios (baja y renombrar) y de contenidos, grafo de afinidad,
+comunidades, contenidos más valorados, estudiantes más conectados, niveles de participación,
+**ruta más corta entre dos estudiantes** y botón de datos de prueba.
+
 ## Cómo funciona el grafo de afinidad
 
 - Cada estudiante registrado es un nodo del grafo no dirigido que mantiene `RedAfinidad`.

@@ -81,10 +81,19 @@ public class ChatServlet extends HttpServlet {
                 }
             }
             if (destino != null) {
-                // Uso el nuevo constructor con ambos participantes
-                Conversacion nueva = new Conversacion(origen, destino);
-                convs.agregar(nueva);
-                req.setAttribute("conversacionActual", nueva);
+                // Reutiliza la conversación que ya exista entre los dos estudiantes
+                Conversacion existente = null;
+                for (Conversacion c : convs) {
+                    if (c.getParticipantes().contiene(origen) && c.getParticipantes().contiene(destino)) {
+                        existente = c;
+                        break;
+                    }
+                }
+                if (existente == null) {
+                    existente = new Conversacion(origen, destino);
+                    convs.agregar(existente);
+                }
+                req.setAttribute("conversacionActual", existente);
             }
         }
 

@@ -34,7 +34,7 @@ class FiltroAccesoTest {
     @Test
     void sin_sesion_se_pide_login_en_rutas_privadas() {
         assertEquals(Decision.REQUIERE_LOGIN, FiltroAcceso.evaluar("/inicio.jsp", null));
-        assertEquals(Decision.REQUIERE_LOGIN, FiltroAcceso.evaluar("/reporte.jsp", null));
+        assertEquals(Decision.REQUIERE_LOGIN, FiltroAcceso.evaluar("/rutaMasCorta.jsp", null));
         assertEquals(Decision.REQUIERE_LOGIN, FiltroAcceso.evaluar("/GenerarDatosServlet", null));
     }
 
@@ -43,15 +43,15 @@ class FiltroAccesoTest {
         Usuario e = estudiante();
         assertEquals(Decision.PERMITIR, FiltroAcceso.evaluar("/inicio.jsp", e));
         assertEquals(Decision.PERMITIR, FiltroAcceso.evaluar("/grupos", e));
-        assertEquals(Decision.PROHIBIDO, FiltroAcceso.evaluar("/panelModerador.jsp", e));
+        assertEquals(Decision.PROHIBIDO, FiltroAcceso.evaluar("/moderador.jsp", e));
         assertEquals(Decision.PROHIBIDO, FiltroAcceso.evaluar("/GestionUsuariosServlet", e));
         assertEquals(Decision.PROHIBIDO, FiltroAcceso.evaluar("/GenerarDatosServlet", e));
     }
 
     @Test
     void moderador_accede_a_las_paginas_de_moderador() {
-        assertEquals(Decision.PERMITIR, FiltroAcceso.evaluar("/panelModerador.jsp", moderador()));
-        assertEquals(Decision.PERMITIR, FiltroAcceso.evaluar("/ReporteServlet", moderador()));
+        assertEquals(Decision.PERMITIR, FiltroAcceso.evaluar("/moderador.jsp", moderador()));
+        assertEquals(Decision.PERMITIR, FiltroAcceso.evaluar("/RutaMasCortaServlet", moderador()));
     }
 
     @Test

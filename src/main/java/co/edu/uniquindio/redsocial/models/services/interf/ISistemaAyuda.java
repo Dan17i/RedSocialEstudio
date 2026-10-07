@@ -1,5 +1,6 @@
 package co.edu.uniquindio.redsocial.models.services.interf;
 
+import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.SolicitudAyuda;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
@@ -38,4 +39,14 @@ public interface ISistemaAyuda {
      * @return Lista de solicitudes relacionadas con el tema.
      */
     ListaEnlazada<SolicitudAyuda> obtenerSolicitudesPorTema(String tema);
+
+    /**
+     * Lista las solicitudes pendientes, la más urgente primero.
+     */
+    ListaEnlazada<SolicitudAyuda> obtenerSolicitudesPendientes();
+
+    /**
+     * Un estudiante toma una solicitud concreta; sale de las colas y queda EN_PROGRESO.
+     */
+    SolicitudAyuda atenderSolicitud(String idSolicitud, Estudiante ayudante);
 }

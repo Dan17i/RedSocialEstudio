@@ -1,4 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="co.edu.uniquindio.redsocial.models.Contenido" %>
+<%@ page import="co.edu.uniquindio.redsocial.models.structures.ListaEnlazada" %>
+<%@ page import="co.edu.uniquindio.redsocial.security.Html" %>
+<%
+    String resumen = (String) request.getAttribute("resumen");
+    @SuppressWarnings("unchecked")
+    ListaEnlazada<Contenido> contenidos = (ListaEnlazada<Contenido>) request.getAttribute("contenidos");
+%>
 
 
 <!DOCTYPE html>
@@ -43,30 +51,28 @@
             <h4><i class="bi bi-star-fill"></i> Contenidos Más Valorados</h4>
         </div>
         <div class="card-body">
-            <c:if test="${not empty resumen}">
-                <h5 class="text-muted mb-4">${resumen}</h5>
-            </c:if>
+            <% if (resumen != null) { %>
+                <h5 class="text-muted mb-4"><%= Html.esc(resumen) %></h5>
+            <% } %>
 
-            <c:choose>
-                <c:when test="${not empty contenidos}">
+            <% if (contenidos != null && !contenidos.isEmpty()) { %>
                     <ul class="list-group">
-                        <c:forEach var="contenido" items="${contenidos}">
+                        <% for (Contenido contenido : contenidos) { %>
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <span>
                                     <i class="bi bi-file-earmark-text"></i>
-                                    ${contenido.tema}
+                                    <%= Html.esc(contenido.getTema()) %>
+                                    <small class="text-muted">· <%= Html.esc(contenido.getAutor().getNombre()) %></small>
                                 </span>
                                 <span class="badge bg-primary rounded-pill">
-                                    Promedio: ${contenido.promedioValoraciones()}
+                                    Promedio: <%= String.format("%.1f", contenido.promedioValoraciones()) %> / 5
                                 </span>
                             </li>
-                        </c:forEach>
+                        <% } %>
                     </ul>
-                </c:when>
-                <c:otherwise>
+            <% } else { %>
                     <p class="text-danger">No hay contenidos disponibles.</p>
-                </c:otherwise>
-            </c:choose>
+            <% } %>
         </div>
     </div>
 

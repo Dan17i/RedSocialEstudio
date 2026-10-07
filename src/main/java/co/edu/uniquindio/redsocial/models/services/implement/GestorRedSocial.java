@@ -180,7 +180,7 @@ public class GestorRedSocial implements IGestorRedSocial {
     }
 
     /**
-     * Busca un nodo dentro del grafo a partir del nombre del estudiante.
+     * Busca un nodo dentro del grafo a partir del nombre o del id del estudiante.
      *
      * @param nombre Nombre del estudiante a buscar.
      * @return Nodo del grafo que contiene al estudiante, o null si no se encuentra.
@@ -188,7 +188,7 @@ public class GestorRedSocial implements IGestorRedSocial {
 
     private NodoGrafo<Estudiante> buscarNodoPorNombre(String nombre) {
         for (NodoGrafo<Estudiante> nodo : grafoEstudiantes.obtenerNodos()) {
-            if (nodo.getDato().getNombre().equals(nombre)) {
+            if (nodo.getDato().getId().equals(nombre) || nodo.getDato().getNombre().equals(nombre)) {
                 return nodo;
             }
         }

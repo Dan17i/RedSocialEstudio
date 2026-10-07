@@ -88,7 +88,7 @@ public class GestorContenidos implements IGestorContenidos {
         while (actual != null) {
             Contenido c = actual.getDato();
             if (c.getId().equals(id)) {
-                arbolContenidos.eliminar(c.getTema());
+                arbolContenidos.eliminarValor(c.getTema(), c);
                 listaDeContenidos.eliminar(c);
                 return true;
             }

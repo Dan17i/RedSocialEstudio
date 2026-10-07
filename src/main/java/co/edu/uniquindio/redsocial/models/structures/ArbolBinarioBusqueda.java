@@ -65,7 +65,9 @@ public class ArbolBinarioBusqueda<T extends Tematico> {
         } else if (comparacion > 0) {
             nodo.setDerecha(insertarRecursivo(nodo.getDerecha(), clave, valor));
         } else {
-            nodo.setValor(valor); // Actualiza el valor si la clave ya existe
+            // Clave repetida (varios contenidos con el mismo tema): se conserva cada elemento
+            // insertándolo en el subárbol derecho, en lugar de pisar el anterior.
+            nodo.setDerecha(insertarRecursivo(nodo.getDerecha(), clave, valor));
         }
 
         return nodo;
@@ -208,6 +210,43 @@ public class ArbolBinarioBusqueda<T extends Tematico> {
 
         return nodo;
     }
+    /**
+     * Elimina del árbol el nodo con la clave dada cuyo valor sea el indicado.
+     * Útil cuando hay varios elementos con la misma clave y solo se debe quitar uno.
+     *
+     * @param clave Clave del nodo.
+     * @param valor Valor (comparado con equals) del nodo a eliminar.
+     */
+    public void eliminarValor(String clave, T valor) {
+        raiz = eliminarValorRecursivo(raiz, clave, valor);
+    }
+
+    private NodoABB<T> eliminarValorRecursivo(NodoABB<T> nodo, String clave, T valor) {
+        if (nodo == null) {
+            return null;
+        }
+        int comparacion = clave.compareTo(nodo.getClave());
+        if (comparacion < 0) {
+            nodo.setIzquierda(eliminarValorRecursivo(nodo.getIzquierda(), clave, valor));
+        } else if (comparacion > 0 || !nodo.getValor().equals(valor)) {
+            // Misma clave pero otro valor: los repetidos están en el subárbol derecho.
+            nodo.setDerecha(eliminarValorRecursivo(nodo.getDerecha(), clave, valor));
+        } else {
+            if (nodo.getIzquierda() == null) {
+                return nodo.getDerecha();
+            } else if (nodo.getDerecha() == null) {
+                return nodo.getIzquierda();
+            }
+            // El sucesor es el nodo más a la izquierda del subárbol derecho; al ser el mínimo es
+            // también el primer nodo con su clave, así que eliminar por clave lo quita a él.
+            NodoABB<T> sucesor = encontrarMinimo(nodo.getDerecha());
+            nodo.setClave(sucesor.getClave());
+            nodo.setValor(sucesor.getValor());
+            nodo.setDerecha(eliminarRecursivo(nodo.getDerecha(), sucesor.getClave()));
+        }
+        return nodo;
+    }
+
     /**
      * Busca el nodo con la clave mínima en el subárbol dado.
      *

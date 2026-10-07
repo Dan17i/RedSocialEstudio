@@ -47,6 +47,27 @@ class GestorContenidosUnicoTest {
     }
 
     @Test
+    void dos_contenidos_con_el_mismo_tema_se_conservan_y_se_eliminan_por_separado() {
+        SistemaAutenticacion sistema = new SistemaAutenticacion();
+        Estudiante ana = sistema.registrarEstudiante("Ana", "ana@correo.com", "x");
+        GestorContenidos gestor = GestorContenidos.getInstancia();
+        Contenido a = new Contenido("A", "Java", "Desc", ana, TipoContenido.values()[0],
+                LocalDateTime.now(), new ListaEnlazada<>(), null);
+        Contenido b = new Contenido("B", "Java", "Desc", ana, TipoContenido.values()[0],
+                LocalDateTime.now(), new ListaEnlazada<>(), null);
+        gestor.agregarContenido(a);
+        gestor.agregarContenido(b);
+
+        assertEquals(2, gestor.buscarPorTema("Java").getTamanio());
+
+        assertTrue(gestor.eliminarContenido("A"));
+        ListaEnlazada<Contenido> restantes = gestor.buscarPorTema("Java");
+        assertEquals(1, restantes.getTamanio());
+        assertSame(b, restantes.obtener(0));
+        assertEquals(1, gestor.obtenerTodosLosContenidos().getTamanio());
+    }
+
+    @Test
     void eliminar_contenido_lo_quita_tambien_de_la_lista() {
         SistemaAutenticacion sistema = new SistemaAutenticacion();
         Estudiante ana = sistema.registrarEstudiante("Ana", "ana@correo.com", "x");

@@ -26,7 +26,7 @@ public class GrafoNoDirigido<T> extends GrafoImpl<T> {
      */
     @Override
     public void agregarArista(T nodo1, T nodo2) {
-        agregarArista(nodo1, nodo2, 0.0);
+        agregarArista(nodo1, nodo2, PESO_POR_DEFECTO);
     }
 
     /**

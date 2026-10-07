@@ -70,4 +70,18 @@ class GrafoNoDirigidoTest {
         assertTrue(g.obtenerVecinos("A").isEmpty());
         assertEquals(1, g.tamano());
     }
+
+    @Test
+    void buscarRutaCorta_sin_pesos_minimiza_el_numero_de_saltos() {
+        GrafoNoDirigido<String> g = new GrafoNoDirigido<>();
+        // Camino largo A-B-C-D y atajo A-E-D (declarado después).
+        g.agregarArista("A", "B");
+        g.agregarArista("B", "C");
+        g.agregarArista("C", "D");
+        g.agregarArista("A", "E");
+        g.agregarArista("E", "D");
+        ListaEnlazada<String> ruta = g.buscarRutaCorta("A", "D");
+        assertEquals(3, ruta.getTamanio());
+        assertEquals("E", ruta.obtener(1));
+    }
 }

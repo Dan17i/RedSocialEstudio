@@ -14,6 +14,9 @@ import co.edu.uniquindio.redsocial.models.services.interf.IGrafo;
  */
 public class GrafoImpl<T> implements IGrafo<T> {
 
+    /** Peso asignado a las aristas creadas sin peso explícito. */
+    protected static final double PESO_POR_DEFECTO = 1.0;
+
     private ListaEnlazada<NodoGrafo<T>> nodos;
     private final TablaHash<T, NodoGrafo<T>> mapaDeNodos;
     private final boolean esDirigido;
@@ -69,11 +72,12 @@ public class GrafoImpl<T> implements IGrafo<T> {
         if (!esDirigido) n2.agregarAdyacente(n1, peso);
     }
     /**
-     * Agrega una arista sin peso (valor por defecto 0.0).
+     * Agrega una arista con peso por defecto 1.0, de modo que la ruta más corta
+     * sea la de menor número de conexiones (saltos).
      */
     @Override
     public void agregarArista(T nodo1, T nodo2) {
-        agregarArista(nodo1, nodo2, 0.0);
+        agregarArista(nodo1, nodo2, PESO_POR_DEFECTO);
     }
     /**
      * Elimina un nodo y todas sus conexiones.

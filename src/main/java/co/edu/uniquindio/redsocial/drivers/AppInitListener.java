@@ -10,6 +10,9 @@ import co.edu.uniquindio.redsocial.models.services.implement.SistemaAyuda;
 import co.edu.uniquindio.redsocial.models.services.implement.SistemaAutenticacion;
 import co.edu.uniquindio.redsocial.models.structures.GrafoNoDirigido;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+import co.edu.uniquindio.redsocial.persistence.ConfigPersistencia;
+import co.edu.uniquindio.redsocial.persistence.EstadoAplicacion;
+import co.edu.uniquindio.redsocial.persistence.Persistencia;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -70,20 +73,39 @@ public class AppInitListener implements ServletContextListener {
         sce.getServletContext().setAttribute("gestorGrupos", gestorGrupos);
 
         // 7) Cola global de solicitudes de ayuda (por urgencia)
-        sce.getServletContext().setAttribute("sistemaAyuda", new SistemaAyuda());
+        SistemaAyuda sistemaAyuda = new SistemaAyuda();
+        sce.getServletContext().setAttribute("sistemaAyuda", sistemaAyuda);
 
         // 8) Lista global de grupos
         ListaEnlazada<GrupoEstudio> todosGrupos = new ListaEnlazada<>();
         sce.getServletContext().setAttribute("todosGrupos", todosGrupos);
+
+        // 9) Persistencia: carga lo guardado en la base de datos (si MongoDB no responde, el contexto
+        //    no arranca) y deja disponible el estado para que FiltroPersistencia lo guarde.
+        EstadoAplicacion estado = new EstadoAplicacion(sistema, gestor, RedAfinidad.getInstancia(),
+                sistemaAyuda, todosGrupos, conversaciones);
+        Persistencia persistencia = ConfigPersistencia.crear();
+        persistencia.cargar(estado);
+        sce.getServletContext().setAttribute("persistencia", persistencia);
+        sce.getServletContext().setAttribute("estadoAplicacion", estado);
     }
     /**
-     * Método que se ejecuta cuando el contexto del servlet es destruido.
-     * Actualmente, no realiza ninguna acción.
+     * Método que se ejecuta cuando el contexto del servlet es destruido:
+     * guarda por última vez el estado y cierra la conexión con la base de datos.
      *
      * @param sce Evento que notifica la destrucción del contexto del servlet.
      */
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        // No es necesario liberar nada en este caso
+        Persistencia persistencia = (Persistencia) sce.getServletContext().getAttribute("persistencia");
+        EstadoAplicacion estado = (EstadoAplicacion) sce.getServletContext().getAttribute("estadoAplicacion");
+        if (persistencia == null) return;
+        try {
+            if (estado != null) persistencia.guardar(estado);
+        } catch (RuntimeException e) {
+            sce.getServletContext().log("No se pudo guardar el estado al detener la aplicación", e);
+        } finally {
+            persistencia.cerrar();
+        }
     }
 }

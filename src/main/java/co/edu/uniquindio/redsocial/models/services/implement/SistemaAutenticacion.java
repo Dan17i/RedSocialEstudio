@@ -95,6 +95,17 @@ public class SistemaAutenticacion implements ISistemaAutenticacion {
      *
      * @return Cadena de texto representando un identificador único.
      */
+    /**
+     * Incorpora un estudiante ya existente (cargado desde la persistencia) sin validar ni
+     * transformar sus datos: conserva su id y el hash de su contraseña.
+     *
+     * @param estudiante Estudiante a restaurar.
+     */
+    public void restaurarEstudiante(Estudiante estudiante) {
+        gestorUsuarios.registrarUsuario(estudiante);
+        RedAfinidad.getInstancia().agregarEstudiante(estudiante);
+    }
+
     private String generarId() {
         return "USR-" + UUID.randomUUID();
     }

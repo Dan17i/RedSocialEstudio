@@ -10,6 +10,7 @@ La particularidad del proyecto es que **todas las estructuras de datos son propi
 ## Tecnologías
 
 - Java 17 y Maven
+- MongoDB 7 (persistencia; se levanta con Docker)
 - Servlets 4.0 + JSP (Tomcat 9), JSTL 1.2
 - Gson, JUnit 5, JaCoCo
 
@@ -18,6 +19,7 @@ La particularidad del proyecto es que **todas las estructuras de datos son propi
 - JDK 17 o superior
 - Maven 3.8+
 - Apache Tomcat **9** (el proyecto usa `javax.servlet`; Tomcat 10+ no es compatible)
+- Docker (o un MongoDB instalado) para la base de datos
 
 ## Compilar y probar
 
@@ -25,6 +27,30 @@ La particularidad del proyecto es que **todas las estructuras de datos son propi
 mvn clean package        # compila, ejecuta las pruebas y genera target/RedSocialEstudio-1.0-SNAPSHOT.war
 mvn test                 # solo pruebas (informe de cobertura JaCoCo en target/site/jacoco)
 ```
+
+## Base de datos (MongoDB)
+
+Los datos se guardan en MongoDB y se cargan al arrancar la aplicación. Levanta la base con Docker (una sola vez):
+
+```bash
+docker run -d --name redsocial-mongo -p 27017:27017 -v redsocial-mongo-data:/data/db mongo:7
+```
+
+Las próximas veces basta con `docker start redsocial-mongo`. Los datos quedan en el volumen `redsocial-mongo-data`.
+
+| Variable | Significado | Valor por defecto |
+|---|---|---|
+| `REDSOCIAL_MONGO_URI` | Cadena de conexión | `mongodb://localhost:27017` |
+| `REDSOCIAL_MONGO_DB` | Nombre de la base | `redsocialestudio` |
+| `REDSOCIAL_PERSISTENCIA` | `mongo` o `memoria` (sin guardar nada) | `mongo` |
+| `REDSOCIAL_UPLOADS` | Carpeta de archivos subidos | `~/redsocial-uploads` |
+
+- **Si MongoDB no responde, la aplicación no arranca** y el log explica por qué. Para trabajar sin base de datos,
+  elige `REDSOCIAL_PERSISTENCIA=memoria` de forma explícita (los datos se pierden al detener el servidor).
+- Se guardan: estudiantes (con el hash de su contraseña), contenidos y valoraciones, grupos con sus mensajes y ayuda,
+  conversaciones de chat y solicitudes de ayuda. El grafo de afinidad no se guarda: se recalcula.
+- Los archivos adjuntos se guardan en `REDSOCIAL_UPLOADS`, **fuera** de la aplicación, para que sobrevivan a un nuevo despliegue.
+- El guardado ocurre después de cada petición que modifica datos y al detener la aplicación.
 
 ## Ejecutar
 
@@ -35,7 +61,7 @@ mvn test                 # solo pruebas (informe de cobertura JaCoCo en target/s
    con el artefacto `RedSocialEstudio:war exploded`.
 3. Abre `http://localhost:8080/RedSocialEstudio/` (te lleva a la pantalla de inicio de sesión).
 
-Los datos viven **en memoria**: se pierden al reiniciar el servidor.
+Los datos se conservan al reiniciar el servidor (ver *Base de datos*).
 
 ### Datos de prueba
 
@@ -92,9 +118,10 @@ src/main/java/co/edu/uniquindio/redsocial
 │   ├── services/interf/      Interfaces de los servicios
 │   ├── services/implement/   Gestores y sistemas (autenticación, contenidos, red de afinidad, ...)
 │   └── structures/           Estructuras de datos propias
+├── persistence/              Persistencia en MongoDB (mapeador a documentos, guardado y carga) y carpeta de subidas
 └── security/                 Hash de contraseñas, filtro de acceso, escape HTML, config del moderador
 src/main/webapp               JSP, CSS e imágenes
-src/test/java                 Pruebas unitarias (modelos, estructuras, seguridad, red de afinidad)
+src/test/java                 Pruebas (modelos, estructuras, seguridad, red de afinidad y persistencia; las de MongoDB se omiten si no hay base)
 docs/diagrama-clases.md       Diagrama de clases
 ```
 

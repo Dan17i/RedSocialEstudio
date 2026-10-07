@@ -1,5 +1,6 @@
 package co.edu.uniquindio.redsocial.drivers;
 
+import co.edu.uniquindio.redsocial.persistence.Almacenamiento;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.*;
@@ -17,7 +18,6 @@ import java.io.*;
 @WebServlet("/archivo/*")
 public class ArchivoServlet extends HttpServlet {
 
-    private static final String UPLOAD_DIR = "archivos";
     /**
      * Procesa las peticiones GET para entregar un archivo solicitado.
      *
@@ -34,10 +34,15 @@ public class ArchivoServlet extends HttpServlet {
             return;
         }
 
-        String uploadPath = getServletContext().getRealPath("/" + UPLOAD_DIR);
-        File file = new File(uploadPath, path.substring(1)); // quita la “/”
+        File carpeta = Almacenamiento.directorioSubidas();
+        File file = new File(carpeta, path.substring(1)); // quita la “/”
+        // Evita salir de la carpeta de subidas con rutas tipo ../
+        if (!file.getCanonicalPath().startsWith(carpeta.getCanonicalPath() + File.separator)) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Archivo no encontrado");
+            return;
+        }
 
-        if (!file.exists()) {
+        if (!file.isFile()) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Archivo no encontrado");
             return;
         }

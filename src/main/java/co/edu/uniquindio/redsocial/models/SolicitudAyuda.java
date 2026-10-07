@@ -27,7 +27,7 @@ import java.util.UUID;
  */
 public class SolicitudAyuda implements Comparable<SolicitudAyuda> {
 
-    private final String id;
+    private String id;
     private final String tema;
     private final int urgencia;
     private final LocalDateTime fechaSolicitud;
@@ -84,6 +84,21 @@ public class SolicitudAyuda implements Comparable<SolicitudAyuda> {
         this.descripcion = descripcion;
         this.fechaSolicitud = fechaSolicitud;
         this.estado = EstadoSolicitud.PENDIENTE;
+    }
+
+    /**
+     * Reconstruye una solicitud guardada en la persistencia, conservando su id y su estado.
+     */
+    public static SolicitudAyuda restaurar(String id, String tema, int urgencia, Estudiante estudiante,
+                                           String descripcion, LocalDateTime fechaSolicitud,
+                                           EstadoSolicitud estado) {
+        if (id == null || estado == null) {
+            throw new IllegalArgumentException("Faltan datos para restaurar la solicitud");
+        }
+        SolicitudAyuda solicitud = new SolicitudAyuda(tema, urgencia, estudiante, descripcion, fechaSolicitud);
+        solicitud.id = id;
+        solicitud.estado = estado;
+        return solicitud;
     }
 
     public String getId() {

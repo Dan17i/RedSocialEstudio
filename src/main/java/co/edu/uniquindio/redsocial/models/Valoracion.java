@@ -63,6 +63,28 @@ public class Valoracion {
         this.fechaValoracion = LocalDateTime.now();
     }
 
+    /** Constructor privado para reconstruir una valoración ya guardada (conserva id y fecha). */
+    private Valoracion(String id, Estudiante estudiante, Contenido contenido, int puntuacion,
+                       String comentario, LocalDateTime fechaValoracion) {
+        this.id = id;
+        this.estudiante = estudiante;
+        this.contenido = contenido;
+        this.puntuacion = puntuacion;
+        this.comentario = comentario;
+        this.fechaValoracion = fechaValoracion;
+    }
+
+    /**
+     * Reconstruye una valoración guardada en la persistencia, conservando su id y su fecha.
+     */
+    public static Valoracion restaurar(String id, Estudiante estudiante, Contenido contenido, int puntuacion,
+                                       String comentario, LocalDateTime fechaValoracion) {
+        if (id == null || estudiante == null || contenido == null || fechaValoracion == null) {
+            throw new IllegalArgumentException("Faltan datos para restaurar la valoración");
+        }
+        return new Valoracion(id, estudiante, contenido, puntuacion, comentario, fechaValoracion);
+    }
+
     /**
      * Obtiene el identificador único de la valoración.
      *

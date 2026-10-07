@@ -42,6 +42,16 @@ public class ArchivoMultimedia {
         return "/archivos/" + rutaRelativa;
     }
     /**
+     * Devuelve la ruta tal como se guardó (sin el prefijo "/archivos/" que agrega
+     * {@link #getRutaRelativa()}). Es el valor que debe usarse para persistir y reconstruir el archivo.
+     *
+     * @return Ruta almacenada.
+     */
+    public String getRutaGuardada() {
+        return rutaRelativa;
+    }
+
+    /**
      * Establece la ruta relativa del archivo.
      *
      * @param rutaRelativa Nueva ruta relativa.
@@ -125,11 +135,7 @@ public class ArchivoMultimedia {
         // Crear nombre único en servidor
         String uniqueName = UUID.randomUUID().toString() + "_" + nombre;
         // Preparar directorio absoluto
-        String uploadPath = context.getRealPath("/archivos");
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
-        }
+        File uploadDir = co.edu.uniquindio.redsocial.persistence.Almacenamiento.directorioSubidas();
         File file = new File(uploadDir, uniqueName);
         try (InputStream is = part.getInputStream();
              FileOutputStream fos = new FileOutputStream(file)) {

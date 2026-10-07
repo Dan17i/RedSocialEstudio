@@ -11,6 +11,8 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
+import co.edu.uniquindio.redsocial.persistence.Almacenamiento;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -25,7 +27,6 @@ import java.util.UUID;
 @WebServlet("/grupos/detalle/publicar")
 public class PublicarContenidoGrupoServlet extends HttpServlet {
 
-    private static final String UPLOAD_DIR = "uploads";
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -66,9 +67,7 @@ public class PublicarContenidoGrupoServlet extends HttpServlet {
         ArchivoMultimedia am = null;
         if (archivoPart != null && archivoPart.getSize() > 0) {
             String nombre = UUID.randomUUID() + "_" + archivoPart.getSubmittedFileName();
-            String rutaRel = UPLOAD_DIR + File.separator + nombre;
-            File uploads = new File(getServletContext().getRealPath("/") + UPLOAD_DIR);
-            if (!uploads.exists()) uploads.mkdirs();
+            File uploads = Almacenamiento.directorioSubidas();
             archivoPart.write(uploads.getAbsolutePath() + File.separator + nombre);
             am = new ArchivoMultimedia(
                     archivoPart.getSubmittedFileName(),

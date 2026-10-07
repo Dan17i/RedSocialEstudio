@@ -4,11 +4,12 @@ Los diagramas están escritos en [Mermaid](https://mermaid.js.org/): GitHub los 
 al abrir este archivo. Para exportarlos a PNG/PDF (por ejemplo para la entrega) se puede pegar cada
 bloque en <https://mermaid.live>.
 
-Se dividen en tres vistas para que sean legibles:
+Se dividen en cuatro vistas para que sean legibles:
 
 1. [Modelo de dominio](#1-modelo-de-dominio)
 2. [Estructuras de datos propias](#2-estructuras-de-datos-propias)
 3. [Servicios](#3-servicios)
+4. [Persistencia](#4-persistencia)
 
 ---
 
@@ -411,3 +412,79 @@ Los principales:
 
 `AppInitListener` crea al arrancar el contexto el sistema de autenticación, las colecciones globales y
 publica en el `ServletContext` las mismas estructuras que mantiene `GestorContenidos`.
+
+---
+
+## 4. Persistencia
+
+Las estructuras propias siguen siendo la memoria de trabajo; MongoDB solo guarda su contenido y lo vuelve a cargar al arrancar.
+
+```mermaid
+classDiagram
+    direction LR
+
+    class Persistencia {
+        <<interface>>
+        +cargar(EstadoAplicacion)
+        +guardar(EstadoAplicacion)
+        +cerrar()
+    }
+    class PersistenciaMongo {
+        -TablaHash ultimoGuardado
+        +cargar(EstadoAplicacion)
+        +guardar(EstadoAplicacion)
+    }
+    class PersistenciaMemoria
+    class ConfigPersistencia {
+        <<utility>>
+        +crear() Persistencia
+    }
+    class MapeadorDocumentos {
+        +usuarios(EstadoAplicacion) ListaEnlazada
+        +contenidos(EstadoAplicacion) ListaEnlazada
+        +grupos(EstadoAplicacion) ListaEnlazada
+        +conversaciones(EstadoAplicacion) ListaEnlazada
+        +solicitudes(EstadoAplicacion) ListaEnlazada
+        +restaurar(EstadoAplicacion, ...)
+    }
+    class EstadoAplicacion {
+        -SistemaAutenticacion autenticacion
+        -GestorContenidos contenidos
+        -SistemaAyuda ayuda
+        -ListaEnlazada grupos
+        -ListaEnlazada conversaciones
+    }
+    class FiltroPersistencia {
+        <<WebFilter>>
+        guarda tras cada POST
+    }
+    class Almacenamiento {
+        <<utility>>
+        +directorioSubidas() File
+    }
+    class AppInitListener {
+        carga al arrancar
+        guarda al detener
+    }
+
+    Persistencia <|.. PersistenciaMongo
+    Persistencia <|.. PersistenciaMemoria
+    ConfigPersistencia ..> Persistencia : elige
+    PersistenciaMongo --> MapeadorDocumentos
+    MapeadorDocumentos ..> EstadoAplicacion
+    PersistenciaMongo ..> EstadoAplicacion
+    FiltroPersistencia ..> Persistencia
+    AppInitListener ..> Persistencia
+    AppInitListener ..> EstadoAplicacion
+```
+
+| Colección | Contenido |
+|---|---|
+| `usuarios` | Estudiante: nombre, email, hash de contraseña, intereses |
+| `contenidos` | Contenido global con su archivo adjunto y sus valoraciones |
+| `grupos` | Miembros (ids), publicaciones del grupo, mensajes y solicitudes de ayuda |
+| `conversaciones` | Participantes (ids) y mensajes |
+| `solicitudes` | Solicitudes de ayuda de cada estudiante y si siguen en la cola global |
+
+Los objetos se relacionan por `id` (no se anidan referencias circulares). `java.util.List` aparece solo en la frontera
+con el driver de MongoDB (`MapeadorDocumentos`, `PersistenciaMongo`).

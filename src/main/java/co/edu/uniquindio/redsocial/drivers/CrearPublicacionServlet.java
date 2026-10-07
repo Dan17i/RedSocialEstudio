@@ -1,5 +1,6 @@
 package co.edu.uniquindio.redsocial.drivers;
 
+import co.edu.uniquindio.redsocial.persistence.Almacenamiento;
 import co.edu.uniquindio.redsocial.ArchivoMultimedia;
 import co.edu.uniquindio.redsocial.models.Contenido;
 import co.edu.uniquindio.redsocial.models.Estudiante;
@@ -42,7 +43,6 @@ import java.util.UUID;
 )
 public class CrearPublicacionServlet extends HttpServlet {
 
-    private static final String UPLOAD_DIR = "archivos";
     /**
      * Maneja la solicitud POST para crear una nueva publicación en la red social educativa.
      * Verifica si el usuario está autenticado, procesa los parámetros del formulario, guarda
@@ -81,9 +81,8 @@ public class CrearPublicacionServlet extends HttpServlet {
         }
 
         // Guardar archivo
-        String uploadPath = getServletContext().getRealPath("/" + UPLOAD_DIR);
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) uploadDir.mkdirs();
+        File uploadDir = Almacenamiento.directorioSubidas();
+        String uploadPath = uploadDir.getAbsolutePath();
 
         Part filePart;
         try {

@@ -44,6 +44,18 @@ public class Conversacion {
         participantes.agregar(destino);
     }
 
+    /**
+     * Reconstruye una conversación guardada en la persistencia, conservando su id.
+     */
+    public Conversacion(String id, Estudiante origen, Estudiante destino) {
+        if (id == null || id.isBlank() || origen == null || destino == null) {
+            throw new IllegalArgumentException("Faltan datos para restaurar la conversación");
+        }
+        this.id = id;
+        participantes.agregar(origen);
+        participantes.agregar(destino);
+    }
+
     public String getId() {
         return id;
     }

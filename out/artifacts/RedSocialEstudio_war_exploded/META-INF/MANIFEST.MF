@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Created-By: IntelliJ IDEA
-Built-By: 15-FA000la
-Build-Jdk: Eclipse Temurin 21.0.2
-

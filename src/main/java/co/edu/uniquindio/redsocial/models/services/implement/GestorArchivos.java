@@ -1,7 +1,7 @@
 package co.edu.uniquindio.redsocial.models.services.implement;
 
 import co.edu.uniquindio.redsocial.models.services.interf.IGestorArchivos;
-import jakarta.servlet.http.Part;
+import javax.servlet.http.Part;
 
 import java.io.File;
 import java.io.IOException;

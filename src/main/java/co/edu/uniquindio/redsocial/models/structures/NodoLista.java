@@ -1,6 +1,5 @@
 package co.edu.uniquindio.redsocial.models.structures;
 
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -62,7 +61,7 @@ public class NodoLista<T> {
      * @return true si los datos de ambos nodos son iguales, false en caso contrario.
      */
     @Override
-    public boolean equals(@Nullable Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         NodoLista<?> that = (NodoLista<?>) obj;

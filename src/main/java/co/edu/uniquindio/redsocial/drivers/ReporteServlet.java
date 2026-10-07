@@ -1,7 +1,6 @@
 package co.edu.uniquindio.redsocial.drivers;
 
 import co.edu.uniquindio.redsocial.models.Moderador;
-import co.edu.uniquindio.redsocial.models.services.implement.SistemaAutenticacion;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

@@ -2,7 +2,6 @@ package co.edu.uniquindio.redsocial.drivers;
 
 import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.GrupoEstudio;
-import co.edu.uniquindio.redsocial.models.Mensaje;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
 import javax.servlet.ServletException;

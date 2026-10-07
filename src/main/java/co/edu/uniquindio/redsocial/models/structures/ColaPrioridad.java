@@ -1,6 +1,5 @@
 package co.edu.uniquindio.redsocial.models.structures;
 
-import co.edu.uniquindio.redsocial.models.Estudiante;
 
 /**
  * Cola de prioridad basada en lista enlazada.

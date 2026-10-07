@@ -1,7 +1,6 @@
 package co.edu.uniquindio.redsocial.drivers;
 
 import co.edu.uniquindio.redsocial.models.Moderador;
-import co.edu.uniquindio.redsocial.models.Reporte;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
 import javax.servlet.ServletException;

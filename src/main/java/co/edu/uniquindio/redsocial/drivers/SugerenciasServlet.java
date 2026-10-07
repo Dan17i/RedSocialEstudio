@@ -2,8 +2,6 @@ package co.edu.uniquindio.redsocial.drivers;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashSet;
-import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -13,6 +11,7 @@ import co.edu.uniquindio.redsocial.models.Valoracion;
 import co.edu.uniquindio.redsocial.models.GrupoEstudio;
 import co.edu.uniquindio.redsocial.models.services.implement.RedAfinidad;
 import co.edu.uniquindio.redsocial.models.services.implement.SistemaAutenticacion;
+import co.edu.uniquindio.redsocial.models.structures.ConjuntoHash;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import co.edu.uniquindio.redsocial.models.structures.NodoLista;
 
@@ -74,20 +73,20 @@ public class SugerenciasServlet extends HttpServlet {
     }
 
     private int contarValoraciones(Estudiante e1, Estudiante e2){
-        Set<String> set=new HashSet<>();
-        for(Valoracion v:e1.getValoraciones()) set.add(v.getContenido().getId());
+        ConjuntoHash<String> set=new ConjuntoHash<>();
+        for(Valoracion v:e1.getValoraciones()) set.agregar(v.getContenido().getId());
         int c=0;
         for(Valoracion v:e2.getValoraciones())
-            if(set.contains(v.getContenido().getId())) c++;
+            if(set.contiene(v.getContenido().getId())) c++;
         return c;
     }
 
     private int contarGrupos(Estudiante e1, Estudiante e2){
-        Set<String> set=new HashSet<>();
-        for(GrupoEstudio g:e1.getGruposEstudio()) set.add(g.getTema());
+        ConjuntoHash<String> set=new ConjuntoHash<>();
+        for(GrupoEstudio g:e1.getGruposEstudio()) set.agregar(g.getTema());
         int c=0;
         for(GrupoEstudio g:e2.getGruposEstudio())
-            if(set.contains(g.getTema())) c++;
+            if(set.contiene(g.getTema())) c++;
         return c;
     }
 }

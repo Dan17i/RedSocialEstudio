@@ -1,12 +1,11 @@
 package co.edu.uniquindio.redsocial.models.services.implement;
 
 import co.edu.uniquindio.redsocial.models.Estudiante;
+import co.edu.uniquindio.redsocial.models.structures.ConjuntoHash;
 import co.edu.uniquindio.redsocial.models.structures.GrafoImpl;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import co.edu.uniquindio.redsocial.models.structures.NodoGrafo;
 import co.edu.uniquindio.redsocial.models.services.interf.IRedAfinidad;
-import java.util.Set;
-import java.util.HashSet;
 
 import co.edu.uniquindio.redsocial.models.Valoracion;
 import co.edu.uniquindio.redsocial.models.GrupoEstudio;
@@ -14,8 +13,6 @@ import co.edu.uniquindio.redsocial.models.Contenido;
 import co.edu.uniquindio.redsocial.models.Estudiante;
 
 
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Clase que representa una red de afinidad entre estudiantes,
@@ -118,14 +115,14 @@ public class RedAfinidad implements IRedAfinidad {
      * @return número de coincidencias
      */
     private int contarCoincidencias(ListaEnlazada<String> lista1, ListaEnlazada<String> lista2) {
-        Set<String> conjunto = new HashSet<>();
+        ConjuntoHash<String> conjunto = new ConjuntoHash<>();
         for (int i = 0; i < lista1.getTamanio(); i++) {
-            conjunto.add(lista1.obtener(i).toLowerCase());
+            conjunto.agregar(lista1.obtener(i).toLowerCase());
         }
 
         int contador = 0;
         for (int i = 0; i < lista2.getTamanio(); i++) {
-            if (conjunto.contains(lista2.obtener(i).toLowerCase())) {
+            if (conjunto.contiene(lista2.obtener(i).toLowerCase())) {
                 contador++;
             }
         }
@@ -140,14 +137,14 @@ public class RedAfinidad implements IRedAfinidad {
      */
     private int contarValoracionesSimilares(Estudiante e1, Estudiante e2) {
         // Obtener ids de contenidos valorados por e1
-        Set<String> contenidosE1 = new HashSet<>();
+        ConjuntoHash<String> contenidosE1 = new ConjuntoHash<>();
         for (Valoracion v : e1.getValoraciones()) {
-            contenidosE1.add(v.getContenido().getId());
+            contenidosE1.agregar(v.getContenido().getId());
         }
         // Contar cuántos de e2 están en ese set
         int contador = 0;
         for (Valoracion v : e2.getValoraciones()) {
-            if (contenidosE1.contains(v.getContenido().getId())) {
+            if (contenidosE1.contiene(v.getContenido().getId())) {
                 contador++;
             }
         }
@@ -161,13 +158,13 @@ public class RedAfinidad implements IRedAfinidad {
      * @return número de grupos en común
      */
     private int contarGruposCompartidos(Estudiante e1, Estudiante e2) {
-        Set<String> gruposE1 = new HashSet<>();
+        ConjuntoHash<String> gruposE1 = new ConjuntoHash<>();
         for (GrupoEstudio g : e1.getGruposEstudio()) {
-            gruposE1.add(g.getId());  // asume que GrupoEstudio tiene getId()
+            gruposE1.agregar(g.getId());  // asume que GrupoEstudio tiene getId()
         }
         int contador = 0;
         for (GrupoEstudio g : e2.getGruposEstudio()) {
-            if (gruposE1.contains(g.getId())) {
+            if (gruposE1.contiene(g.getId())) {
                 contador++;
             }
         }

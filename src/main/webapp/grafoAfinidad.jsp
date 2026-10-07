@@ -15,11 +15,11 @@
 
     int n = todos.getTamanio();
     int centerX = 400, centerY = 300, radius = 250;
-    java.util.Map<String,int[]> pos = new java.util.HashMap<>();
+    co.edu.uniquindio.redsocial.models.structures.TablaHash<String,int[]> pos = new co.edu.uniquindio.redsocial.models.structures.TablaHash<>();
     for (int i = 0; i < n; i++) {
         Estudiante e = todos.obtener(i);
         double angle = 2 * Math.PI * i / n;
-        pos.put(e.getId(), new int[]{
+        pos.poner(e.getId(), new int[]{
                 (int)(centerX + radius * Math.cos(angle)),
                 (int)(centerY + radius * Math.sin(angle))
         });
@@ -62,11 +62,11 @@
         <g class="links">
             <% for (int i = 0; i < n; i++) {
                 Estudiante e1 = todos.obtener(i);
-                int[] p1 = pos.get(e1.getId());
+                int[] p1 = pos.obtener(e1.getId());
                 ListaEnlazada<Estudiante> sugs = red.sugerirCompanerosAvanzado(e1);
                 for (NodoLista<Estudiante> it = sugs.getCabeza(); it != null; it = it.getSiguiente()) {
                     Estudiante e2 = it.getDato();
-                    int[] p2 = pos.get(e2.getId());
+                    int[] p2 = pos.obtener(e2.getId());
             %>
             <line class="link"
                   x1="<%=p1[0]%>" y1="<%=p1[1]%>"
@@ -78,7 +78,7 @@
         <g class="nodes">
             <% for (int i = 0; i < n; i++) {
                 Estudiante e = todos.obtener(i);
-                int[] p = pos.get(e.getId());
+                int[] p = pos.obtener(e.getId());
             %>
             <g class="node"
                data-id="<%=e.getId()%>"

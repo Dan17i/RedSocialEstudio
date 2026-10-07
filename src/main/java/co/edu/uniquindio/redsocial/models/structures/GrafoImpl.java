@@ -2,8 +2,6 @@ package co.edu.uniquindio.redsocial.models.structures;
 
 import co.edu.uniquindio.redsocial.models.services.interf.IGrafo;
 
-import java.util.*;
-
 /**
  * Implementación concreta de la interfaz {@link IGrafo} que representa un grafo genérico.
  * Permite grafos dirigidos o no dirigidos, con operaciones de agregado, eliminación, búsqueda
@@ -17,7 +15,7 @@ import java.util.*;
 public class GrafoImpl<T> implements IGrafo<T> {
 
     private ListaEnlazada<NodoGrafo<T>> nodos;
-    private final Map<T, NodoGrafo<T>> mapaDeNodos;
+    private final TablaHash<T, NodoGrafo<T>> mapaDeNodos;
     private final boolean esDirigido;
 
     /**
@@ -33,7 +31,7 @@ public class GrafoImpl<T> implements IGrafo<T> {
      */
     public GrafoImpl(boolean esDirigido) {
         this.nodos = new ListaEnlazada<>();
-        this.mapaDeNodos = new HashMap<>();
+        this.mapaDeNodos = new TablaHash<>();
         this.esDirigido = esDirigido;
     }
     /**
@@ -44,10 +42,10 @@ public class GrafoImpl<T> implements IGrafo<T> {
     @Override
     public void agregarNodo(T dato) {
         if (dato == null) throw new IllegalArgumentException("El nodo no puede ser null");
-        if (!mapaDeNodos.containsKey(dato)) {
+        if (!mapaDeNodos.contieneClave(dato)) {
             NodoGrafo<T> nuevo = new NodoGrafo<>(dato);
             nodos.agregar(nuevo);
-            mapaDeNodos.put(dato, nuevo);
+            mapaDeNodos.poner(dato, nuevo);
         }
     }
     /**
@@ -63,8 +61,8 @@ public class GrafoImpl<T> implements IGrafo<T> {
         if (nodo1.equals(nodo2)) throw new IllegalArgumentException("No se permiten lazos (nodo igual a sí mismo)");
         if (peso < 0) throw new IllegalArgumentException("Peso no puede ser negativo");
 
-        NodoGrafo<T> n1 = mapaDeNodos.get(nodo1);
-        NodoGrafo<T> n2 = mapaDeNodos.get(nodo2);
+        NodoGrafo<T> n1 = mapaDeNodos.obtener(nodo1);
+        NodoGrafo<T> n2 = mapaDeNodos.obtener(nodo2);
         if (n1 == null || n2 == null) throw new IllegalArgumentException("Uno o ambos nodos no existen");
 
         n1.agregarAdyacente(n2, peso);
@@ -85,7 +83,7 @@ public class GrafoImpl<T> implements IGrafo<T> {
     @Override
     public boolean eliminarNodo(T dato) {
         if (dato == null) return false;
-        NodoGrafo<T> nodo = mapaDeNodos.remove(dato);
+        NodoGrafo<T> nodo = mapaDeNodos.eliminar(dato);
         if (nodo == null) return false;
         nodos.eliminar(nodo);
         for (NodoGrafo<T> otro : nodos) {
@@ -101,8 +99,8 @@ public class GrafoImpl<T> implements IGrafo<T> {
      */
     @Override
     public boolean eliminarArista(T nodo1, T nodo2) {
-        NodoGrafo<T> n1 = mapaDeNodos.get(nodo1);
-        NodoGrafo<T> n2 = mapaDeNodos.get(nodo2);
+        NodoGrafo<T> n1 = mapaDeNodos.obtener(nodo1);
+        NodoGrafo<T> n2 = mapaDeNodos.obtener(nodo2);
         if (n1 == null || n2 == null) return false;
 
         boolean eliminado = n1.eliminarAdyacente(n2);
@@ -120,8 +118,8 @@ public class GrafoImpl<T> implements IGrafo<T> {
         if (origen == null || destino == null)
             throw new IllegalArgumentException("Nodos no pueden ser null");
 
-        NodoGrafo<T> nodoOrigen = mapaDeNodos.get(origen);
-        NodoGrafo<T> nodoDestino = mapaDeNodos.get(destino);
+        NodoGrafo<T> nodoOrigen = mapaDeNodos.obtener(origen);
+        NodoGrafo<T> nodoDestino = mapaDeNodos.obtener(destino);
 
         if (nodoOrigen == null || nodoDestino == null)
             throw new IllegalArgumentException("Uno o ambos nodos no existen");
@@ -132,32 +130,40 @@ public class GrafoImpl<T> implements IGrafo<T> {
             return ruta;
         }
 
-        Map<NodoGrafo<T>, Double> distancias = new HashMap<>();
-        Map<NodoGrafo<T>, NodoGrafo<T>> predecesores = new HashMap<>();
-        PriorityQueue<NodoGrafo<T>> cola = new PriorityQueue<>(Comparator.comparingDouble(n -> distancias.getOrDefault(n, Double.MAX_VALUE)));
+        TablaHash<NodoGrafo<T>, Double> distancias = new TablaHash<>();
+        TablaHash<NodoGrafo<T>, NodoGrafo<T>> predecesores = new TablaHash<>();
+        // Nodos alcanzados y aún no procesados; se extrae siempre el de menor distancia.
+        ListaEnlazada<NodoGrafo<T>> pendientes = new ListaEnlazada<>();
 
         for (NodoGrafo<T> nodo : nodos) {
-            distancias.put(nodo, Double.MAX_VALUE);
+            distancias.poner(nodo, Double.MAX_VALUE);
         }
 
-        distancias.put(nodoOrigen, 0.0);
-        cola.add(nodoOrigen);
+        distancias.poner(nodoOrigen, 0.0);
+        pendientes.agregar(nodoOrigen);
 
-        while (!cola.isEmpty()) {
-            NodoGrafo<T> actual = cola.poll();
+        while (!pendientes.isEmpty()) {
+            int indiceMenor = 0;
+            for (int i = 1; i < pendientes.getTamanio(); i++) {
+                if (distancias.obtener(pendientes.obtener(i)) < distancias.obtener(pendientes.obtener(indiceMenor))) {
+                    indiceMenor = i;
+                }
+            }
+            NodoGrafo<T> actual = pendientes.eliminarEn(indiceMenor);
 
             if (actual.equals(nodoDestino)) return reconstruirRuta(nodoDestino, predecesores);
 
-            for (Map.Entry<NodoGrafo<T>, Double> entrada : actual.getAdyacentes().entrySet()) {
-                NodoGrafo<T> vecino = entrada.getKey();
-                double peso = entrada.getValue();
-                double nuevaDistancia = distancias.get(actual) + peso;
+            for (TablaHash.Entrada<NodoGrafo<T>, Double> entrada : actual.getAdyacentes().entradas()) {
+                NodoGrafo<T> vecino = entrada.getClave();
+                double peso = entrada.getValor();
+                double nuevaDistancia = distancias.obtener(actual) + peso;
 
-                if (nuevaDistancia < distancias.get(vecino)) {
-                    distancias.put(vecino, nuevaDistancia);
-                    predecesores.put(vecino, actual);
-                    cola.remove(vecino);
-                    cola.add(vecino);
+                if (nuevaDistancia < distancias.obtener(vecino)) {
+                    distancias.poner(vecino, nuevaDistancia);
+                    predecesores.poner(vecino, actual);
+                    if (!pendientes.contiene(vecino)) {
+                        pendientes.agregar(vecino);
+                    }
                 }
             }
         }
@@ -171,13 +177,13 @@ public class GrafoImpl<T> implements IGrafo<T> {
      * @param predecesores Mapa de predecesores.
      * @return Ruta reconstruida.
      */
-    private ListaEnlazada<T> reconstruirRuta(NodoGrafo<T> destino, Map<NodoGrafo<T>, NodoGrafo<T>> predecesores) {
+    private ListaEnlazada<T> reconstruirRuta(NodoGrafo<T> destino, TablaHash<NodoGrafo<T>, NodoGrafo<T>> predecesores) {
         ListaEnlazada<T> ruta = new ListaEnlazada<>();
         NodoGrafo<T> actual = destino;
 
         while (actual != null) {
             ruta.agregarInicio(actual.getDato());
-            actual = predecesores.get(actual);
+            actual = predecesores.obtener(actual);
         }
 
         return ruta;
@@ -187,7 +193,7 @@ public class GrafoImpl<T> implements IGrafo<T> {
      */
     @Override
     public NodoGrafo<T> obtenerNodo(T dato) {
-        return mapaDeNodos.get(dato);
+        return mapaDeNodos.obtener(dato);
     }
     /**
      * Obtiene todos los nodos del grafo.
@@ -208,7 +214,7 @@ public class GrafoImpl<T> implements IGrafo<T> {
      */
     @Override
     public int tamano() {
-        return mapaDeNodos.size();
+        return mapaDeNodos.tamanio();
     }
 
     /**
@@ -217,16 +223,16 @@ public class GrafoImpl<T> implements IGrafo<T> {
      * @param dato El dato del nodo
      */
     public void agregarVertice(T dato) {
-        mapaDeNodos.putIfAbsent(dato, new NodoGrafo<>(dato));
+        agregarNodo(dato);
     }
 
-    public Map<T, Double> obtenerAdyacentes(T dato) {
-        NodoGrafo<T> nodo = mapaDeNodos.get(dato);
-        if (nodo == null) return Collections.emptyMap();
+    public TablaHash<T, Double> obtenerAdyacentes(T dato) {
+        TablaHash<T, Double> adyacentes = new TablaHash<>();
+        NodoGrafo<T> nodo = mapaDeNodos.obtener(dato);
+        if (nodo == null) return adyacentes;
 
-        Map<T, Double> adyacentes = new HashMap<>();
-        for (Map.Entry<NodoGrafo<T>, Double> entry : nodo.getAdyacentes().entrySet()) {
-            adyacentes.put(entry.getKey().getDato(), entry.getValue());
+        for (TablaHash.Entrada<NodoGrafo<T>, Double> entry : nodo.getAdyacentes().entradas()) {
+            adyacentes.poner(entry.getClave().getDato(), entry.getValor());
         }
         return adyacentes;
     }
@@ -238,11 +244,11 @@ public class GrafoImpl<T> implements IGrafo<T> {
      * @return {@code true} si el grafo contiene un nodo con el dato dado; {@code false} en caso contrario.
      */
     public boolean contieneNodo(T dato) {
-        return mapaDeNodos.containsKey(dato);
+        return mapaDeNodos.contieneClave(dato);
     }
 
-    public Set<T> obtenerTodosLosDatos() {
-        return mapaDeNodos.keySet();
+    public ListaEnlazada<T> obtenerTodosLosDatos() {
+        return mapaDeNodos.claves();
     }
     /**
      * Busca un nodo en la lista de nodos del grafo que contenga el dato especificado.
@@ -275,10 +281,10 @@ public class GrafoImpl<T> implements IGrafo<T> {
     @Override
     public ListaEnlazada<ListaEnlazada<T>> detectarComunidades() {
         ListaEnlazada<ListaEnlazada<T>> comunidades = new ListaEnlazada<>();
-        Set<T> visitados = new HashSet<>();
+        ConjuntoHash<T> visitados = new ConjuntoHash<>();
 
-        for (T vertice : mapaDeNodos.keySet()) {
-            if (!visitados.contains(vertice)) {
+        for (T vertice : mapaDeNodos.claves()) {
+            if (!visitados.contiene(vertice)) {
                 ListaEnlazada<T> comunidad = new ListaEnlazada<>();
                 dfs(vertice, visitados, comunidad);
                 comunidades.agregar(comunidad);
@@ -294,15 +300,15 @@ public class GrafoImpl<T> implements IGrafo<T> {
      * @param visitados Conjunto de nodos visitados.
      * @param comunidad Lista para almacenar nodos de la comunidad actual.
      */
-    private void dfs(T actual, Set<T> visitados, ListaEnlazada<T> comunidad) {
-        visitados.add(actual);
+    private void dfs(T actual, ConjuntoHash<T> visitados, ListaEnlazada<T> comunidad) {
+        visitados.agregar(actual);
         comunidad.agregar(actual);
-        NodoGrafo<T> nodoActual = mapaDeNodos.get(actual);
+        NodoGrafo<T> nodoActual = mapaDeNodos.obtener(actual);
         if (nodoActual == null) return;
 
-        for (NodoGrafo<T> vecinoNodo : nodoActual.getAdyacentes().keySet()) {
+        for (NodoGrafo<T> vecinoNodo : nodoActual.getAdyacentes().claves()) {
             T vecino = vecinoNodo.getDato();
-            if (!visitados.contains(vecino)) {
+            if (!visitados.contiene(vecino)) {
                 dfs(vecino, visitados, comunidad);
             }
         }

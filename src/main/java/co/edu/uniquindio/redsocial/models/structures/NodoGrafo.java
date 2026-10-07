@@ -1,7 +1,5 @@
 package co.edu.uniquindio.redsocial.models.structures;
 
-import java.util.HashMap;
-import java.util.Map;
 /**
  * Clase que representa un nodo dentro de un grafo (dirigido o no dirigido).
  * Cada nodo tiene un dato genérico y un mapa de adyacencias, donde se almacenan
@@ -16,7 +14,7 @@ import java.util.Map;
 public class NodoGrafo<T> {
 
     private T dato;  // Valor asociado al nodo
-    private Map<NodoGrafo<T>, Double> adyacentes;  // Mapa de nodos adyacentes y sus pesos
+    private TablaHash<NodoGrafo<T>, Double> adyacentes;  // Mapa de nodos adyacentes y sus pesos
 
     /**
      * Constructor que crea un nodo con el dato especificado.
@@ -25,7 +23,7 @@ public class NodoGrafo<T> {
      */
     public NodoGrafo(T dato) {
         this.dato = dato;
-        this.adyacentes = new HashMap<>();
+        this.adyacentes = new TablaHash<>();
     }
 
     /**
@@ -35,7 +33,7 @@ public class NodoGrafo<T> {
      * @param peso Peso de la arista entre los nodos.
      */
     public void agregarAdyacente(NodoGrafo<T> nodo, Double peso) {
-        adyacentes.put(nodo, peso);
+        adyacentes.poner(nodo, peso);
     }
 
     /**
@@ -45,7 +43,7 @@ public class NodoGrafo<T> {
      */
     public boolean eliminarAdyacente(NodoGrafo<T> nodo) {
         // remove() devuelve el peso (Double) si existía, o null si no
-        return adyacentes.remove(nodo) != null;
+        return adyacentes.eliminar(nodo) != null;
     }
 
     /**
@@ -56,7 +54,7 @@ public class NodoGrafo<T> {
      * @param peso Nuevo peso de la arista.
      */
     public void actualizarPeso(NodoGrafo<T> nodo, double peso) {
-        adyacentes.put(nodo, peso);
+        adyacentes.poner(nodo, peso);
     }
 
     /**
@@ -66,7 +64,7 @@ public class NodoGrafo<T> {
      * @return Peso de la arista o -1 si no existe conexión.
      */
     public double getPeso(NodoGrafo<T> nodo) {
-        return adyacentes.getOrDefault(nodo, -1.0);
+        return adyacentes.obtenerOPredeterminado(nodo, -1.0);
     }
 
     /**
@@ -76,7 +74,7 @@ public class NodoGrafo<T> {
      * @return true si es adyacente, false en caso contrario.
      */
     public boolean esAdyacente(NodoGrafo<T> nodo) {
-        return adyacentes.containsKey(nodo);
+        return adyacentes.contieneClave(nodo);
     }
 
     /**
@@ -88,9 +86,9 @@ public class NodoGrafo<T> {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Nodo: ").append(dato).append("\nAdyacentes: ");
-        for (Map.Entry<NodoGrafo<T>, Double> entry : adyacentes.entrySet()) {
-            sb.append(entry.getKey().dato)
-                    .append(" (Peso: ").append(entry.getValue()).append("), ");
+        for (TablaHash.Entrada<NodoGrafo<T>, Double> entry : adyacentes.entradas()) {
+            sb.append(entry.getClave().dato)
+                    .append(" (Peso: ").append(entry.getValor()).append("), ");
         }
         return sb.toString();
     }
@@ -128,11 +126,11 @@ public class NodoGrafo<T> {
         this.dato = dato;
     }
 
-    public Map<NodoGrafo<T>, Double> getAdyacentes() {
+    public TablaHash<NodoGrafo<T>, Double> getAdyacentes() {
         return adyacentes;
     }
 
-    public void setAdyacentes(Map<NodoGrafo<T>, Double> adyacentes) {
+    public void setAdyacentes(TablaHash<NodoGrafo<T>, Double> adyacentes) {
         this.adyacentes = adyacentes;
     }
 
@@ -151,7 +149,7 @@ public class NodoGrafo<T> {
      */
     public double getGrado() {
         double suma = 0.0;
-        for (Double peso : adyacentes.values()) {
+        for (Double peso : adyacentes.valores()) {
             suma += peso;
         }
         return suma;

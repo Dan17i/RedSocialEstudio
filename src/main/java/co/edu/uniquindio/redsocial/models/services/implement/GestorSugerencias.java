@@ -5,7 +5,6 @@ import co.edu.uniquindio.redsocial.models.services.interf.IGestorSugerencias;
 import co.edu.uniquindio.redsocial.models.structures.GrafoNoDirigido;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
-import java.util.*;
 /**
  * Implementación del servicio de sugerencias de compañeros de estudio.
  * Esta clase utiliza un grafo no dirigido de estudiantes para generar sugerencias
@@ -41,23 +40,23 @@ public class GestorSugerencias implements IGestorSugerencias {
      */
 
     @Override
-    public List<Estudiante> sugerirAmigos(Estudiante estudiante) {
-        Set<Estudiante> sugerencias = new HashSet<>();
+    public ListaEnlazada<Estudiante> sugerirAmigos(Estudiante estudiante) {
+        ListaEnlazada<Estudiante> sugerencias = new ListaEnlazada<>();
         // Vecinos directos (amigos actuales)
-        List<Estudiante> amigos = grafo.obtenerVecinos(estudiante);
+        ListaEnlazada<Estudiante> amigos = grafo.obtenerVecinos(estudiante);
 
         // Recorrer amigos de amigos
         for (Estudiante amigo : amigos) {
             for (Estudiante amigoDeAmigo : grafo.obtenerVecinos(amigo)) {
-                if (!amigoDeAmigo.equals(estudiante) && !amigos.contains(amigoDeAmigo)) {
-                    if (tienenInteresesEnComun(estudiante, amigoDeAmigo)) {
-                        sugerencias.add(amigoDeAmigo);
+                if (!amigoDeAmigo.equals(estudiante) && !amigos.contiene(amigoDeAmigo)) {
+                    if (!sugerencias.contiene(amigoDeAmigo) && tienenInteresesEnComun(estudiante, amigoDeAmigo)) {
+                        sugerencias.agregar(amigoDeAmigo);
                     }
                 }
             }
         }
 
-        return new ArrayList<>(sugerencias);
+        return sugerencias;
     }
 
     /**

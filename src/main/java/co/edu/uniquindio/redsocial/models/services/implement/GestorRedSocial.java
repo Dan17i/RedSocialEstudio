@@ -2,13 +2,11 @@ package co.edu.uniquindio.redsocial.models.services.implement;
 
 import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.services.interf.IGestorRedSocial;
+import co.edu.uniquindio.redsocial.models.structures.ConjuntoHash;
 import co.edu.uniquindio.redsocial.models.structures.GrafoImpl;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import co.edu.uniquindio.redsocial.models.structures.NodoGrafo;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Clase que implementa la interfaz IGestorRedSocial y actúa como gestor principal de la red social educativa.
@@ -51,10 +49,10 @@ public class GestorRedSocial implements IGestorRedSocial {
     @Override
     public ListaEnlazada<ListaEnlazada<Estudiante>> detectarComunidades() {
         ListaEnlazada<ListaEnlazada<Estudiante>> comunidades = new ListaEnlazada<>();
-        Set<NodoGrafo<Estudiante>> visitados = new HashSet<>();
+        ConjuntoHash<NodoGrafo<Estudiante>> visitados = new ConjuntoHash<>();
 
         for (NodoGrafo<Estudiante> nodo : grafoEstudiantes.obtenerNodos()) {
-            if (!visitados.contains(nodo)) {
+            if (!visitados.contiene(nodo)) {
                 ListaEnlazada<Estudiante> comunidad = new ListaEnlazada<>();
                 dfs(nodo, visitados, comunidad);
                 comunidades.agregar(comunidad);
@@ -72,13 +70,12 @@ public class GestorRedSocial implements IGestorRedSocial {
      * @param comunidad Lista que agrupa los estudiantes pertenecientes a la misma comunidad.
      */
 
-    private void dfs(NodoGrafo<Estudiante> actual, Set<NodoGrafo<Estudiante>> visitados, ListaEnlazada<Estudiante> comunidad) {
-        visitados.add(actual);
+    private void dfs(NodoGrafo<Estudiante> actual, ConjuntoHash<NodoGrafo<Estudiante>> visitados, ListaEnlazada<Estudiante> comunidad) {
+        visitados.agregar(actual);
         comunidad.agregar(actual.getDato());
 
-        Map<NodoGrafo<Estudiante>, Double> adyacentes = actual.getAdyacentes();
-        for (NodoGrafo<Estudiante> vecino : adyacentes.keySet()) {
-            if (!visitados.contains(vecino)) {
+        for (NodoGrafo<Estudiante> vecino : actual.getAdyacentes().claves()) {
+            if (!visitados.contiene(vecino)) {
                 dfs(vecino, visitados, comunidad);
             }
         }
@@ -93,8 +90,7 @@ public class GestorRedSocial implements IGestorRedSocial {
     public void visualizarGrafoUsuarios() {
         for (NodoGrafo<Estudiante> nodo : grafoEstudiantes.obtenerNodos()) {
             System.out.print(nodo.getDato().getNombre() + " -> ");
-            Map<NodoGrafo<Estudiante>, Double> adyacentes = nodo.getAdyacentes();
-            for (NodoGrafo<Estudiante> vecino : adyacentes.keySet()) {
+            for (NodoGrafo<Estudiante> vecino : nodo.getAdyacentes().claves()) {
                 System.out.print(vecino.getDato().getNombre() + " ");
             }
             System.out.println();
@@ -113,7 +109,7 @@ public class GestorRedSocial implements IGestorRedSocial {
         int maxConexiones = 0;
 
         for (NodoGrafo<Estudiante> nodo : grafoEstudiantes.obtenerNodos()) {
-            int conexiones = nodo.getAdyacentes().size();
+            int conexiones = nodo.getAdyacentes().tamanio();
 
             if (conexiones > maxConexiones) {
                 masConectados = new ListaEnlazada<>();
@@ -197,7 +193,7 @@ public class GestorRedSocial implements IGestorRedSocial {
         ListaEnlazada<String> niveles = new ListaEnlazada<>();
 
         for (NodoGrafo<Estudiante> nodo : grafoEstudiantes.obtenerNodos()) {
-            int conexiones = nodo.getAdyacentes().size();
+            int conexiones = nodo.getAdyacentes().tamanio();
             String nivel;
 
             if (conexiones >= 5) {

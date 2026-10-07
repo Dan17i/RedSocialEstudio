@@ -1,7 +1,7 @@
 package co.edu.uniquindio.redsocial.models.services.interf;
 
 import co.edu.uniquindio.redsocial.models.Estudiante;
-import java.util.List;
+import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
 /**
  * Interfaz para definir el comportamiento del gestor de sugerencias de amigos.
@@ -17,5 +17,5 @@ public interface IGestorSugerencias {
      * @param estudiante Estudiante al que se le quiere sugerir amigos.
      * @return Lista de estudiantes sugeridos.
      */
-    List<Estudiante> sugerirAmigos(Estudiante estudiante);
+    ListaEnlazada<Estudiante> sugerirAmigos(Estudiante estudiante);
 }

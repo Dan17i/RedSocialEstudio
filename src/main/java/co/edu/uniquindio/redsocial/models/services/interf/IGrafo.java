@@ -1,6 +1,5 @@
 package co.edu.uniquindio.redsocial.models.services.interf;
 
-import java.util.List;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import co.edu.uniquindio.redsocial.models.structures.NodoGrafo;
 

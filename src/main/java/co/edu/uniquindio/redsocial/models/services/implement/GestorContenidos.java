@@ -6,8 +6,8 @@ import co.edu.uniquindio.redsocial.models.services.interf.IGestorContenidos;
 import co.edu.uniquindio.redsocial.models.structures.ArbolBinarioBusqueda;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import co.edu.uniquindio.redsocial.models.structures.NodoLista;
+import co.edu.uniquindio.redsocial.models.structures.TablaHash;
 
-import java.util.HashMap;
 
 /**
  * Implementación del servicio {@link IGestorContenidos} para gestionar los contenidos
@@ -125,13 +125,13 @@ public class GestorContenidos implements IGestorContenidos {
      * @return Mapa con tipo de contenido como clave y cantidad como valor.
      */
     @Override
-    public HashMap<String, Integer> generarEstadisticas() {
-        HashMap<String, Integer> stats = new HashMap<>();
+    public TablaHash<String, Integer> generarEstadisticas() {
+        TablaHash<String, Integer> stats = new TablaHash<>();
         ListaEnlazada<Contenido> todos = arbolContenidos.listarTodos();
         NodoLista<Contenido> actual = todos.getCabeza();
         while (actual != null) {
             String tipo = actual.getDato().getTipo().name();
-            stats.put(tipo, stats.getOrDefault(tipo, 0) + 1);
+            stats.poner(tipo, stats.obtenerOPredeterminado(tipo, 0) + 1);
             actual = actual.getSiguiente();
         }
         return stats;

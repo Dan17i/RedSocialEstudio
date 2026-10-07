@@ -3,7 +3,7 @@ package co.edu.uniquindio.redsocial.models.services.interf;
 import co.edu.uniquindio.redsocial.models.Contenido;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
-import java.util.HashMap;
+import co.edu.uniquindio.redsocial.models.structures.TablaHash;
 /**
  * Interfaz que define las operaciones para la gestión de contenidos
  * en la plataforma de la red social educativa.
@@ -56,7 +56,7 @@ public interface IGestorContenidos {
      * @return un mapa donde la clave es la categoría (ejemplo: tipo de contenido)
      *         y el valor es el conteo o estadística correspondiente.
      */
-    HashMap<String, Integer> generarEstadisticas();
+    TablaHash<String, Integer> generarEstadisticas();
     /**
      * Busca contenidos que coincidan simultáneamente con un tema, autor y tipo especificados.
      *

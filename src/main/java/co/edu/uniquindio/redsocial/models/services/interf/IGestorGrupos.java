@@ -7,8 +7,6 @@ import co.edu.uniquindio.redsocial.models.structures.GrafoImpl;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**

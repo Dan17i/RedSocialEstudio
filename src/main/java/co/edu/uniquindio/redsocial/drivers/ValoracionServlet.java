@@ -2,7 +2,6 @@ package co.edu.uniquindio.redsocial.drivers;
 
 import co.edu.uniquindio.redsocial.models.Contenido;
 import co.edu.uniquindio.redsocial.models.Estudiante;
-import co.edu.uniquindio.redsocial.models.Valoracion;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
 import javax.servlet.ServletException;
@@ -61,8 +60,12 @@ public class ValoracionServlet extends HttpServlet {
         }
 
         if (target != null) {
-            Valoracion v = new Valoracion(est, target, pts, cm);
-            target.agregarValoracion(v);
+            // Registra la valoración en el contenido y en el estudiante (necesario para el grafo de afinidad)
+            try {
+                est.valorarContenido(target, pts, cm);
+            } catch (IllegalArgumentException e) {
+                // puntuación fuera de 1..5: se ignora la valoración
+            }
         }
 
         response.sendRedirect("inicio.jsp?seccion=home");

@@ -5,7 +5,6 @@ import co.edu.uniquindio.redsocial.models.Contenido;
 import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.Enums.TipoContenido;
 import co.edu.uniquindio.redsocial.models.services.implement.GestorContenidos;
-import co.edu.uniquindio.redsocial.models.structures.ArbolBinarioBusqueda;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
 import javax.servlet.ServletException;
@@ -114,19 +113,8 @@ public class CrearPublicacionServlet extends HttpServlet {
         // Historial del autor
         autor.getHistorialContenidos().agregar(nuevoContenido);
 
-        // Agregar al ABB global
-        @SuppressWarnings("unchecked")
-        ArbolBinarioBusqueda<Contenido> arbol =
-                (ArbolBinarioBusqueda<Contenido>) getServletContext().getAttribute("arbolContenidos");
-        arbol.insertar(nuevoContenido.getTema(), nuevoContenido);
-        // Si quieres indexar por interés:
-        // arbol.insertar(interesSeleccionado, nuevoContenido);
-
-        // Agregar a la lista global
-        @SuppressWarnings("unchecked")
-        ListaEnlazada<Contenido> publicaciones =
-                (ListaEnlazada<Contenido>) getServletContext().getAttribute("publicaciones");
-        publicaciones.agregar(nuevoContenido);
+        // Publicar en el gestor global (indexa en el ABB por tema y en la lista de publicaciones)
+        GestorContenidos.getInstancia().agregarContenido(nuevoContenido);
 
         response.sendRedirect("inicio.jsp?seccion=home");
     }

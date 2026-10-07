@@ -1,12 +1,10 @@
 package co.edu.uniquindio.redsocial.models.services.implement;
 
-import co.edu.uniquindio.redsocial.models.Contenido;
 import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.Usuario;
 import co.edu.uniquindio.redsocial.models.services.interf.IGestorRedSocial;
 import co.edu.uniquindio.redsocial.models.services.interf.IGestorUsuarios;
 import co.edu.uniquindio.redsocial.models.services.interf.ISistemaAutenticacion;
-import co.edu.uniquindio.redsocial.models.structures.ArbolBinarioBusqueda;
 import co.edu.uniquindio.redsocial.models.structures.ColaPrioridad;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import co.edu.uniquindio.redsocial.models.structures.NodoLista;
@@ -36,10 +34,8 @@ public class SistemaAutenticacion implements ISistemaAutenticacion {
         this.gestorUsuarios = new GestorUsuarios();
         this.gestorRedSocial = new GestorRedSocial();
 
-        ArbolBinarioBusqueda<Contenido> arbolContenidos = new ArbolBinarioBusqueda<>();
-        ListaEnlazada<Contenido> contenidoDestacado = new ListaEnlazada<>();
-
-        this.gestorContenidos = new GestorContenidos(arbolContenidos, contenidoDestacado);
+        // Un único gestor de contenidos para toda la aplicación (el mismo que usan los servlets)
+        this.gestorContenidos = GestorContenidos.getInstancia();
     }
 
     /**

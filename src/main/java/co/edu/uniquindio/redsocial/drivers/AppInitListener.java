@@ -1,6 +1,5 @@
 package co.edu.uniquindio.redsocial.drivers;
 
-import co.edu.uniquindio.redsocial.models.Contenido;
 import co.edu.uniquindio.redsocial.models.Conversacion;
 import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.GrupoEstudio;
@@ -8,7 +7,6 @@ import co.edu.uniquindio.redsocial.models.services.implement.GestorContenidos;
 import co.edu.uniquindio.redsocial.models.services.implement.GestorGrupos;
 import co.edu.uniquindio.redsocial.models.services.implement.RedAfinidad;
 import co.edu.uniquindio.redsocial.models.services.implement.SistemaAutenticacion;
-import co.edu.uniquindio.redsocial.models.structures.ArbolBinarioBusqueda;
 import co.edu.uniquindio.redsocial.models.structures.GrafoNoDirigido;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 
@@ -49,19 +47,18 @@ public class AppInitListener implements ServletContextListener {
         sce.getServletContext().setAttribute("sistemaAutenticacion", sistema);
 
         // 2) Lista global de publicaciones
-        ListaEnlazada<Contenido> publicaciones = new ListaEnlazada<>();
-        sce.getServletContext().setAttribute("publicaciones", publicaciones);
+        // (misma lista que mantiene el gestor de contenidos: una sola fuente de verdad)
+        GestorContenidos gestor = GestorContenidos.getInstancia();
+        sce.getServletContext().setAttribute("publicaciones", gestor.obtenerTodosLosContenidos());
 
         // 3) Lista global de conversaciones (inicialmente vacía)
         ListaEnlazada<Conversacion> conversaciones = new ListaEnlazada<>();
         sce.getServletContext().setAttribute("conversaciones", conversaciones);
 
         // 4) Árbol binario global para publicar y filtrar
-        ArbolBinarioBusqueda<Contenido> arbolContenidos = new ArbolBinarioBusqueda<>();
-        sce.getServletContext().setAttribute("arbolContenidos", arbolContenidos);
+        sce.getServletContext().setAttribute("arbolContenidos", gestor.getArbolContenidos());
 
-        // 5) Instancia del gestor (opcional si lo usas)
-        GestorContenidos gestor = GestorContenidos.getInstancia();
+        // 5) Instancia del gestor
         sce.getServletContext().setAttribute("gestorContenidos", gestor);
 
         // 6) Gestor de grupos con grafo no dirigido

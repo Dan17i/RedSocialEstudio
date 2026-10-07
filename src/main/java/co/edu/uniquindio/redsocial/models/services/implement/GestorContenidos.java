@@ -52,6 +52,22 @@ public class GestorContenidos implements IGestorContenidos {
      *
      * @param contenido Contenido a agregar.
      */
+    /**
+     * Descarta la instancia única (útil en pruebas para empezar sin contenidos).
+     */
+    public static void reiniciar() {
+        instancia = null;
+    }
+
+    /**
+     * Árbol binario de búsqueda donde se indexan los contenidos por tema.
+     *
+     * @return el árbol de contenidos de este gestor.
+     */
+    public ArbolBinarioBusqueda<Contenido> getArbolContenidos() {
+        return arbolContenidos;
+    }
+
     @Override
     public void agregarContenido(Contenido contenido) {
         if (contenido != null) {
@@ -73,6 +89,7 @@ public class GestorContenidos implements IGestorContenidos {
             Contenido c = actual.getDato();
             if (c.getId().equals(id)) {
                 arbolContenidos.eliminar(c.getTema());
+                listaDeContenidos.eliminar(c);
                 return true;
             }
             actual = actual.getSiguiente();

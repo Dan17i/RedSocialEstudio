@@ -9,7 +9,6 @@ import co.edu.uniquindio.redsocial.models.services.implement.GestorRedSocial;
 import co.edu.uniquindio.redsocial.models.services.implement.GestorUsuarios;
 import co.edu.uniquindio.redsocial.models.services.interf.IGestorRedSocial;
 import co.edu.uniquindio.redsocial.models.services.interf.IGestorUsuarios;
-import co.edu.uniquindio.redsocial.models.structures.ArbolBinarioBusqueda;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.ServletException;
@@ -59,9 +58,7 @@ public class GestionUsuariosServlet extends HttpServlet {
 
         // Inicializaciones mínimas para pruebas
         gestorUsuarios = new GestorUsuarios();
-        ArbolBinarioBusqueda<Contenido> arbolContenidos = new ArbolBinarioBusqueda<>();
-        ListaEnlazada<Contenido> contenidoDestacado = new ListaEnlazada<>();
-        GestorContenidos gestorContenidos = new GestorContenidos(arbolContenidos, contenidoDestacado);
+        GestorContenidos gestorContenidos = GestorContenidos.getInstancia();
         IGestorRedSocial gestorRedSocial = new GestorRedSocial();
         ListaEnlazada<String> intereses = new ListaEnlazada<>();
         ListaEnlazada<Contenido> historial = new ListaEnlazada<>();

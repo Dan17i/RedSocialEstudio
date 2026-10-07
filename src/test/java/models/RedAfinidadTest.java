@@ -4,10 +4,12 @@ import co.edu.uniquindio.redsocial.models.Contenido;
 import co.edu.uniquindio.redsocial.models.Enums.TipoContenido;
 import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.GrupoEstudio;
+import co.edu.uniquindio.redsocial.models.services.implement.GestorContenidos;
 import co.edu.uniquindio.redsocial.models.services.implement.GestorRedSocial;
 import co.edu.uniquindio.redsocial.models.services.implement.RedAfinidad;
 import co.edu.uniquindio.redsocial.models.services.implement.SistemaAutenticacion;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,12 +29,19 @@ class RedAfinidadTest {
     @BeforeEach
     void preparar() {
         RedAfinidad.reiniciar();
+        GestorContenidos.reiniciar();
         sistema = new SistemaAutenticacion();
         red = RedAfinidad.getInstancia();
         ana = sistema.registrarEstudiante("Ana", "ana@correo.com", "x");
         beto = sistema.registrarEstudiante("Beto", "beto@correo.com", "x");
         carla = sistema.registrarEstudiante("Carla", "carla@correo.com", "x");
         diego = sistema.registrarEstudiante("Diego", "diego@correo.com", "x");
+    }
+
+    @AfterEach
+    void limpiar() {
+        RedAfinidad.reiniciar();
+        GestorContenidos.reiniciar();
     }
 
     @Test

@@ -53,4 +53,23 @@ class FiltroAccesoTest {
         assertEquals(Decision.PERMITIR, FiltroAcceso.evaluar("/panelModerador.jsp", moderador()));
         assertEquals(Decision.PERMITIR, FiltroAcceso.evaluar("/ReporteServlet", moderador()));
     }
+
+    @Test
+    void post_del_mismo_origen_se_acepta() {
+        assertEquals(true, FiltroAcceso.origenValido("POST", "http://localhost:8080", null, "localhost:8080"));
+        assertEquals(true, FiltroAcceso.origenValido("POST", null, "http://localhost:8080/app/perfil.jsp", "localhost:8080"));
+    }
+
+    @Test
+    void post_de_otro_origen_se_rechaza() {
+        assertEquals(false, FiltroAcceso.origenValido("POST", "http://sitio-malo.com", null, "localhost:8080"));
+        assertEquals(false, FiltroAcceso.origenValido("POST", "null", "http://sitio-malo.com/x", "localhost:8080"));
+        assertEquals(false, FiltroAcceso.origenValido("POST", "no es una url ::", null, "localhost:8080"));
+    }
+
+    @Test
+    void get_y_post_sin_cabeceras_no_se_bloquean() {
+        assertEquals(true, FiltroAcceso.origenValido("GET", "http://sitio-malo.com", null, "localhost:8080"));
+        assertEquals(true, FiltroAcceso.origenValido("POST", null, null, "localhost:8080"));
+    }
 }

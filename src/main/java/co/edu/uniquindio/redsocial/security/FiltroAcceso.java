@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * Filtro de control de acceso para toda la aplicación.
@@ -21,6 +23,7 @@ import java.io.IOException;
  *   <li>Rutas de moderador (paneles, reportes, gestión, grafo): solo {@link Moderador}.</li>
  *   <li>Cualquier otra ruta: requiere haber iniciado sesión.</li>
  * </ul>
+ * Además rechaza los POST cuyo origen no sea el propio servidor (mitigación de CSRF).
  * Los {@code forward} internos no pasan por el filtro (solo se filtran peticiones directas del cliente).
  */
 @WebFilter("/*")
@@ -59,6 +62,32 @@ public class FiltroAcceso implements Filter {
         return Decision.PERMITIR;
     }
 
+    /**
+     * Mitigación de CSRF: una petición que modifica estado (POST/PUT/DELETE) solo se acepta si su
+     * cabecera Origin (o, si falta, Referer) pertenece al mismo servidor que atiende la petición.
+     * Si el cliente no envía ninguna de las dos cabeceras no se puede comprobar y se permite.
+     *
+     * @param metodo  Método HTTP.
+     * @param origin  Cabecera Origin (puede ser null).
+     * @param referer Cabecera Referer (puede ser null).
+     * @param host    Cabecera Host de la petición (host:puerto).
+     * @return true si la petición es aceptable.
+     */
+    public static boolean origenValido(String metodo, String origin, String referer, String host) {
+        if ("GET".equalsIgnoreCase(metodo) || "HEAD".equalsIgnoreCase(metodo)
+                || "OPTIONS".equalsIgnoreCase(metodo)) {
+            return true;
+        }
+        String cabecera = (origin != null && !origin.isBlank() && !"null".equals(origin)) ? origin : referer;
+        if (cabecera == null || cabecera.isBlank()) return true;
+        try {
+            String autoridad = new URI(cabecera).getAuthority();
+            return autoridad != null && host != null && autoridad.equalsIgnoreCase(host);
+        } catch (URISyntaxException e) {
+            return false;
+        }
+    }
+
     private static boolean esPublica(String ruta) {
         for (String p : RUTAS_PUBLICAS) if (p.equals(ruta)) return true;
         for (String p : PREFIJOS_PUBLICOS) if (ruta.startsWith(p)) return true;
@@ -75,6 +104,12 @@ public class FiltroAcceso implements Filter {
             throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
+
+        if (!origenValido(request.getMethod(), request.getHeader("Origin"),
+                request.getHeader("Referer"), request.getHeader("Host"))) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Origen de la petición no permitido");
+            return;
+        }
 
         String ruta = request.getRequestURI().substring(request.getContextPath().length());
         HttpSession session = request.getSession(false);

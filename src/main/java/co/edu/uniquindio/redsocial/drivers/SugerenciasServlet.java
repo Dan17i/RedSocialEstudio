@@ -1,5 +1,8 @@
 package co.edu.uniquindio.redsocial.drivers;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -43,25 +46,18 @@ public class SugerenciasServlet extends HttpServlet {
         ListaEnlazada<Estudiante> sugeridos = red.sugerirCompanerosAvanzado(origen);
 
         resp.setContentType("application/json;charset=UTF-8");
-        PrintWriter out = resp.getWriter();
-        out.write("[");
-        boolean first = true;
-
+        JsonArray resultado = new JsonArray();
         for (NodoLista<Estudiante> it = sugeridos.getCabeza(); it != null; it = it.getSiguiente()) {
             Estudiante e = it.getDato();
-
-            int intereses = contarIntereses(origen, e);
-            int valoraciones = contarValoraciones(origen, e);
-            int grupos = contarGrupos(origen, e);
-
-            if (!first) out.write(",");
-            out.write("{\"nombre\":\""+e.getNombre()+"\",");
-            out.write("\"intereses\":"+intereses+",");
-            out.write("\"valoraciones\":"+valoraciones+",");
-            out.write("\"grupos\":"+grupos+"}");
-            first = false;
+            JsonObject obj = new JsonObject();
+            obj.addProperty("nombre", e.getNombre());
+            obj.addProperty("intereses", contarIntereses(origen, e));
+            obj.addProperty("valoraciones", contarValoraciones(origen, e));
+            obj.addProperty("grupos", contarGrupos(origen, e));
+            resultado.add(obj);
         }
-        out.write("]");
+        PrintWriter out = resp.getWriter();
+        out.write(resultado.toString());
         out.flush();
     }
 

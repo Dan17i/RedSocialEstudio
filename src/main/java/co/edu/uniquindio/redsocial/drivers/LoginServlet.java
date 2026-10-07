@@ -82,7 +82,7 @@ public class LoginServlet extends HttpServlet {
                 );
 
                 // Guardamos en sesión
-                request.getSession().setAttribute("usuarioActual", moderador);
+                abrirSesion(request, moderador);
 
                 // Redirigimos a página especial del moderador
                 response.sendRedirect("moderador.jsp");
@@ -93,7 +93,7 @@ public class LoginServlet extends HttpServlet {
             Usuario usuario = sistemaAutenticacion.iniciarSesion(email, password);
 
             // Guardar usuario en sesión
-            request.getSession().setAttribute("usuarioActual", usuario);
+            abrirSesion(request, usuario);
 
             // Redirigir al perfil normal
             response.sendRedirect("inicio.jsp");
@@ -102,5 +102,15 @@ public class LoginServlet extends HttpServlet {
             request.setAttribute("error", "Credenciales inválidas");
             request.getRequestDispatcher("inicioSesion.jsp").forward(request, response);
         }
+    }
+
+    /**
+     * Guarda el usuario en sesión regenerando antes el id de sesión
+     * (evita la fijación de sesión: un id conocido antes del login deja de ser válido).
+     */
+    private void abrirSesion(HttpServletRequest request, Usuario usuario) {
+        HttpSession sesion = request.getSession();
+        request.changeSessionId();
+        sesion.setAttribute("usuarioActual", usuario);
     }
 }

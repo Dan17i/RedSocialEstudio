@@ -125,11 +125,20 @@
                     } else {
                         arr.forEach(o => {
                             const li = document.createElement('li');
-                            li.innerHTML =
-                                '<strong>Conectar con:</strong> ' + o.nombre + '<br>' +
-                                '<em>Intereses compartidos:</em> ' + o.intereses + '<br>' +
-                                '<em>Valoraciones en común:</em> ' + o.valoraciones + '<br>' +
-                                '<em>Grupos compartidos:</em> ' + o.grupos;
+                            // textContent: los nombres vienen del servidor y no deben interpretarse como HTML
+                            const filas = [
+                                ['Conectar con: ', o.nombre],
+                                ['Intereses compartidos: ', o.intereses],
+                                ['Valoraciones en común: ', o.valoraciones],
+                                ['Grupos compartidos: ', o.grupos]
+                            ];
+                            filas.forEach(([etiqueta, valor], i) => {
+                                if (i > 0) li.appendChild(document.createElement('br'));
+                                const et = document.createElement(i === 0 ? 'strong' : 'em');
+                                et.textContent = etiqueta;
+                                li.appendChild(et);
+                                li.appendChild(document.createTextNode(String(valor)));
+                            });
                             sugList.appendChild(li);
                         });
                     }

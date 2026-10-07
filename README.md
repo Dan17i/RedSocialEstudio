@@ -1,5 +1,104 @@
 # RedSocialEstudio
-proyecto final de estructura de datos 
+
+Red social de aprendizaje colaborativo, proyecto final de **Estructura de Datos** (Universidad del Quindío).
+Los estudiantes comparten recursos, se valoran entre sí los contenidos, se conectan según sus afinidades y
+se organizan en grupos de estudio; un moderador analiza la red y genera reportes.
+
+La particularidad del proyecto es que **todas las estructuras de datos son propias** (sin colecciones de
+`java.util`): lista enlazada, árbol binario de búsqueda, cola de prioridad, tabla hash, conjunto y grafo.
+
+## Tecnologías
+
+- Java 17 y Maven
+- Servlets 4.0 + JSP (Tomcat 9), JSTL 1.2
+- Gson, JUnit 5, JaCoCo
+
+## Requisitos
+
+- JDK 17 o superior
+- Maven 3.8+
+- Apache Tomcat **9** (el proyecto usa `javax.servlet`; Tomcat 10+ no es compatible)
+
+## Compilar y probar
+
+```bash
+mvn clean package        # compila, ejecuta las pruebas y genera target/RedSocialEstudio-1.0-SNAPSHOT.war
+mvn test                 # solo pruebas (informe de cobertura JaCoCo en target/site/jacoco)
+```
+
+## Ejecutar
+
+1. Genera el WAR con `mvn clean package`.
+2. Copia `target/RedSocialEstudio-1.0-SNAPSHOT.war` a la carpeta `webapps` de Tomcat 9
+   (por ejemplo renombrándolo a `RedSocialEstudio.war`) e inicia Tomcat.
+   En IntelliJ también sirve importar el proyecto como *Maven* y crear una configuración *Tomcat Server (Local)*
+   con el artefacto `RedSocialEstudio:war exploded`.
+3. Abre `http://localhost:8080/RedSocialEstudio/` (te lleva a la pantalla de inicio de sesión).
+
+Los datos viven **en memoria**: se pierden al reiniciar el servidor.
+
+### Datos de prueba
+
+Inicia sesión como moderador y pulsa **Generar datos de prueba**: crea 10 estudiantes
+(`est1@correo.com` … `est10@correo.com`, contraseña `pass123`) con intereses, contenidos, valoraciones
+y grupos. Después de generarlos, el grafo de afinidad ya tiene conexiones.
+
+### Moderador
+
+Las credenciales se leen de variables de entorno:
+
+| Variable | Significado | Valor por defecto (solo desarrollo) |
+|---|---|---|
+| `REDSOCIAL_MOD_EMAIL` | Correo del moderador | `moderador@redsocial.com` |
+| `REDSOCIAL_MOD_PASS` | Contraseña del moderador | `moderador123` |
+
+Define ambas variables antes de iniciar Tomcat en cualquier entorno que no sea tu equipo local.
+
+## Cómo funciona el grafo de afinidad
+
+- Cada estudiante registrado es un nodo del grafo no dirigido que mantiene `RedAfinidad`.
+- Dos estudiantes quedan **conectados** si han valorado al menos un contenido en común o comparten
+  al menos un grupo de estudio. Las conexiones se recalculan al abrir el grafo y antes de cada reporte.
+- La **ruta más corta** entre dos estudiantes (Dijkstra) minimiza el número de conexiones.
+- Los **grupos de estudio sugeridos** se forman con las comunidades (componentes conexos) de un grafo de intereses.
+- La cola de prioridad atiende primero la solicitud de ayuda con el número de urgencia **menor**
+  (1 = más urgente, 10 = menos urgente).
+
+## Estructura del código
+
+```
+src/main/java/co/edu/uniquindio/redsocial
+├── drivers/                  Servlets (capa web) y AppInitListener
+├── models/                   Dominio: Usuario, Estudiante, Moderador, Contenido, GrupoEstudio, ...
+│   ├── Enums/
+│   ├── services/interf/      Interfaces de los servicios
+│   ├── services/implement/   Gestores y sistemas (autenticación, contenidos, red de afinidad, ...)
+│   └── structures/           Estructuras de datos propias
+└── security/                 Hash de contraseñas, filtro de acceso, escape HTML, config del moderador
+src/main/webapp               JSP, CSS e imágenes
+src/test/java                 Pruebas unitarias (modelos, estructuras, seguridad, red de afinidad)
+docs/diagrama-clases.md       Diagrama de clases
+```
+
+Diagrama de clases: [docs/diagrama-clases.md](docs/diagrama-clases.md).
+
+## Seguridad
+
+- Contraseñas con PBKDF2-HMAC-SHA256 y sal aleatoria (nunca en texto plano).
+- Filtro de acceso por rol: las páginas y servlets del moderador solo responden a un moderador;
+  el resto exige sesión iniciada.
+- Salida HTML escapada en todos los JSP (prevención de XSS).
+- Los POST deben provenir del mismo origen (mitigación de CSRF), id de sesión regenerado al iniciar sesión,
+  sesión de 30 minutos con cookie `HttpOnly`.
+
+## Autores
+
+Daniel Jurado, Sebastián Torres y Juan Soto.
+
+---
+
+# Enunciado original
+
 Proyecto Final de Semestre: Red Social de Aprendizaje Colaborativo
 1. Descripción General:
 El proyecto consiste en desarrollar una plataforma que simule una red social educativa, en la cual los usuarios (estudiantes) puedan compartir recursos de aprendizaje, participar en grupos de estudio, evaluar contenidos y establecer conexiones con otros estudiantes que tengan intereses similares. El sistema debe hacer uso de estructuras de datos personalizadas para modelar usuarios, contenidos, relaciones de afinidad y sistemas de recomendación.

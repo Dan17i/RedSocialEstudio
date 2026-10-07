@@ -25,6 +25,7 @@ public class GrafoAfinidadServlet extends HttpServlet {
                 sistemaAuth.getEstudiantesRegistrados();
 
         RedAfinidad redAfinidad = RedAfinidad.getInstancia();
+        redAfinidad.actualizarConexiones();
 
         // Pasar al JSP
         req.setAttribute("estudiantes", estudiantes);

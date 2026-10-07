@@ -4,6 +4,7 @@
     co.edu.uniquindio.redsocial.models.services.implement.SistemaAutenticacion,
     co.edu.uniquindio.redsocial.models.services.implement.RedAfinidad,
     co.edu.uniquindio.redsocial.models.structures.ListaEnlazada,
+    co.edu.uniquindio.redsocial.models.structures.NodoGrafo,
     co.edu.uniquindio.redsocial.models.structures.NodoLista
 " %>
 <%
@@ -60,13 +61,15 @@
 <div style="position:relative;">
     <svg width="800" height="600">
         <g class="links">
-            <% for (int i = 0; i < n; i++) {
-                Estudiante e1 = todos.obtener(i);
+            <% for (NodoGrafo<Estudiante> nodoA : red.getGrafo().getNodos()) {
+                Estudiante e1 = nodoA.getDato();
                 int[] p1 = pos.obtener(e1.getId());
-                ListaEnlazada<Estudiante> sugs = red.sugerirCompanerosAvanzado(e1);
-                for (NodoLista<Estudiante> it = sugs.getCabeza(); it != null; it = it.getSiguiente()) {
-                    Estudiante e2 = it.getDato();
+                if (p1 == null) continue;
+                for (NodoGrafo<Estudiante> nodoB : nodoA.getAdyacentes().claves()) {
+                    Estudiante e2 = nodoB.getDato();
                     int[] p2 = pos.obtener(e2.getId());
+                    // cada arista se dibuja una sola vez
+                    if (p2 == null || e1.getId().compareTo(e2.getId()) >= 0) continue;
             %>
             <line class="link"
                   x1="<%=p1[0]%>" y1="<%=p1[1]%>"

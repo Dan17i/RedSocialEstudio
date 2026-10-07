@@ -68,6 +68,7 @@ public class SistemaAutenticacion implements ISistemaAutenticacion {
         );
 
         usuariosRegistrados.agregar(nuevo);
+        RedAfinidad.getInstancia().agregarEstudiante(nuevo);
         return nuevo;
     }
 
@@ -150,6 +151,9 @@ public class SistemaAutenticacion implements ISistemaAutenticacion {
                 nuevaLista.agregar(usuario);
             } else {
                 eliminado = true;
+                if (usuario instanceof Estudiante) {
+                    RedAfinidad.getInstancia().eliminarEstudiante((Estudiante) usuario);
+                }
             }
             actual = actual.getSiguiente();
         }

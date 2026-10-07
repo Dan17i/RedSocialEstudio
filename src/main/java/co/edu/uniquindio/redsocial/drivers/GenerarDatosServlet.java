@@ -30,6 +30,11 @@ public class GenerarDatosServlet extends HttpServlet {
 
         SistemaAutenticacion sistemaAuth = (SistemaAutenticacion)
                 getServletContext().getAttribute("sistemaAutenticacion");
+        // Evita fallar con "Email ya registrado" si el botón se pulsa más de una vez
+        if (sistemaAuth.existeUsuario("est1@correo.com")) {
+            resp.sendRedirect("moderador.jsp?datosGenerados=ya");
+            return;
+        }
         GestorContenidos gestorContenidos = GestorContenidos.getInstancia();
         RedAfinidad redAfinidad         = RedAfinidad.getInstancia();
 
@@ -100,7 +105,10 @@ public class GenerarDatosServlet extends HttpServlet {
             }
         }
 
-        // 4) Redirigir al panel del moderador
+        // 4) Calcular las conexiones del grafo (valoraciones similares / grupos compartidos)
+        redAfinidad.actualizarConexiones();
+
+        // 5) Redirigir al panel del moderador
         resp.sendRedirect("moderador.jsp?datosGenerados=true");
     }
 }

@@ -27,6 +27,7 @@ import co.edu.uniquindio.redsocial.models.structures.NodoGrafo;
  */
 public class GestorRedSocial implements IGestorRedSocial {
 
+    private final RedAfinidad redAfinidad;
     private final GrafoImpl<Estudiante> grafoEstudiantes;
 
     /**
@@ -34,7 +35,18 @@ public class GestorRedSocial implements IGestorRedSocial {
      * de un grafo no dirigido que almacenará los estudiantes y sus relaciones.
      */
     public GestorRedSocial() {
-        this.grafoEstudiantes = new GrafoImpl<>(false); // No dirigido
+        this(RedAfinidad.getInstancia());
+    }
+
+    /**
+     * Constructor que trabaja sobre el grafo de afinidad de la red indicada, de modo que
+     * todos los reportes lean las mismas conexiones.
+     *
+     * @param redAfinidad red de afinidad dueña del grafo de estudiantes.
+     */
+    public GestorRedSocial(RedAfinidad redAfinidad) {
+        this.redAfinidad = redAfinidad;
+        this.grafoEstudiantes = redAfinidad.getGrafo();
     }
 
     /**
@@ -48,6 +60,7 @@ public class GestorRedSocial implements IGestorRedSocial {
 
     @Override
     public ListaEnlazada<ListaEnlazada<Estudiante>> detectarComunidades() {
+        redAfinidad.actualizarConexiones();
         ListaEnlazada<ListaEnlazada<Estudiante>> comunidades = new ListaEnlazada<>();
         ConjuntoHash<NodoGrafo<Estudiante>> visitados = new ConjuntoHash<>();
 
@@ -88,6 +101,7 @@ public class GestorRedSocial implements IGestorRedSocial {
      */
     @Override
     public void visualizarGrafoUsuarios() {
+        redAfinidad.actualizarConexiones();
         for (NodoGrafo<Estudiante> nodo : grafoEstudiantes.obtenerNodos()) {
             System.out.print(nodo.getDato().getNombre() + " -> ");
             for (NodoGrafo<Estudiante> vecino : nodo.getAdyacentes().claves()) {
@@ -105,6 +119,7 @@ public class GestorRedSocial implements IGestorRedSocial {
      */
     @Override
     public ListaEnlazada<Estudiante> obtenerEstudiantesMasConectados() {
+        redAfinidad.actualizarConexiones();
         ListaEnlazada<Estudiante> masConectados = new ListaEnlazada<>();
         int maxConexiones = 0;
 
@@ -133,6 +148,7 @@ public class GestorRedSocial implements IGestorRedSocial {
      */
     @Override
     public ListaEnlazada<String> calcularCaminosMasCortos(String inicio, String destino) {
+        redAfinidad.actualizarConexiones();
         NodoGrafo<Estudiante> nodoInicio = buscarNodoPorNombre(inicio);
         NodoGrafo<Estudiante> nodoDestino = buscarNodoPorNombre(destino);
 
@@ -190,6 +206,7 @@ public class GestorRedSocial implements IGestorRedSocial {
      */
     @Override
     public ListaEnlazada<String> obtenerNivelesParticipacion() {
+        redAfinidad.actualizarConexiones();
         ListaEnlazada<String> niveles = new ListaEnlazada<>();
 
         for (NodoGrafo<Estudiante> nodo : grafoEstudiantes.obtenerNodos()) {

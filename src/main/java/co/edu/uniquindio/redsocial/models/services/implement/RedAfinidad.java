@@ -2,15 +2,13 @@ package co.edu.uniquindio.redsocial.models.services.implement;
 
 import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.structures.ConjuntoHash;
-import co.edu.uniquindio.redsocial.models.structures.GrafoImpl;
+import co.edu.uniquindio.redsocial.models.structures.GrafoNoDirigido;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import co.edu.uniquindio.redsocial.models.structures.NodoGrafo;
 import co.edu.uniquindio.redsocial.models.services.interf.IRedAfinidad;
 
 import co.edu.uniquindio.redsocial.models.Valoracion;
 import co.edu.uniquindio.redsocial.models.GrupoEstudio;
-import co.edu.uniquindio.redsocial.models.Contenido;
-import co.edu.uniquindio.redsocial.models.Estudiante;
 
 
 
@@ -30,7 +28,7 @@ import co.edu.uniquindio.redsocial.models.Estudiante;
  */
 
 public class RedAfinidad implements IRedAfinidad {
-    public final GrafoImpl<Estudiante> grafoEstudiantes;
+    private final GrafoNoDirigido<Estudiante> grafoEstudiantes;
     private static RedAfinidad instancia;
 
     /**
@@ -38,7 +36,7 @@ public class RedAfinidad implements IRedAfinidad {
      *
      * @param grafoEstudiantes grafo que contiene los estudiantes y sus relaciones.
      */
-    private RedAfinidad(GrafoImpl<Estudiante> grafoEstudiantes) {
+    private RedAfinidad(GrafoNoDirigido<Estudiante> grafoEstudiantes) {
         this.grafoEstudiantes = grafoEstudiantes;
     }
 
@@ -49,7 +47,7 @@ public class RedAfinidad implements IRedAfinidad {
      */
     public static RedAfinidad getInstancia() {
         if (instancia == null) {
-            instancia = new RedAfinidad(new GrafoImpl<>());
+            instancia = new RedAfinidad(new GrafoNoDirigido<>());
         }
         return instancia;
     }
@@ -61,6 +59,63 @@ public class RedAfinidad implements IRedAfinidad {
      */
     public void agregarEstudiante(Estudiante estudiante) {
         grafoEstudiantes.agregarNodo(estudiante);
+    }
+
+    /**
+     * Quita a un estudiante de la red (y todas sus conexiones).
+     *
+     * @param estudiante el estudiante a quitar.
+     */
+    public void eliminarEstudiante(Estudiante estudiante) {
+        grafoEstudiantes.eliminarNodo(estudiante);
+    }
+
+    /**
+     * Grafo no dirigido de afinidad: único dueño de las conexiones entre estudiantes.
+     * Los demás servicios (reportes del moderador, visualización) deben consumir este grafo.
+     *
+     * @return el grafo de afinidad.
+     */
+    public GrafoNoDirigido<Estudiante> getGrafo() {
+        return grafoEstudiantes;
+    }
+
+    /**
+     * Descarta la instancia única (útil en pruebas para empezar con una red vacía).
+     */
+    public static void reiniciar() {
+        instancia = null;
+    }
+
+    /**
+     * Regla de conexión del grafo: dos estudiantes quedan conectados si han valorado
+     * al menos un contenido en común o han coincidido en al menos un grupo de estudio.
+     *
+     * @return true si deben estar conectados.
+     */
+    public boolean estanConectados(Estudiante e1, Estudiante e2) {
+        return contarValoracionesSimilares(e1, e2) >= 1 || contarGruposCompartidos(e1, e2) >= 1;
+    }
+
+    /**
+     * Recalcula las conexiones del grafo para todos los estudiantes de la red:
+     * agrega la arista entre cada par que cumple {@link #estanConectados} y elimina
+     * la de los pares que dejaron de cumplirla.
+     */
+    public void actualizarConexiones() {
+        ListaEnlazada<NodoGrafo<Estudiante>> nodos = grafoEstudiantes.getNodos();
+        int n = nodos.getTamanio();
+        for (int i = 0; i < n; i++) {
+            Estudiante a = nodos.obtener(i).getDato();
+            for (int j = i + 1; j < n; j++) {
+                Estudiante b = nodos.obtener(j).getDato();
+                if (estanConectados(a, b)) {
+                    grafoEstudiantes.agregarArista(a, b);
+                } else {
+                    grafoEstudiantes.eliminarArista(a, b);
+                }
+            }
+        }
     }
 
     /**

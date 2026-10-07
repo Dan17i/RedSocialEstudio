@@ -6,6 +6,7 @@ import co.edu.uniquindio.redsocial.models.Estudiante;
 import co.edu.uniquindio.redsocial.models.GrupoEstudio;
 import co.edu.uniquindio.redsocial.models.services.implement.GestorContenidos;
 import co.edu.uniquindio.redsocial.models.services.implement.GestorGrupos;
+import co.edu.uniquindio.redsocial.models.services.implement.RedAfinidad;
 import co.edu.uniquindio.redsocial.models.services.implement.SistemaAutenticacion;
 import co.edu.uniquindio.redsocial.models.structures.ArbolBinarioBusqueda;
 import co.edu.uniquindio.redsocial.models.structures.GrafoNoDirigido;
@@ -64,7 +65,8 @@ public class AppInitListener implements ServletContextListener {
         sce.getServletContext().setAttribute("gestorContenidos", gestor);
 
         // 6) Gestor de grupos con grafo no dirigido
-        GrafoNoDirigido<Estudiante> grafoEstudiantes = new GrafoNoDirigido<>();
+        // Mismo grafo de afinidad que usan el moderador y la visualización
+        GrafoNoDirigido<Estudiante> grafoEstudiantes = RedAfinidad.getInstancia().getGrafo();
         GestorGrupos<Estudiante> gestorGrupos = new GestorGrupos<>();
         gestorGrupos.setGrafo(grafoEstudiantes);
         sce.getServletContext().setAttribute("gestorGrupos", gestorGrupos);

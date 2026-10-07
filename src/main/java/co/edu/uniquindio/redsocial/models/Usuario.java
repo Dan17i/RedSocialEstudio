@@ -18,7 +18,7 @@ public class Usuario {
     private String id;
     private String nombre;
     private String email;
-    private String contraseña;
+    private String contrasena;
     private ListaEnlazada<String> intereses;
     private ListaEnlazada<Contenido> historialContenidos;
     private ListaEnlazada<Valoracion> valoraciones;
@@ -29,19 +29,19 @@ public class Usuario {
      * @param id                  Identificador único.
      * @param nombre              Nombre del usuario.
      * @param email               Email único.
-     * @param contraseña          Contraseña para autenticación.
+     * @param contrasena          Contraseña para autenticación.
      * @param intereses           Lista de intereses del usuario.
      * @param historialContenidos Contenidos visualizados por el usuario.
      * @param valoraciones        Valoraciones realizadas por el usuario.
      */
-    public Usuario(String id, String nombre, String email, String contraseña,
+    public Usuario(String id, String nombre, String email, String contrasena,
                    ListaEnlazada<String> intereses,
                    ListaEnlazada<Contenido> historialContenidos,
                    ListaEnlazada<Valoracion> valoraciones) {
         this.id = id;
         this.nombre = nombre;
         this.email = email;
-        this.contraseña = contraseña;
+        this.contrasena = contrasena;
         this.intereses = intereses;
         this.historialContenidos = historialContenidos;
         this.valoraciones = valoraciones;
@@ -124,8 +124,8 @@ public class Usuario {
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
-    public String getContraseña() { return contraseña; }
-    public void setContraseña(String contraseña) { this.contraseña = contraseña; }
+    public String getContrasena() { return contrasena; }
+    public void setContrasena(String contrasena) { this.contrasena = contrasena; }
 
     public ListaEnlazada<String> getIntereses() { return intereses; }
     public void setIntereses(ListaEnlazada<String> intereses) { this.intereses = intereses; }
@@ -153,7 +153,7 @@ public class Usuario {
 
 
     /**
-     * Representación en texto del usuario, sin mostrar la contraseña.
+     * Representación en texto del usuario, sin mostrar la contrasena.
      */
     @Override
     public String toString() {

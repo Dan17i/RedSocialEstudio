@@ -24,21 +24,21 @@ public interface ISistemaAutenticacion {
      *
      * @param nombre     Nombre completo del estudiante.
      * @param email      Correo electrónico del estudiante (debe ser único).
-     * @param contraseña Contraseña del estudiante.
+     * @param contrasena Contraseña del estudiante.
      * @return El estudiante creado y registrado.
      * @throws IllegalArgumentException Si el correo ya está registrado.
      */
-    Estudiante registrarEstudiante(String nombre, String email, String contraseña);
+    Estudiante registrarEstudiante(String nombre, String email, String contrasena);
 
     /**
-     * Inicia sesión de un usuario mediante email y contraseña.
+     * Inicia sesión de un usuario mediante email y contrasena.
      *
      * @param email      Correo electrónico del usuario.
-     * @param contraseña Contraseña del usuario.
+     * @param contrasena Contraseña del usuario.
      * @return Usuario autenticado si las credenciales coinciden.
      * @throws SecurityException Si las credenciales son incorrectas.
      */
-    Usuario iniciarSesion(String email, String contraseña);
+    Usuario iniciarSesion(String email, String contrasena);
 
     /**
      * Verifica si un usuario con el email dado ya está registrado.

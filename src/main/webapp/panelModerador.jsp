@@ -4,7 +4,7 @@
 <%
     Moderador moderador = (Moderador) session.getAttribute("usuario");
     if (moderador == null) {
-        response.sendRedirect(request.getContextPath() + "/loginModerador.jsp");
+        response.sendRedirect(request.getContextPath() + "/inicioSesion.jsp");
         return;
     }
     GestorContenidos gestorContenidos = GestorContenidos.getInstancia();

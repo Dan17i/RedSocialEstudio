@@ -11,6 +11,8 @@ import co.edu.uniquindio.redsocial.models.structures.ColaPrioridad;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
 import co.edu.uniquindio.redsocial.models.structures.NodoLista;
 
+import co.edu.uniquindio.redsocial.security.ClaveHash;
+
 import java.util.UUID;
 
 /**
@@ -45,18 +47,18 @@ public class SistemaAutenticacion implements ISistemaAutenticacion {
      *
      * @param nombre      Nombre completo del estudiante.
      * @param email       Correo electrónico del estudiante (debe ser único).
-     * @param contraseña  Contraseña del estudiante.
+     * @param contrasena  Contraseña del estudiante.
      * @return El estudiante creado y registrado.
      * @throws IllegalArgumentException Si el correo ya está registrado.
      */
-    public Estudiante registrarEstudiante(String nombre, String email, String contraseña) {
+    public Estudiante registrarEstudiante(String nombre, String email, String contrasena) {
         validarEmailUnico(email);
 
         Estudiante nuevo = new Estudiante(
                 generarId(),
                 nombre,
                 email,
-                contraseña,
+                ClaveHash.hashear(contrasena),
                 new ListaEnlazada<>(),  // intereses
                 new ListaEnlazada<>(),  // historial
                 new ListaEnlazada<>(),  // valoraciones
@@ -70,18 +72,18 @@ public class SistemaAutenticacion implements ISistemaAutenticacion {
     }
 
     /**
-     * Inicia sesión de un usuario mediante email y contraseña.
+     * Inicia sesión de un usuario mediante email y contrasena.
      *
      * @param email      Correo electrónico del usuario.
-     * @param contraseña Contraseña del usuario.
+     * @param contrasena Contraseña del usuario.
      * @return Usuario autenticado si las credenciales coinciden.
      * @throws SecurityException Si las credenciales son incorrectas.
      */
-    public Usuario iniciarSesion(String email, String contraseña) {
+    public Usuario iniciarSesion(String email, String contrasena) {
         NodoLista<Usuario> actual = usuariosRegistrados.getCabeza();
         while (actual != null) {
             Usuario usuario = actual.getDato();
-            if (usuario.getEmail().equals(email) && usuario.getContraseña().equals(contraseña)) {
+            if (usuario.getEmail().equals(email) && ClaveHash.verificar(contrasena, usuario.getContrasena())) {
                 return usuario;
             }
             actual = actual.getSiguiente();

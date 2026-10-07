@@ -4,6 +4,7 @@ import co.edu.uniquindio.redsocial.models.Moderador;
 import co.edu.uniquindio.redsocial.models.Usuario;
 import co.edu.uniquindio.redsocial.models.services.implement.SistemaAutenticacion;
 import co.edu.uniquindio.redsocial.models.structures.ListaEnlazada;
+import co.edu.uniquindio.redsocial.security.ConfigModerador;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -26,10 +27,6 @@ import java.io.IOException;
 public class LoginServlet extends HttpServlet {
 
     private SistemaAutenticacion sistemaAutenticacion;
-
-    // Credenciales fijas del moderador
-    private static final String MODERADOR_EMAIL = "moderador@redsocial.com";
-    private static final String MODERADOR_PASS = "moderador123";
 
     @Override
     public void init() throws ServletException {
@@ -64,14 +61,14 @@ public class LoginServlet extends HttpServlet {
 
         try {
             // Verificar primero si es moderador fijo
-            if (MODERADOR_EMAIL.equalsIgnoreCase(email) && MODERADOR_PASS.equals(password)) {
+            if (ConfigModerador.esModerador(email, password)) {
                 // Creamos un Usuario para moderador
                 Moderador moderador = new Moderador(
 
                         "MOD-0001",                          // id
                         "Moderador Principal",              // nombre
-                        MODERADOR_EMAIL,                    // email
-                        MODERADOR_PASS,                     // contraseña
+                        ConfigModerador.email(),            // email
+                        null,                               // contraseña (se valida con ConfigModerador)
                         new ListaEnlazada<>(),              // intereses
                         new ListaEnlazada<>(),              // historial de contenidos
                         new ListaEnlazada<>(),              // valoraciones

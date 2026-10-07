@@ -32,7 +32,7 @@ public class Moderador extends Usuario {
      * @param id                    iD del moderador
      * @param nombre                Nombre del moderador
      * @param email                 Correo electrónico
-     * @param contraseña            Contraseña
+     * @param contrasena            Contraseña
      * @param intereses             Intereses
      * @param historialContenidos  Historial de contenidos
      * @param valoraciones          Valoraciones realizadas
@@ -42,7 +42,7 @@ public class Moderador extends Usuario {
      * @param gestorContenidos      Referencia al gestor de contenidos
      * @param gestorRedSocial       Referencia al gestor de la red social
      */
-    public Moderador(String id, String nombre, String email, String contraseña,
+    public Moderador(String id, String nombre, String email, String contrasena,
                      ListaEnlazada<String> intereses,
                      ListaEnlazada<Contenido> historialContenidos,
                      ListaEnlazada<Valoracion> valoraciones,
@@ -52,7 +52,7 @@ public class Moderador extends Usuario {
                      GestorContenidos gestorContenidos,
                      IGestorRedSocial gestorRedSocial) {
 
-        super(id, nombre, email, contraseña, intereses, historialContenidos, valoraciones);
+        super(id, nombre, email, contrasena, intereses, historialContenidos, valoraciones);
         this.accesoCompleto = accesoCompleto;
         this.areasResponsabilidad = (areasResponsabilidad != null) ? areasResponsabilidad : new ListaEnlazada<>();
         this.gestorUsuarios = gestorUsuarios;

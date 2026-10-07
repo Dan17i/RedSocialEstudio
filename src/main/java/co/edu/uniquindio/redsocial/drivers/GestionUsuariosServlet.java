@@ -72,7 +72,7 @@ public class GestionUsuariosServlet extends HttpServlet {
                 "mod001",
                 "Moderador",
                 "moderador@redsocial.com",
-                "moderador123",
+                null,
                 intereses,
                 historial,
                 valoraciones,
